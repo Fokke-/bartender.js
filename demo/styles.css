@@ -1,3 +1,7 @@
+body {
+  font-family: sans-serif;
+}
+
 h1:first-child,
 h2:first-child {
   margin-top: 0;
@@ -6,4 +10,21 @@ h2:first-child {
 .offcanvas-content,
 .offcanvas-bar {
   padding: 5vw;
+}
+
+button {
+  display: inline-block;
+  font-weight: bold;
+  margin: 0 1em 1em 0;
+  padding: 1em;
+  border: 0;
+  color: #fff;
+  background: teal;
+}
+
+button:focus {
+  color: #fff;
+  background: hotpink;
+  outline: 0;
+
 }
