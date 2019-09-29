@@ -35,11 +35,6 @@
       "online": true
     }
   },
-  "husky": {
-    "hooks": {
-      "pre-push": "gulp build && git add dist/ && git diff-index --quiet HEAD dist/ || ( echo 'ERROR: uncommitted changes in in dist. Please commit those first, or run git push with --no-verify to skip this check.' && exit 2 )"
-    }
-  },
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@babel/plugin-transform-object-assign": "^7.2.0",
@@ -58,7 +53,6 @@
     "gulp-sizereport": "^1.2.1",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-terser": "^1.2.0",
-    "husky": "^3.0.5",
     "node-sass": "^4.12.0"
   }
 }
