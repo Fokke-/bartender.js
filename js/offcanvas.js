@@ -14,20 +14,15 @@ class OffCanvas {
     }, options)
 
     this.overlay = null
-    this.mainWrap = document.querySelector(this.options.mainWrapSelector)
-    this.contentWrap = document.querySelector(this.options.contentWrapSelector)
-    this.openButtons = document.querySelectorAll(this.options.openButtonSelector)
-    this.closeButtons = document.querySelectorAll(this.options.closeButtonSelector)
-    this.toggleButtons = document.querySelectorAll(this.options.toggleButtonSelector)
+    this.currentOpenBar = null
+    this.previousOpenButton = null
+    this.resizeTimeout = null
     this.bars = {
       left: null,
       right: null,
       top: null,
       bottom: null,
     }
-    this.currentOpenBar = null
-    this.previousOpenButton = null
-    this.resizeTimeout = null
 
     this.init()
   }
@@ -51,9 +46,17 @@ class OffCanvas {
 
   init () {
     try {
-      // Validate required elements
+      // Find and validate required elements
+      this.mainWrap = document.querySelector(this.options.mainWrapSelector)
       if (!this.mainWrap) throw 'Main wrap element was not found with selector: ' + this.options.mainWrapSelector
+
+      this.contentWrap = this.mainWrap.querySelector(this.options.contentWrapSelector)
       if (!this.contentWrap) throw 'Content wrap element was not found with selector: ' + this.options.contentWrapSelector
+
+      // Find all buttons
+      this.openButtons = this.mainWrap.querySelectorAll(this.options.openButtonSelector)
+      this.closeButtons = this.mainWrap.querySelectorAll(this.options.closeButtonSelector)
+      this.toggleButtons = this.mainWrap.querySelectorAll(this.options.toggleButtonSelector)
 
       // Add classes
       this.mainWrap.classList.add('offcanvas-main')
@@ -111,10 +114,10 @@ class OffCanvas {
         }
       })
 
-      // Adjust content wrapper push when window is resized
+      // Adjust content wrapper transform when window is resized
       window.addEventListener('resize', () => {
         clearTimeout(this.resizeTimeout)
-        console.log(this.resizeTimeout)
+
         this.resizeTimeout = setTimeout(() => {
           this.setContentWrapPush()
         }, 200)
@@ -122,6 +125,8 @@ class OffCanvas {
     } catch (error) {
       this.logError(error)
     }
+
+    return this
   }
 
   isValidPosition (position = null) {
@@ -130,6 +135,9 @@ class OffCanvas {
 
   addBar (position = 'left', options = {}) {
     try {
+      // Validate required elements
+      if (!this.mainWrap || !this.contentWrap) return this
+
       // Validate position
       if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: left, right, top, bottom'
 
@@ -137,13 +145,13 @@ class OffCanvas {
       if (this.bars[position]) throw 'Bar with position \'' + position + '\' is already defined'
 
       // Create new bar object
-      const bar = new OffCanvasBar(options)
-      bar.parentElement = this.mainWrap
-      bar.position = position
-      bar.init()
+      const newBar = new OffCanvasBar(options)
+      newBar.parentElement = this.mainWrap
+      newBar.position = position
+      newBar.init()
 
       // Insert new bar
-      this.bars[position] = bar
+      this.bars[position] = newBar
 
       this.debug('Added bar with position \'' + position + '\'')
     } catch (error) {
@@ -190,6 +198,8 @@ class OffCanvas {
   closeBar () {
     try {
       if (!this.currentOpenBar) return
+
+      this.debug('Closing bar \'' + this.currentOpenBar.position + '\'')
 
       this.currentOpenBar.close()
 
@@ -281,8 +291,10 @@ class OffCanvasBar {
   init () {
     // Validate required properties
     if (!this.position) throw 'Missing position for bar'
-    if (!this.parentElement) throw 'Missing parent element for bar with position \'' + this.position + '\''
-    if (!this.options.selector) throw 'Missing element selector for bar with position \'' + this.position + '\''
+    if (!this.parentElement) throw 'Missing parent element for bar \'' + this.position + '\''
+
+    // If selector is not specified, use default
+    if (!this.options.selector) this.options.selector = '.offcanvas-bar--' + this.position
 
     // Check that defined bar element exists
     this.element = this.parentElement.querySelector(this.options.selector)

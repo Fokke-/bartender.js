@@ -2,6 +2,12 @@ html {
   height: 100%;
 }
 
+.offcanvas-main,
+.offcanvas-content,
+.offcanvas-bar {
+  box-sizing: border-box;
+}
+
 .offcanvas-main {
   position: relative;
   width: 100%;
