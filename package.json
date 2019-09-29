@@ -1,0 +1,64 @@
+{
+  "name": "offcanvas",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Nokikana / Ville Fokke Saarivaara",
+  "license": "MIT",
+  "config": {
+    "paths": {
+      "base": "./",
+      "css": {
+        "src": "./scss/",
+        "dist": "./dist/"
+      },
+      "js": {
+        "src": "./js/",
+        "dist": "./dist/"
+      }
+    },
+    "terser": {},
+    "babel": {
+      "presets": [
+        "@babel/env"
+      ],
+      "plugins": [
+        "@babel/plugin-transform-object-assign"
+      ]
+    },
+    "sizereport": {
+      "gzip": true
+    },
+    "browserSync": {
+      "server": {
+        "baseDir": "demo/"
+      },
+      "online": true
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "gulp build && git add dist/ && git diff-index --quiet HEAD dist/ || ( echo 'ERROR: uncommitted changes in in dist. Please commit those first, or run git push with --no-verify to skip this check.' && exit 2 )"
+    }
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-transform-object-assign": "^7.2.0",
+    "@babel/preset-env": "^7.5.5",
+    "beeper": "^2.0.0",
+    "browser-sync": "^2.26.7",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-clean-css": "^4.2.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-eslint": "^6.0.0",
+    "gulp-notify": "^3.2.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-sass": "^4.0.2",
+    "gulp-sass-lint": "^1.4.0",
+    "gulp-sizereport": "^1.2.1",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-terser": "^1.2.0",
+    "husky": "^3.0.5",
+    "node-sass": "^4.12.0"
+  }
+}

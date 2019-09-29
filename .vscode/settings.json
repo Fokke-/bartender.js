@@ -1,0 +1,17 @@
+{
+  "phpcs.enable": true,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "files.associations": {
+    "*.module": "php",
+    "*.inc": "php",
+    ".sasslintrc": "json",
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/dist/": true,
+    "**/demo/": true
+  },
+  "search.useIgnoreFiles": false
+}

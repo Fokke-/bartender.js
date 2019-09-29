@@ -1,0 +1,83 @@
+{
+  "files": {
+    "include": "public/site/templates/resources/css/**/*.scss"
+  },
+  "options": {
+    "merge-default-rules": false
+  },
+  "rules": {
+    "indentation": [
+      2
+    ],
+    "bem-depth": 2,
+    "brace-style": [
+      2,
+      {
+        "style": "1tbs",
+        "allow-single-line": false
+      }
+    ],
+    "declarations-before-nesting": 2,
+    "empty-line-between-blocks": 2,
+    "extends-before-declarations": 2,
+    "force-pseudo-nesting": 2,
+    "mixins-before-declarations": 2,
+    "no-empty-rulesets": 2,
+    "one-declaration-per-line": 2,
+    "single-line-per-selector": 2,
+    "space-before-colon": [
+      2,
+      {
+        "include": false
+      }
+    ],
+    "space-after-colon": [
+      2,
+      {
+        "include": true
+      }
+    ],
+    "space-before-bang": [
+      2,
+      {
+        "include": true
+      }
+    ],
+    "space-after-bang": [
+      2,
+      {
+        "include": false
+      }
+    ],
+    "space-after-comma": [
+      2,
+      {
+        "include": true
+      }
+    ],
+    "space-around-operator": [
+      2,
+      {
+        "include": true
+      }
+    ],
+    "space-before-brace": [
+      2,
+      {
+        "include": true
+      }
+    ],
+    "space-between-parens": [
+      2,
+      {
+        "include": false
+      }
+    ],
+    "trailing-semicolon": [
+      2,
+      {
+        "include": true
+      }
+    ]
+  }
+}
