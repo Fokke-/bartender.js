@@ -25,6 +25,9 @@ class OffCanvas {
       top: null,
       bottom: null,
     }
+    this.currentOpenBar = null
+    this.previousOpenButton = null
+    this.resizeTimeout = null
 
     this.init()
   }
@@ -65,22 +68,22 @@ class OffCanvas {
           return
         }
 
-        button.addEventListener('click', () => this.open(position))
+        button.addEventListener('click', () => this.openBar(position, button))
         button.addEventListener('keydown', event => {
           if ([13, 32].indexOf(event.keyCode) > -1) {
             event.preventDefault()
-            this.open(position)
+            this.openBar(position, button)
           }
         })
       })
 
       // Add event listeners for close buttons
       this.closeButtons.forEach(button => {
-        button.addEventListener('click', () => this.close())
+        button.addEventListener('click', () => this.closeBar())
         button.addEventListener('keydown', event => {
           if ([13, 32].indexOf(event.keyCode) > -1) {
             event.preventDefault()
-            this.close()
+            this.closeBar()
           }
         })
       })
@@ -89,18 +92,33 @@ class OffCanvas {
       if (this.options.overlay && !this.overlay) {
         this.overlay = document.createElement('div')
         this.overlay.classList.add('offcanvas-overlay')
-        this.overlay.addEventListener('click', () => this.close())
+        this.overlay.addEventListener('click', () => this.closeBar())
         this.overlay.addEventListener('keydown', event => {
           if ([13, 32].indexOf(event.keyCode) > -1) {
             event.preventDefault()
-            this.close()
+            this.closeBar()
           }
         })
 
         this.contentWrap.appendChild(this.overlay)
       }
 
-      console.log(this)
+      // Enable closing the bar with esc
+      window.addEventListener('keydown', event => {
+        if (event.keyCode === 27) {
+          event.preventDefault()
+          this.closeBar()
+        }
+      })
+
+      // Adjust content wrapper push when window is resized
+      window.addEventListener('resize', () => {
+        clearTimeout(this.resizeTimeout)
+        console.log(this.resizeTimeout)
+        this.resizeTimeout = setTimeout(() => {
+          this.setContentWrapPush()
+        }, 200)
+      })
     } catch (error) {
       this.logError(error)
     }
@@ -135,7 +153,7 @@ class OffCanvas {
     return this
   }
 
-  open (position = null) {
+  openBar (position = null, button = null) {
     try {
       if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: left, right, top, bottom'
 
@@ -145,37 +163,20 @@ class OffCanvas {
       if (bar.element.classList.contains('offcanvas-bar--open')) return
 
       // Close other bars
-      this.close()
+      this.closeBar()
 
       // Open bar
-      bar.element.classList.add('offcanvas-bar--open')
       this.debug('Opening bar \'' + position + '\'')
+      bar.open()
 
-      if (bar.options.mode && bar.options.mode == 'push') {
-        let transform = ''
+      // Mark this bar as open
+      this.currentOpenBar = bar
 
-        switch (bar.position) {
-          case 'left':
-            this.contentWrap.style.transform = 'translateX(' + bar.element.offsetWidth + 'px)'
-            this.mainWrap.style.overflowX = 'hidden'
-            break
+      // Push content wrap if needed
+      this.setContentWrapPush()
 
-          case 'right':
-            this.contentWrap.style.transform = 'translateX(-' + bar.element.offsetWidth + 'px)'
-            this.mainWrap.style.overflowX = 'hidden'
-            break
-
-          case 'top':
-            this.contentWrap.style.transform = 'translateY(' + bar.element.offsetHeight + 'px)'
-            this.mainWrap.style.overflowY = 'hidden'
-            break
-
-          case 'bottom':
-            this.contentWrap.style.transform = 'translateY(-' + bar.element.offsetHeight + 'px)'
-            this.mainWrap.style.overflowY = 'hidden'
-            break
-        }
-      }
+      // Remember the button which was used to open off-canvas
+      this.previousOpenButton = button
 
       // Show overlay
       this.showOverlay()
@@ -186,18 +187,19 @@ class OffCanvas {
     return this
   }
 
-  close () {
+  closeBar () {
     try {
-      Object.keys(this.bars).forEach(position => {
-        const bar = this.bars[position]
+      if (!this.currentOpenBar) return
 
-        if (!bar) throw 'Bar with position \'' + position + '\' is not defined'
-        if (!bar.element.classList.contains('offcanvas-bar--open')) return
+      this.currentOpenBar.close()
 
-        bar.element.classList.remove('offcanvas-bar--open')
-        this.debug('Closing bar \'' + position + '\'')
-      })
+      // Focus open button which was used to open the bar
+      if (this.previousOpenButton) {
+        this.previousOpenButton.focus()
+        this.previousOpenButton = null
+      }
 
+      this.currentOpenBar = null
       this.contentWrap.style.transform = null
       this.mainWrap.style.overflowX = null
       this.mainWrap.style.overflowY = null
@@ -208,6 +210,35 @@ class OffCanvas {
     }
 
     return this
+  }
+
+  setContentWrapPush () {
+    if (!this.currentOpenBar) return
+    if (!this.currentOpenBar.options.mode) return
+
+    if (['push', 'slide'].includes(this.currentOpenBar.options.mode)) {
+      switch (this.currentOpenBar.position) {
+        case 'left':
+          this.contentWrap.style.transform = 'translateX(' + this.currentOpenBar.element.offsetWidth + 'px)'
+          this.mainWrap.style.overflowX = 'hidden'
+          break
+
+        case 'right':
+          this.contentWrap.style.transform = 'translateX(-' + this.currentOpenBar.element.offsetWidth + 'px)'
+          this.mainWrap.style.overflowX = 'hidden'
+          break
+
+        case 'top':
+          this.contentWrap.style.transform = 'translateY(' + this.currentOpenBar.element.offsetHeight + 'px)'
+          this.mainWrap.style.overflowY = 'hidden'
+          break
+
+        case 'bottom':
+          this.contentWrap.style.transform = 'translateY(-' + this.currentOpenBar.element.offsetHeight + 'px)'
+          this.mainWrap.style.overflowY = 'hidden'
+          break
+      }
+    }
   }
 
   showOverlay () {
@@ -227,104 +258,6 @@ class OffCanvas {
 
     this.overlay.classList.remove('offcanvas-overlay--visible')
   }
-
-  // init () {
-  // 	try {
-  // 		// Validate required elements
-  // 		if (!this.body) throw this.error('Body element was not found with selector: ' + this.options.bodySelector)
-  // 		if (!this.bar) throw this.error('Bar element was not found with selector: ' + this.options.barSelector)
-  // 		if (!this.page) throw this.error('Page element was not found with selector: ' + this.options.pageSelector)
-
-  // 		// Get all focusable elements inside off-canvas bar
-  // 		// We need to prevent focus from these elements when bar is closed
-  // 		this.barFocusableElements = this.bar.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
-
-  // 		// Initially close bar
-  // 		this.closeBar()
-
-  // 		// Add event listeners to toggle buttons
-  // 		this.openButtons.forEach(button => {
-  // 			button.addEventListener('click', () => this.openBar(button))
-  // 			button.addEventListener('keydown', event => {
-  // 				if ([13, 32].indexOf(event.keyCode) > -1) {
-  // 					event.preventDefault()
-  // 					this.openBar(button)
-  // 				}
-  // 			})
-  // 		})
-
-  // 		this.closeButtons.forEach(button => {
-  // 			button.addEventListener('click', () => this.closeBar())
-  // 			button.addEventListener('keydown', event => {
-  // 				if ([13, 32].indexOf(event.keyCode) > -1) {
-  // 					event.preventDefault()
-  // 					this.closeBar()
-  // 				}
-  // 			})
-  // 		})
-
-  // 		this.toggleButtons.forEach(button => {
-  // 			button.addEventListener('click', () => this.toggleBar(button))
-  // 			button.addEventListener('keydown', event => {
-  // 				if ([13, 32].indexOf(event.keyCode) > -1) {
-  // 					event.preventDefault()
-  // 					this.toggleBar(button)
-  // 				}
-  // 			})
-  // 		})
-  // 	} catch (e) {
-  // 		console.error(e)
-  // 	}
-  // }
-
-  // openBar (button = null) {
-  // 	if (this.isOpen) return
-
-  // 	this.body.classList.add('offCanvas-open')
-
-  // 	// Enable focus on all bar child elements
-  // 	this.barFocusableElements.forEach(item => {
-  // 		item.removeAttribute('tabindex')
-  // 	})
-
-  // 	// Focus on bar
-  // 	this.bar.removeAttribute('aria-hidden')
-  // 	this.bar.setAttribute('tabindex', '0')
-  // 	this.bar.focus()
-
-  // 	// Remember the button which was used to open off-canvas
-  // 	this.previousOpenButton = button
-
-  // 	this.isOpen = true
-  // }
-
-  // closeBar () {
-  // 	this.body.classList.remove('offCanvas-open')
-
-  // 	// Prevent focus on all bar child elements
-  // 	this.barFocusableElements.forEach(item => {
-  // 		item.setAttribute('tabindex', '-1')
-  // 	})
-
-  // 	// Prevent focus on bar
-  // 	this.bar.setAttribute('tabindex', '-1')
-  // 	this.bar.setAttribute('aria-hidden', 'true')
-
-  // 	// Focus open button which was used to open off-canvas
-  // 	if (this.previousOpenButton) this.previousOpenButton.focus()
-
-  // 	this.previousOpenButton = null
-  // 	this.isOpen = false
-  // }
-
-  // toggleBar (button = null) {
-  // 	if (this.isOpen) {
-  // 		this.closeBar()
-  // 	} else {
-  // 		this.openBar(button)
-  // 	}
-  // }
-
 }
 
 class OffCanvasBar {
@@ -362,7 +295,43 @@ class OffCanvasBar {
     this.element.classList.add('offcanvas-bar')
     this.element.setAttribute('data-offcanvas-bar-position', this.position)
 
+    // Disable focus
+    this.disableFocus()
+
     return this
+  }
+
+  disableFocus () {
+    // Prevent focus on bar child elements
+    this.element.querySelectorAll(this.options.focusableElementSelector).forEach(item => {
+      item.setAttribute('tabindex', '-1')
+    })
+
+    // Prevent focus on bar
+    this.element.setAttribute('tabindex', '-1')
+    this.element.setAttribute('aria-hidden', 'true')
+  }
+
+  enableFocus () {
+    // Enable focus on bar child elements
+    this.element.querySelectorAll(this.options.focusableElementSelector).forEach(item => {
+      item.removeAttribute('tabindex')
+    })
+
+    // Focus on bar
+    this.element.removeAttribute('aria-hidden')
+    this.element.setAttribute('tabindex', '0')
+    this.element.focus()
+  }
+
+  open () {
+    this.enableFocus()
+    this.element.classList.add('offcanvas-bar--open')
+  }
+
+  close () {
+    this.disableFocus()
+    this.element.classList.remove('offcanvas-bar--open')
   }
 
 }
