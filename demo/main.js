@@ -2,6 +2,7 @@
 
 var offCanvas = new OffCanvas({
   debug: true,
+  overlay: true,
 }).addBar('left', {
   mode: 'float',
 }).addBar('right', {

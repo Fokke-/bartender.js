@@ -4,8 +4,8 @@ class OffCanvas {
 
   constructor (options) {
     this.options = Object.assign({
-      debug: false,
-      overlay: true,
+      debug: false, // Debug mode
+      overlay: true, // Show shading overlay over content wrapper when bar is open?
       mainWrapSelector: '.offcanvas-main',
       contentWrapSelector: '.offcanvas-content',
       openButtonSelector: '.offcanvas-open',
@@ -211,8 +211,7 @@ class OffCanvas {
 
       this.currentOpenBar = null
       this.contentWrap.style.transform = null
-      this.mainWrap.style.overflowX = null
-      this.mainWrap.style.overflowY = null
+      this.mainWrap.style.overflow = null
 
       this.hideOverlay()
     } catch (error) {
@@ -230,22 +229,22 @@ class OffCanvas {
       switch (this.currentOpenBar.position) {
         case 'left':
           this.contentWrap.style.transform = 'translateX(' + this.currentOpenBar.element.offsetWidth + 'px)'
-          this.mainWrap.style.overflowX = 'hidden'
+          this.mainWrap.style.overflow = 'hidden'
           break
 
         case 'right':
           this.contentWrap.style.transform = 'translateX(-' + this.currentOpenBar.element.offsetWidth + 'px)'
-          this.mainWrap.style.overflowX = 'hidden'
+          this.mainWrap.style.overflow = 'hidden'
           break
 
         case 'top':
           this.contentWrap.style.transform = 'translateY(' + this.currentOpenBar.element.offsetHeight + 'px)'
-          this.mainWrap.style.overflowY = 'hidden'
+          this.mainWrap.style.overflow = 'hidden'
           break
 
         case 'bottom':
           this.contentWrap.style.transform = 'translateY(-' + this.currentOpenBar.element.offsetHeight + 'px)'
-          this.mainWrap.style.overflowY = 'hidden'
+          this.mainWrap.style.overflow = 'hidden'
           break
       }
     }
