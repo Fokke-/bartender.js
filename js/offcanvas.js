@@ -71,22 +71,22 @@ class OffCanvas {
           return
         }
 
-        button.addEventListener('click', () => this.openBar(position, button))
+        button.addEventListener('click', () => this.open(position, button))
         button.addEventListener('keydown', event => {
           if ([13, 32].indexOf(event.keyCode) >= 0) {
             event.preventDefault()
-            this.openBar(position, button)
+            this.open(position, button)
           }
         })
       })
 
       // Add event listeners for close buttons
       this.closeButtons.forEach(button => {
-        button.addEventListener('click', () => this.closeBar())
+        button.addEventListener('click', () => this.close())
         button.addEventListener('keydown', event => {
           if ([13, 32].indexOf(event.keyCode) >= 0) {
             event.preventDefault()
-            this.closeBar()
+            this.close()
           }
         })
       })
@@ -95,11 +95,11 @@ class OffCanvas {
       if (this.options.overlay && !this.overlay) {
         this.overlay = document.createElement('div')
         this.overlay.classList.add('offcanvas-overlay')
-        this.overlay.addEventListener('click', () => this.closeBar())
+        this.overlay.addEventListener('click', () => this.close())
         this.overlay.addEventListener('keydown', event => {
           if ([13, 32].indexOf(event.keyCode) >= 0) {
             event.preventDefault()
-            this.closeBar()
+            this.close()
           }
         })
 
@@ -111,7 +111,7 @@ class OffCanvas {
         window.addEventListener('keydown', event => {
           if (event.keyCode === 27) {
             event.preventDefault()
-            this.closeBar()
+            this.close()
           }
         })
       }
@@ -163,7 +163,7 @@ class OffCanvas {
     return this
   }
 
-  openBar (position = null, button = null) {
+  open (position = null, button = null) {
     try {
       if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: left, right, top, bottom'
 
@@ -173,7 +173,7 @@ class OffCanvas {
       if (bar.element.classList.contains('offcanvas-bar--open')) return
 
       // Close other bars
-      this.closeBar()
+      this.close()
 
       // Open bar
       this.debug('Opening bar \'' + position + '\'')
@@ -197,7 +197,7 @@ class OffCanvas {
     return this
   }
 
-  closeBar () {
+  close () {
     try {
       if (!this.currentOpenBar) return
 
