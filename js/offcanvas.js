@@ -325,10 +325,6 @@ class OffCanvasBar {
     this.focusableElementSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
   }
 
-  isValidMode(mode = '') {
-    return ['float', 'push', 'slide'].indexOf(mode) >= 0
-  }
-
   init () {
     // Validate required properties
     if (!this.position) throw 'Missing position for bar'
