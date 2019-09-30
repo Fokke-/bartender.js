@@ -162,7 +162,6 @@ class OffCanvas {
     try {
       // Get bar configuration
       var position = bar.getAttribute('data-offcanvas-bar')
-      var mode = bar.getAttribute('data-offcanvas-bar-mode')
 
       // Validate required elements
       if (!this.mainWrap || !this.contentWrap) return this
@@ -176,14 +175,12 @@ class OffCanvas {
       // Create new bar object
       const newBar = new OffCanvasBar()
       newBar.element = bar
-      newBar.position = position
-      if (mode) newBar.mode = mode
       newBar.init()
 
       // Insert new bar
       this.bars[position] = newBar
 
-      this.debug('Added bar \'' + newBar.position + '\' with mode \'' + newBar.mode + '\'')
+      this.debug('Added bar \'' + position + '\' with mode \'' + newBar.mode + '\'')
     } catch (error) {
       this.logError(error)
     }
@@ -324,11 +321,17 @@ class OffCanvasBar {
   }
 
   init () {
-    // Validate required properties
-    if (!this.position) throw 'Missing position for bar'
-
     // Check that defined bar element exists
     if (!this.element) throw 'Bar element for \'' + this.position + '\' was not found!'
+
+    // Set position
+    this.position = this.element.getAttribute('data-offcanvas-bar')
+    if (!this.position) throw 'Missing position for bar'
+
+    // Set mode
+    if (this.element.getAttribute('data-offcanvas-bar-mode')) {
+      this.mode = this.element.getAttribute('data-offcanvas-bar-mode')
+    }
 
     // Validate mode
     if (['float', 'push', 'slide'].indexOf(this.mode) < 0) throw 'Invalid mode \'' + this.mode + '\' for bar \'' + this.position + '\'. Use one of the following values: float, push, slide.'
