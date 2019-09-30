@@ -3,13 +3,13 @@
 class OffCanvas {
 
   constructor (options) {
+    // Apply user configuration
     this.options = Object.assign({
       debug: false, // Debug mode
       overlay: true, // Show shading overlay over content wrapper when bar is open?
       closeOnEsc: true, // Close open bar with escape key?
       mainWrapSelector: '.offcanvas-main',
       contentWrapSelector: '.offcanvas-content',
-      openButtonSelector: '.offcanvas-open',
       closeButtonSelector: '.offcanvas-close',
       toggleButtonSelector: '.offcanvas-toggle',
     }, options)
@@ -55,7 +55,7 @@ class OffCanvas {
       if (!this.contentWrap) throw 'Content wrap element was not found with selector: ' + this.options.contentWrapSelector
 
       // Find all buttons
-      this.openButtons = this.mainWrap.querySelectorAll(this.options.openButtonSelector)
+      this.openButtons = this.mainWrap.querySelectorAll('[data-offcanvas-openbar]')
       this.closeButtons = this.mainWrap.querySelectorAll(this.options.closeButtonSelector)
       this.toggleButtons = this.mainWrap.querySelectorAll(this.options.toggleButtonSelector)
 
@@ -65,7 +65,7 @@ class OffCanvas {
 
       // Add event listeners for open buttons
       this.openButtons.forEach(button => {
-        let position = button.getAttribute('data-offcanvas-bar') || 'left'
+        let position = button.getAttribute('data-offcanvas-openbar') || 'left'
 
         if (!this.isValidPosition(position)) {
           this.logError('Open button has invalid bar position \'' + position + '\' defined. Use one of the following values: left, right, top, bottom')
