@@ -10,7 +10,6 @@ class OffCanvas {
       closeOnEsc: true, // Close open bar with escape key?
       mainWrapSelector: '.offcanvas-main',
       contentWrapSelector: '.offcanvas-content',
-      toggleButtonSelector: '.offcanvas-toggle',
     }, options)
 
     this.overlay = null
@@ -56,7 +55,7 @@ class OffCanvas {
       // Find all buttons
       this.openButtons = this.mainWrap.querySelectorAll('[data-offcanvas-open]')
       this.closeButtons = this.mainWrap.querySelectorAll('[data-offcanvas-close]')
-      this.toggleButtons = this.mainWrap.querySelectorAll(this.options.toggleButtonSelector)
+      this.toggleButtons = this.mainWrap.querySelectorAll('[data-offcanvas-toggle]')
 
       // Add classes
       this.mainWrap.classList.add('offcanvas-main')
@@ -76,6 +75,24 @@ class OffCanvas {
           if ([13, 32].indexOf(event.keyCode) >= 0) {
             event.preventDefault()
             this.open(position, button)
+          }
+        })
+      })
+
+      // Add event listeners for toggle buttons
+      this.toggleButtons.forEach(button => {
+        let position = button.getAttribute('data-offcanvas-toggle')
+
+        if (!this.isValidPosition(position)) {
+          this.logError('Toggle button has invalid bar position \'' + position + '\' defined. Use one of the following values: left, right, top, bottom')
+          return
+        }
+
+        button.addEventListener('click', () => this.toggle(position, button))
+        button.addEventListener('keydown', event => {
+          if ([13, 32].indexOf(event.keyCode) >= 0) {
+            event.preventDefault()
+            this.toggle(position, button)
           }
         })
       })
@@ -190,6 +207,22 @@ class OffCanvas {
 
       // Show overlay
       this.showOverlay()
+    } catch (error) {
+      this.logError(error)
+    }
+
+    return this
+  }
+
+  toggle (position = null, button = null) {
+    try {
+      if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: left, right, top, bottom'
+
+      if (this.currentOpenBar && this.currentOpenBar.position) {
+        this.close()
+      } else {
+        this.open(position, button)
+      }
     } catch (error) {
       this.logError(error)
     }
