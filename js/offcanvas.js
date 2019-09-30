@@ -210,8 +210,8 @@ class OffCanvas {
       }
 
       this.currentOpenBar = null
-      this.contentWrap.style.transform = ''
-      this.mainWrap.style.overflow = ''
+      this.contentWrap.style.removeProperty('transform')
+      this.mainWrap.style.removeProperty('overflow')
 
       this.hideOverlay()
     } catch (error) {
