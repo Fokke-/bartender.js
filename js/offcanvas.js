@@ -6,6 +6,7 @@ class OffCanvas {
     this.options = Object.assign({
       debug: false, // Debug mode
       overlay: true, // Show shading overlay over content wrapper when bar is open?
+      closeOnEsc: true, // Close open bar with escape key?
       mainWrapSelector: '.offcanvas-main',
       contentWrapSelector: '.offcanvas-content',
       openButtonSelector: '.offcanvas-open',
@@ -106,13 +107,15 @@ class OffCanvas {
         this.contentWrap.appendChild(this.overlay)
       }
 
-      // Enable closing the bar with esc
-      window.addEventListener('keydown', event => {
-        if (event.keyCode === 27) {
-          event.preventDefault()
-          this.closeBar()
-        }
-      })
+      // Enable closing the bar with escape key
+      if (this.options.closeOnEsc) {
+        window.addEventListener('keydown', event => {
+          if (event.keyCode === 27) {
+            event.preventDefault()
+            this.closeBar()
+          }
+        })
+      }
 
       // Adjust content wrapper transform when window is resized
       window.addEventListener('resize', () => {
