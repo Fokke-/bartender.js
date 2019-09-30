@@ -16,6 +16,7 @@ html {
 
 .offcanvas-content {
   z-index: 1;
+  position: relative;
   width: 100%;
   min-height: 100%;
   transition: transform 500ms ease;
@@ -33,7 +34,7 @@ html {
   &[data-offcanvas-bar-position="left"],
   &[data-offcanvas-bar-position="right"] {
     top: 0;
-    width: 30%;
+    width: 50%;
     height: 100%;
 
     &.offcanvas-bar--open {
