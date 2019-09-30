@@ -218,9 +218,10 @@ class OffCanvas {
     try {
       if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: left, right, top, bottom'
 
-      if (this.currentOpenBar && this.currentOpenBar.position) {
+      if (this.currentOpenBar && this.currentOpenBar.position == position) {
         this.close()
       } else {
+        this.close()
         this.open(position, button)
       }
     } catch (error) {
