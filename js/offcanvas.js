@@ -16,12 +16,13 @@ class OffCanvas {
     this.currentOpenBar = null
     this.previousOpenButton = null
     this.resizeTimeout = null
-    this.bars = {
-      left: null,
-      right: null,
-      top: null,
-      bottom: null,
-    }
+    this.bars = []
+    // this.bars = {
+    //   left: null,
+    //   right: null,
+    //   top: null,
+    //   bottom: null,
+    // }
 
     this.init()
   }
@@ -52,7 +53,12 @@ class OffCanvas {
       this.contentWrap = this.mainWrap.querySelector(this.options.contentWrapSelector)
       if (!this.contentWrap) throw 'Content wrap element was not found with selector: ' + this.options.contentWrapSelector
 
-      // Find all buttons
+      // Find bars
+      this.mainWrap.querySelectorAll('[data-offcanvas-bar]').forEach(bar => {
+        this.addBar(bar)
+      })
+
+      // Find buttons
       this.openButtons = this.mainWrap.querySelectorAll('[data-offcanvas-open]')
       this.closeButtons = this.mainWrap.querySelectorAll('[data-offcanvas-close]')
       this.toggleButtons = this.mainWrap.querySelectorAll('[data-offcanvas-toggle]')
@@ -152,8 +158,12 @@ class OffCanvas {
     return ['left', 'right', 'top', 'bottom'].indexOf(position) >= 0
   }
 
-  addBar (position = 'left', options = {}) {
+  addBar (bar) {
     try {
+      // Get bar configuration
+      var position = bar.getAttribute('data-offcanvas-bar')
+      var mode = bar.getAttribute('data-offcanvas-bar-mode')
+
       // Validate required elements
       if (!this.mainWrap || !this.contentWrap) return this
 
@@ -161,18 +171,20 @@ class OffCanvas {
       if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: left, right, top, bottom'
 
       // Check that bar is not already defined
-      if (this.bars[position]) throw 'Bar with position \'' + position + '\' is already defined'
+      if (this.bars[position]) throw 'Duplicate bar with position \'' + position + '\''
 
       // Create new bar object
-      const newBar = new OffCanvasBar(options)
+      const newBar = new OffCanvasBar()
+      newBar.element = bar
       newBar.parentElement = this.mainWrap
       newBar.position = position
+      if (mode) newBar.mode = mode
       newBar.init()
 
       // Insert new bar
       this.bars[position] = newBar
 
-      this.debug('Added bar with position \'' + position + '\'')
+      this.debug('Added bar \'' + newBar.position + '\' with mode \'' + newBar.mode + '\'')
     } catch (error) {
       this.logError(error)
     }
@@ -259,11 +271,11 @@ class OffCanvas {
 
   setContentWrapPush () {
     if (!this.currentOpenBar) return
-    if (!this.currentOpenBar.options.mode) return
+    if (!this.currentOpenBar.mode) return
 
     this.mainWrap.style.overflow = 'hidden'
 
-    if (['push', 'slide'].indexOf(this.currentOpenBar.options.mode) >= 0) {
+    if (['push', 'slide'].indexOf(this.currentOpenBar.mode) >= 0) {
       switch (this.currentOpenBar.position) {
         case 'left':
           this.contentWrap.style.transform = 'translateX(' + this.currentOpenBar.element.offsetWidth + 'px)'
@@ -305,16 +317,12 @@ class OffCanvas {
 
 class OffCanvasBar {
 
-  constructor(options) {
-    this.options = Object.assign({
-      selector: '',
-      focusableElementSelector: 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-      mode: 'float',
-    }, options)
-
+  constructor() {
     this.parentElement = null
     this.element = null
     this.position = null
+    this.mode = 'float'
+    this.focusableElementSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
   }
 
   isValidMode(mode = '') {
@@ -326,19 +334,11 @@ class OffCanvasBar {
     if (!this.position) throw 'Missing position for bar'
     if (!this.parentElement) throw 'Missing parent element for bar \'' + this.position + '\''
 
-    // If selector is not specified, use default
-    if (!this.options.selector) this.options.selector = '.offcanvas-bar--' + this.position
-
     // Check that defined bar element exists
-    this.element = this.parentElement.querySelector(this.options.selector)
-    if (!this.element) throw 'Bar element was not found with selector: ' + this.options.selector
+    if (!this.element) throw 'Bar element for \'' + this.position + '\' was not found!'
 
     // Validate mode
-    if (!this.isValidMode(this.options.mode)) throw 'Invalid mode \'' + this.options.mode + '\' for bar \'' + this.position + '\'. Use one of the following values: float, push, slide.'
-
-    // Insert attributes
-    this.element.classList.add('offcanvas-bar')
-    this.element.setAttribute('data-offcanvas-bar-position', this.position)
+    if (['float', 'push', 'slide'].indexOf(this.mode) < 0) throw 'Invalid mode \'' + this.mode + '\' for bar \'' + this.position + '\'. Use one of the following values: float, push, slide.'
 
     // Disable focus
     this.disableFocus()
@@ -348,18 +348,20 @@ class OffCanvasBar {
 
   disableFocus () {
     // Prevent focus on bar child elements
-    this.element.querySelectorAll(this.options.focusableElementSelector).forEach(item => {
+    this.element.querySelectorAll(this.focusableElementSelector).forEach(item => {
       item.setAttribute('tabindex', '-1')
     })
 
     // Prevent focus on bar
     this.element.setAttribute('tabindex', '-1')
     this.element.setAttribute('aria-hidden', 'true')
+
+    return this
   }
 
   enableFocus () {
     // Enable focus on bar child elements
-    this.element.querySelectorAll(this.options.focusableElementSelector).forEach(item => {
+    this.element.querySelectorAll(this.focusableElementSelector).forEach(item => {
       item.removeAttribute('tabindex')
     })
 
@@ -367,16 +369,22 @@ class OffCanvasBar {
     this.element.removeAttribute('aria-hidden')
     this.element.setAttribute('tabindex', '0')
     this.element.focus()
+
+    return this
   }
 
   open () {
     this.enableFocus()
     this.element.classList.add('offcanvas-bar--open')
+
+    return this
   }
 
   close () {
     this.disableFocus()
     this.element.classList.remove('offcanvas-bar--open')
+
+    return this
   }
 
 }

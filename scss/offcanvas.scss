@@ -4,7 +4,7 @@ html {
 
 .offcanvas-main,
 .offcanvas-content,
-.offcanvas-bar {
+[data-offcanvas-bar] {
   box-sizing: border-box;
 }
 
@@ -22,7 +22,7 @@ html {
   transition: transform 500ms ease;
 }
 
-.offcanvas-bar {
+[data-offcanvas-bar] {
   z-index: 2;
   position: fixed;
   background: #000;
@@ -30,8 +30,8 @@ html {
   transition: transform 500ms ease;
   overflow: auto;
 
-  &[data-offcanvas-bar-position="left"],
-  &[data-offcanvas-bar-position="right"] {
+  &[data-offcanvas-bar="left"],
+  &[data-offcanvas-bar="right"] {
     top: 0;
     width: 50%;
     height: 100%;
@@ -41,18 +41,18 @@ html {
     }
   }
 
-  &[data-offcanvas-bar-position="left"] {
+  &[data-offcanvas-bar="left"] {
     left: 0;
     transform: translateX(-100%);
   }
 
-  &[data-offcanvas-bar-position="right"] {
+  &[data-offcanvas-bar="right"] {
     right: 0;
     transform: translateX(100%);
   }
 
-  &[data-offcanvas-bar-position="top"],
-  &[data-offcanvas-bar-position="bottom"] {
+  &[data-offcanvas-bar="top"],
+  &[data-offcanvas-bar="bottom"] {
     position: fixed;
     left: 0;
     width: 100%;
@@ -63,12 +63,12 @@ html {
     }
   }
 
-  &[data-offcanvas-bar-position="top"] {
+  &[data-offcanvas-bar="top"] {
     top: 0;
     transform: translateY(-100%);
   }
 
-  &[data-offcanvas-bar-position="bottom"] {
+  &[data-offcanvas-bar="bottom"] {
     bottom: 0;
     transform: translateY(100%);
   }

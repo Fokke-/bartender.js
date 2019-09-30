@@ -8,7 +8,7 @@ h2:first-child {
 }
 
 .offcanvas-content,
-.offcanvas-bar {
+[data-offcanvas-bar] {
   padding: 5vw;
 }
 
