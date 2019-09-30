@@ -130,7 +130,7 @@ class OffCanvas {
   }
 
   isValidPosition (position = null) {
-    return ['left', 'right', 'top', 'bottom'].includes(position)
+    return ['left', 'right', 'top', 'bottom'].indexOf(position) >= 0
   }
 
   addBar (position = 'left', options = {}) {
@@ -210,8 +210,8 @@ class OffCanvas {
       }
 
       this.currentOpenBar = null
-      this.contentWrap.style.transform = null
-      this.mainWrap.style.overflow = null
+      this.contentWrap.style.transform = ''
+      this.mainWrap.style.overflow = ''
 
       this.hideOverlay()
     } catch (error) {
@@ -227,7 +227,7 @@ class OffCanvas {
 
     this.mainWrap.style.overflow = 'hidden'
 
-    if (['push', 'slide'].includes(this.currentOpenBar.options.mode)) {
+    if (['push', 'slide'].indexOf(this.currentOpenBar.options.mode) >= 0) {
       switch (this.currentOpenBar.position) {
         case 'left':
           this.contentWrap.style.transform = 'translateX(' + this.currentOpenBar.element.offsetWidth + 'px)'
@@ -282,7 +282,7 @@ class OffCanvasBar {
   }
 
   isValidMode(mode = '') {
-    return ['float', 'push', 'slide'].includes(mode)
+    return ['float', 'push', 'slide'].indexOf(mode) >= 0
   }
 
   init () {
