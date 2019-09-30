@@ -74,7 +74,7 @@ class OffCanvas {
 
         button.addEventListener('click', () => this.openBar(position, button))
         button.addEventListener('keydown', event => {
-          if ([13, 32].indexOf(event.keyCode) > -1) {
+          if ([13, 32].indexOf(event.keyCode) >= 0) {
             event.preventDefault()
             this.openBar(position, button)
           }
@@ -85,7 +85,7 @@ class OffCanvas {
       this.closeButtons.forEach(button => {
         button.addEventListener('click', () => this.closeBar())
         button.addEventListener('keydown', event => {
-          if ([13, 32].indexOf(event.keyCode) > -1) {
+          if ([13, 32].indexOf(event.keyCode) >= 0) {
             event.preventDefault()
             this.closeBar()
           }
@@ -98,7 +98,7 @@ class OffCanvas {
         this.overlay.classList.add('offcanvas-overlay')
         this.overlay.addEventListener('click', () => this.closeBar())
         this.overlay.addEventListener('keydown', event => {
-          if ([13, 32].indexOf(event.keyCode) > -1) {
+          if ([13, 32].indexOf(event.keyCode) >= 0) {
             event.preventDefault()
             this.closeBar()
           }
