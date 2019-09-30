@@ -225,26 +225,24 @@ class OffCanvas {
     if (!this.currentOpenBar) return
     if (!this.currentOpenBar.options.mode) return
 
+    this.mainWrap.style.overflow = 'hidden'
+
     if (['push', 'slide'].includes(this.currentOpenBar.options.mode)) {
       switch (this.currentOpenBar.position) {
         case 'left':
           this.contentWrap.style.transform = 'translateX(' + this.currentOpenBar.element.offsetWidth + 'px)'
-          this.mainWrap.style.overflow = 'hidden'
           break
 
         case 'right':
           this.contentWrap.style.transform = 'translateX(-' + this.currentOpenBar.element.offsetWidth + 'px)'
-          this.mainWrap.style.overflow = 'hidden'
           break
 
         case 'top':
           this.contentWrap.style.transform = 'translateY(' + this.currentOpenBar.element.offsetHeight + 'px)'
-          this.mainWrap.style.overflow = 'hidden'
           break
 
         case 'bottom':
           this.contentWrap.style.transform = 'translateY(-' + this.currentOpenBar.element.offsetHeight + 'px)'
-          this.mainWrap.style.overflow = 'hidden'
           break
       }
     }
