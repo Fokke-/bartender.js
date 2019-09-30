@@ -176,7 +176,6 @@ class OffCanvas {
       // Create new bar object
       const newBar = new OffCanvasBar()
       newBar.element = bar
-      newBar.parentElement = this.mainWrap
       newBar.position = position
       if (mode) newBar.mode = mode
       newBar.init()
@@ -318,7 +317,6 @@ class OffCanvas {
 class OffCanvasBar {
 
   constructor() {
-    this.parentElement = null
     this.element = null
     this.position = null
     this.mode = 'float'
@@ -328,7 +326,6 @@ class OffCanvasBar {
   init () {
     // Validate required properties
     if (!this.position) throw 'Missing position for bar'
-    if (!this.parentElement) throw 'Missing parent element for bar \'' + this.position + '\''
 
     // Check that defined bar element exists
     if (!this.element) throw 'Bar element for \'' + this.position + '\' was not found!'
