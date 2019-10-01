@@ -33,8 +33,8 @@ class OffCanvas {
     // Window resize timeout
     this.resizeTimeout = null
 
-    // Array for bars
-    this.bars = []
+    // Object for storing the bars
+    this.bars = {}
 
     // Run initializer
     this.init()
