@@ -36,6 +36,15 @@ class OffCanvas {
     // Object for storing the bars
     this.bars = {}
 
+    // Arrays for storing buttons
+    this.openButtons = []
+    this.closeButtons = []
+    this.toggleButtons = []
+
+    // Array for storing pushable elements
+    // These elements will be moved when bar with "push" mode is being opened.
+    this.pushElements = []
+
     // Run initializer
     this.init()
   }
@@ -130,6 +139,11 @@ class OffCanvas {
           }
         })
       })
+
+      // Find pushable elements
+      this.pushElements = this.mainWrap.querySelectorAll('[data-offcanvas-push]')
+
+      if (this.pushElements.length) this.log('Registered ' + this.pushElements.length + ' pushable elements.')
 
       // Add overlay
       if (this.options.overlay && !this.overlay) {
@@ -277,6 +291,11 @@ class OffCanvas {
       this.contentWrap.style.removeProperty('transform')
       this.mainWrap.style.removeProperty('overflow')
 
+      // Remove transforms from pushable elements
+      this.pushElements.forEach(el => {
+        el.style.removeProperty('transform')
+      })
+
       // Hide overlay
       this.hideOverlay()
     } catch (error) {
@@ -290,25 +309,38 @@ class OffCanvas {
     if (!this.currentOpenBar) return
     if (!this.currentOpenBar.mode) return
 
-    this.mainWrap.style.overflow = 'hidden'
-
     if (['push', 'slide'].indexOf(this.currentOpenBar.mode) >= 0) {
+      var transform = null
+
       switch (this.currentOpenBar.position) {
         case 'left':
-          this.contentWrap.style.transform = 'translateX(' + this.currentOpenBar.element.offsetWidth + 'px)'
+          transform = 'translateX(' + this.currentOpenBar.element.offsetWidth + 'px)'
           break
 
         case 'right':
-          this.contentWrap.style.transform = 'translateX(-' + this.currentOpenBar.element.offsetWidth + 'px)'
+          transform = 'translateX(-' + this.currentOpenBar.element.offsetWidth + 'px)'
           break
 
         case 'top':
-          this.contentWrap.style.transform = 'translateY(' + this.currentOpenBar.element.offsetHeight + 'px)'
+          transform = 'translateY(' + this.currentOpenBar.element.offsetHeight + 'px)'
           break
 
         case 'bottom':
-          this.contentWrap.style.transform = 'translateY(-' + this.currentOpenBar.element.offsetHeight + 'px)'
+          transform = 'translateY(-' + this.currentOpenBar.element.offsetHeight + 'px)'
           break
+      }
+
+      if (transform) {
+        // Hide overflow of main wrapper
+        this.mainWrap.style.overflow = 'hidden'
+
+        // Transform content wrapper
+        this.contentWrap.style.transform = transform
+
+        // Transform other pushable elements
+        this.pushElements.forEach(el => {
+          el.style.transform = transform
+        })
       }
     }
   }

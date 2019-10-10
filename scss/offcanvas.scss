@@ -23,7 +23,7 @@ html {
 }
 
 [data-offcanvas-bar] {
-  z-index: 2;
+  z-index: 10;
   position: fixed;
   background: #000;
   color: #fff;
@@ -72,6 +72,10 @@ html {
     bottom: 0;
     transform: translateY(100%);
   }
+}
+
+[data-offcanvas-push] {
+  transition: transform 500ms ease;
 }
 
 .offcanvas-overlay {
