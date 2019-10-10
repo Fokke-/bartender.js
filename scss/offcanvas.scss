@@ -75,6 +75,7 @@ html {
 }
 
 .offcanvas-overlay {
+  z-index: 9999;
   visibility: hidden;
   position: absolute;
   left: 0;
