@@ -19,6 +19,10 @@ class OffCanvas {
 
       // Selector to find content wrapper
       contentWrapSelector: '.offcanvas-content',
+
+      // Classes
+      readyClass: 'offcanvas-ready',
+      openClass: 'offcanvas-open',
     }, options)
 
     // Overlay element
@@ -178,6 +182,9 @@ class OffCanvas {
           this.setPush()
         }, 200)
       })
+
+      // Add class
+      this.mainWrap.classList.add(this.options.readyClass)
     } catch (error) {
       this.logError(error)
     }
@@ -242,6 +249,9 @@ class OffCanvas {
       // Push elements
       this.setPush()
 
+      // Add class to the main wrap
+      this.mainWrap.classList.add(this.options.openClass)
+
       // Remember the button which was used to open off-canvas
       this.previousOpenButton = button
 
@@ -295,6 +305,9 @@ class OffCanvas {
       this.pushElements.forEach(el => {
         el.style.removeProperty('transform')
       })
+
+      // Remove class from the main wrap
+      this.mainWrap.classList.remove(this.options.openClass)
 
       // Hide overlay
       this.hideOverlay()
