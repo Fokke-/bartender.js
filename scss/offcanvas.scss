@@ -30,48 +30,49 @@ html {
   transition: transform 500ms ease;
   overflow: auto;
 
-  &[data-offcanvas-bar="left"],
-  &[data-offcanvas-bar="right"] {
-    top: 0;
-    width: 50%;
-    height: 100%;
+}
 
-    &.offcanvas-bar--open {
-      transform: translateX(0);
-    }
+[data-offcanvas-bar="left"],
+[data-offcanvas-bar="right"] {
+  top: 0;
+  width: 50%;
+  height: 100%;
+
+  &.offcanvas-bar--open {
+    transform: translateX(0);
   }
+}
 
-  &[data-offcanvas-bar="left"] {
-    left: 0;
-    transform: translateX(-100%);
+[data-offcanvas-bar="left"] {
+  left: 0;
+  transform: translateX(-100%);
+}
+
+[data-offcanvas-bar="right"] {
+  right: 0;
+  transform: translateX(100%);
+}
+
+[data-offcanvas-bar="top"],
+[data-offcanvas-bar="bottom"] {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  height: 50%;
+
+  &.offcanvas-bar--open {
+    transform: translateY(0);
   }
+}
 
-  &[data-offcanvas-bar="right"] {
-    right: 0;
-    transform: translateX(100%);
-  }
+[data-offcanvas-bar="top"] {
+  top: 0;
+  transform: translateY(-100%);
+}
 
-  &[data-offcanvas-bar="top"],
-  &[data-offcanvas-bar="bottom"] {
-    position: fixed;
-    left: 0;
-    width: 100%;
-    height: 50%;
-
-    &.offcanvas-bar--open {
-      transform: translateY(0);
-    }
-  }
-
-  &[data-offcanvas-bar="top"] {
-    top: 0;
-    transform: translateY(-100%);
-  }
-
-  &[data-offcanvas-bar="bottom"] {
-    bottom: 0;
-    transform: translateY(100%);
-  }
+[data-offcanvas-bar="bottom"] {
+  bottom: 0;
+  transform: translateY(100%);
 }
 
 [data-offcanvas-push] {
