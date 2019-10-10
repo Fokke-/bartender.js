@@ -175,7 +175,7 @@ class OffCanvas {
         clearTimeout(this.resizeTimeout)
 
         this.resizeTimeout = setTimeout(() => {
-          this.setContentWrapPush()
+          this.setPush()
         }, 200)
       })
     } catch (error) {
@@ -239,8 +239,8 @@ class OffCanvas {
       // Mark this bar as open
       this.currentOpenBar = bar
 
-      // Push content wrap if needed
-      this.setContentWrapPush()
+      // Push elements
+      this.setPush()
 
       // Remember the button which was used to open off-canvas
       this.previousOpenButton = button
@@ -305,7 +305,7 @@ class OffCanvas {
     return this
   }
 
-  setContentWrapPush () {
+  setPush () {
     if (!this.currentOpenBar) return
     if (!this.currentOpenBar.mode) return
 
