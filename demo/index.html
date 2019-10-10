@@ -7,9 +7,13 @@
     <link rel="stylesheet" href="styles.css" />
     <title>Demo</title>
   </head>
-  <body class="offcanvas-main">
-    <button data-offcanvas-open="left" data-offcanvas-push class="fixedButton">Fixed button</button>
 
+  <!-- Main wrap for offcanvas -->
+  <body class="offcanvas-main">
+    <!-- Fixed button, which will be pushed when offcanvas bar is open -->
+    <button data-offcanvas-toggle="left" data-offcanvas-push class="fixedButton">Fixed toggle button</button>
+
+    <!-- Wrapper for page content -->
     <div class="offcanvas-content">
       <h1>Demo</h1>
 
@@ -18,31 +22,39 @@
       <button data-offcanvas-open="top">Open top</button>
       <button data-offcanvas-open="bottom">Open bottom</button>
     </div>
-    <div data-offcanvas-bar="left" data-offcanvas-bar-mode="push">
-      <button data-offcanvas-close>Close</button>
-      <button data-offcanvas-open="right">Open right</button>
-      <h2>Left bar (push)</h2>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque sunt ipsa distinctio magnam nisi sequi voluptate
-        esse molestiae nihil, quis corporis quasi natus. Unde, obcaecati rem debitis earum asperiores aut.</p>
-    </div>
-    <div data-offcanvas-bar="right">
-      <button data-offcanvas-close>Close</button>
-      <button data-offcanvas-open="left">Open left</button>
-      <h2>Right bar (float)</h2>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque sunt ipsa distinctio magnam nisi sequi voluptate
-        esse molestiae nihil, quis corporis quasi natus. Unde, obcaecati rem debitis earum asperiores aut.</p>
-    </div>
+
+    <!-- Top bar -->
     <div data-offcanvas-bar="top" data-offcanvas-bar-mode="push">
       <button data-offcanvas-close>Close</button>
-      <button data-offcanvas-open="bottom">Open bottom</button>
-      <h2>Top bar (push)</h2>
+      <button data-offcanvas-open="right">Open right</button>
+      <h2>Top bar (push mode)</h2>
       <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque sunt ipsa distinctio magnam nisi sequi voluptate
         esse molestiae nihil, quis corporis quasi natus. Unde, obcaecati rem debitis earum asperiores aut.</p>
     </div>
-    <div data-offcanvas-bar="bottom">
+
+    <!-- Right bar -->
+    <div data-offcanvas-bar="right" data-offcanvas-bar-mode="slide">
+      <button data-offcanvas-close>Close</button>
+      <button data-offcanvas-open="bottom">Open bottom</button>
+      <h2>Right bar (slide mode)</h2>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque sunt ipsa distinctio magnam nisi sequi voluptate
+        esse molestiae nihil, quis corporis quasi natus. Unde, obcaecati rem debitis earum asperiores aut.</p>
+      </div>
+
+    <!-- Bottom bar -->
+    <div data-offcanvas-bar="bottom" data-offcanvas-bar-mode="float">
+      <button data-offcanvas-close>Close</button>
+      <button data-offcanvas-open="left">Open left</button>
+      <h2>Bottom bar (float mode)</h2>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque sunt ipsa distinctio magnam nisi sequi voluptate
+        esse molestiae nihil, quis corporis quasi natus. Unde, obcaecati rem debitis earum asperiores aut.</p>
+    </div>
+
+    <!-- Left bar -->
+    <div data-offcanvas-bar="left" data-offcanvas-bar-mode="push">
       <button data-offcanvas-close>Close</button>
       <button data-offcanvas-open="top">Open top</button>
-      <h2>Bottom bar (float)</h2>
+      <h2>Left bar (push mode)</h2>
       <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque sunt ipsa distinctio magnam nisi sequi voluptate
         esse molestiae nihil, quis corporis quasi natus. Unde, obcaecati rem debitis earum asperiores aut.</p>
     </div>
