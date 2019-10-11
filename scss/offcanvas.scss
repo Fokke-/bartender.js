@@ -17,17 +17,17 @@ html {
 }
 
 .offcanvas-content {
-  z-index: 2;
+  z-index: 30;
   position: relative;
   width: 100%;
   min-height: 100%;
   transition: $transition;
-  color: #000;
   background: #fff;
+  color: #000;
 }
 
 [data-offcanvas-bar] {
-  z-index: 3;
+  z-index: 50;
   position: fixed;
   background: #000;
   color: #fff;
@@ -35,7 +35,7 @@ html {
   overflow: auto;
 
   &[data-offcanvas-bar-mode="slide"] {
-    z-index: 1;
+    z-index: 10;
   }
 }
 

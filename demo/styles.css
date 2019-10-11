@@ -31,7 +31,7 @@ button:focus {
 }
 
 .fixedButton {
-  z-index: 20;
+  z-index: 40;
   position: fixed;
   left: 0;
   top: 0;

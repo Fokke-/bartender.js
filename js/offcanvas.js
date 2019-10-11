@@ -322,40 +322,39 @@ class OffCanvas {
     if (!this.currentOpenBar) return
     if (!this.currentOpenBar.mode) return
 
-    if (['push', 'slide'].indexOf(this.currentOpenBar.mode) >= 0) {
-      var transform = null
+    var transform = null
 
-      switch (this.currentOpenBar.position) {
-        case 'left':
-          transform = 'translateX(' + this.currentOpenBar.element.offsetWidth + 'px)'
-          break
+    // Hide overflow of main wrapper
+    // This has to be done first in order to get correct width/height
+    this.mainWrap.style.overflow = 'hidden'
 
-        case 'right':
-          transform = 'translateX(-' + this.currentOpenBar.element.offsetWidth + 'px)'
-          break
+    switch (this.currentOpenBar.position) {
+      case 'left':
+        transform = 'translateX(' + this.currentOpenBar.element.offsetWidth + 'px)'
+        break
 
-        case 'top':
-          transform = 'translateY(' + this.currentOpenBar.element.offsetHeight + 'px)'
-          break
+      case 'right':
+        transform = 'translateX(-' + this.currentOpenBar.element.offsetWidth + 'px)'
+        break
 
-        case 'bottom':
-          transform = 'translateY(-' + this.currentOpenBar.element.offsetHeight + 'px)'
-          break
-      }
+      case 'top':
+        transform = 'translateY(' + this.currentOpenBar.element.offsetHeight + 'px)'
+        break
 
-      if (transform) {
-        // Hide overflow of main wrapper
-        this.mainWrap.style.overflow = 'hidden'
-
-        // Transform content wrapper
-        this.contentWrap.style.transform = transform
-
-        // Transform other pushable elements
-        this.pushElements.forEach(el => {
-          el.style.transform = transform
-        })
-      }
+      case 'bottom':
+        transform = 'translateY(-' + this.currentOpenBar.element.offsetHeight + 'px)'
+        break
     }
+
+    if (['push', 'slide'].indexOf(this.currentOpenBar.mode) >= 0) {
+      // Transform content wrapper
+      this.contentWrap.style.transform = transform
+    }
+
+    // Transform other pushable elements
+    this.pushElements.forEach(el => {
+      el.style.transform = transform
+    })
   }
 
   showOverlay () {
