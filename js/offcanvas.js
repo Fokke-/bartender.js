@@ -147,7 +147,7 @@ class OffCanvas {
       // Find pushable elements
       this.pushElements = this.mainWrap.querySelectorAll('[data-offcanvas-push]')
 
-      if (this.pushElements.length) this.log('Registered ' + this.pushElements.length + ' pushable elements.')
+      if (this.pushElements.length) this.debug('Registered ' + this.pushElements.length + ' pushable elements.')
 
       // Add overlay
       if (this.options.overlay && !this.overlay) {
