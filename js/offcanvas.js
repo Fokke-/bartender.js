@@ -3,6 +3,9 @@
 class OffCanvas {
 
   constructor (options) {
+    // Run polyfill
+    this.polyfillCustomEvent()
+
     // Apply user configuration
     this.options = Object.assign({
       // Debug mode
@@ -51,6 +54,22 @@ class OffCanvas {
 
     // Run initializer
     this.init()
+  }
+
+  // Polyfill for custom event
+  polyfillCustomEvent () {
+    if (typeof window.CustomEvent === 'function') return false;
+
+    window.CustomEvent = function (event, params) {
+      params = params || {
+        bubbles: false,
+        cancelable: false,
+        detail: null
+      }
+      var evt = document.createEvent('CustomEvent')
+      evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail)
+      return evt;
+    }
   }
 
   // Logging function
@@ -266,6 +285,14 @@ class OffCanvas {
 
       // Show overlay
       this.showOverlay()
+
+      // Dispatch event
+      this.mainWrap.dispatchEvent(new CustomEvent('open', {
+        detail: {
+          bar: bar,
+          button: button,
+        }
+      }))
     } catch (error) {
       this.logError(error)
     }
@@ -298,7 +325,6 @@ class OffCanvas {
       this.debug('Closing bar \'' + this.currentOpenBar.position + '\'')
       this.currentOpenBar.disableFocus()
       this.currentOpenBar.element.classList.remove('offcanvas-bar--open')
-      this.currentOpenBar = null
 
       // Focus open button which was used to open the bar
       if (this.previousOpenButton) {
@@ -320,6 +346,15 @@ class OffCanvas {
 
       // Hide overlay
       this.hideOverlay()
+
+      // Dispatch event
+      this.mainWrap.dispatchEvent(new CustomEvent('close', {
+        detail: {
+          bar: this.currentOpenBar,
+        }
+      }))
+
+      this.currentOpenBar = null
     } catch (error) {
       this.logError(error)
     }
