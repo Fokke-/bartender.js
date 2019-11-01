@@ -129,6 +129,7 @@ class OffCanvas {
           event.preventDefault()
           this.open(position, button)
         })
+
         button.addEventListener('keydown', event => {
           if ([13, 32].indexOf(event.keyCode) >= 0) {
             event.preventDefault()
@@ -150,6 +151,7 @@ class OffCanvas {
           event.preventDefault()
           this.toggle(position, button)
         })
+
         button.addEventListener('keydown', event => {
           if ([13, 32].indexOf(event.keyCode) >= 0) {
             event.preventDefault()
@@ -164,6 +166,7 @@ class OffCanvas {
           event.preventDefault()
           this.close()
         })
+
         button.addEventListener('keydown', event => {
           if ([13, 32].indexOf(event.keyCode) >= 0) {
             event.preventDefault()
