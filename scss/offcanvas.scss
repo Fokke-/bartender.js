@@ -37,6 +37,10 @@ html {
   &[data-offcanvas-bar-mode="slide"] {
     z-index: 10;
   }
+
+  &:focus {
+    outline: 0;
+  }
 }
 
 [data-offcanvas-bar="left"],
