@@ -14,6 +14,10 @@ html {
   position: relative;
   width: 100%;
   height: 100%;
+
+  &.offcanvas-open {
+    overflow: hidden !important;
+  }
 }
 
 .offcanvas-content {
@@ -46,7 +50,8 @@ html {
 [data-offcanvas-bar="left"],
 [data-offcanvas-bar="right"] {
   top: 0;
-  width: 50%;
+  width: 80%;
+  max-width: 400px;
   height: 100%;
 
   &.offcanvas-bar--open {
