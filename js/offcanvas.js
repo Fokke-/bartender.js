@@ -116,7 +116,7 @@ class OffCanvas {
       // Check that there's at least one bar defined
       if (!Object.keys(this.bars).length) throw 'Cannot find any bars.'
 
-      // Add event listeners for open buttons
+      // Open buttons
       this.openButtons.forEach(button => {
         let position = button.getAttribute('data-offcanvas-open')
 
@@ -125,6 +125,10 @@ class OffCanvas {
           return
         }
 
+        // Add ARIA attributes
+        button.setAttribute('aria-expanded', 'false')
+
+        // Event listeners for open buttons
         button.addEventListener('click', event => {
           event.preventDefault()
           this.open(position, button)
@@ -138,7 +142,7 @@ class OffCanvas {
         })
       })
 
-      // Add event listeners for toggle buttons
+      // Toggle buttons
       this.toggleButtons.forEach(button => {
         let position = button.getAttribute('data-offcanvas-toggle')
 
@@ -147,6 +151,10 @@ class OffCanvas {
           return
         }
 
+        // Add ARIA attributes
+        button.setAttribute('aria-expanded', 'false')
+
+        // Event listeners for toggle buttons
         button.addEventListener('click', event => {
           event.preventDefault()
           this.toggle(position, button)
@@ -160,8 +168,9 @@ class OffCanvas {
         })
       })
 
-      // Add event listeners for close buttons
+      // Close buttons
       this.closeButtons.forEach(button => {
+        // Event listeners for close buttons
         button.addEventListener('click', event => {
           event.preventDefault()
           this.close()
@@ -286,6 +295,9 @@ class OffCanvas {
       // Remember the button which was used to open off-canvas
       this.previousOpenButton = button
 
+      // Set ARIA attributes of the button
+      if (button) button.setAttribute('aria-expanded', true)
+
       // Show overlay
       this.showOverlay()
 
@@ -332,6 +344,7 @@ class OffCanvas {
       // Focus open button which was used to open the bar
       if (this.previousOpenButton) {
         this.previousOpenButton.focus()
+        this.previousOpenButton.setAttribute('aria-expanded', 'false')
         this.previousOpenButton = null
       }
 
