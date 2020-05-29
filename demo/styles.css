@@ -20,7 +20,7 @@ button {
   border: 0;
   color: #fff;
   background: teal;
-  transition: all 200ms ease;
+  transition: background 200ms ease;
 }
 
 button:hover,

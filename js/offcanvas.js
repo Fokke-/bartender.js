@@ -130,13 +130,11 @@ class OffCanvas {
 
         // Event listeners for open buttons
         button.addEventListener('click', event => {
-          event.preventDefault()
           this.open(position, button)
         })
 
         button.addEventListener('keydown', event => {
           if ([13, 32].indexOf(event.keyCode) >= 0) {
-            event.preventDefault()
             this.open(position, button)
           }
         })
@@ -156,13 +154,11 @@ class OffCanvas {
 
         // Event listeners for toggle buttons
         button.addEventListener('click', event => {
-          event.preventDefault()
           this.toggle(position, button)
         })
 
         button.addEventListener('keydown', event => {
           if ([13, 32].indexOf(event.keyCode) >= 0) {
-            event.preventDefault()
             this.toggle(position, button)
           }
         })
@@ -172,13 +168,11 @@ class OffCanvas {
       this.closeButtons.forEach(button => {
         // Event listeners for close buttons
         button.addEventListener('click', event => {
-          event.preventDefault()
           this.close()
         })
 
         button.addEventListener('keydown', event => {
           if ([13, 32].indexOf(event.keyCode) >= 0) {
-            event.preventDefault()
             this.close()
           }
         })
