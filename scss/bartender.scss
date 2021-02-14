@@ -8,6 +8,7 @@ html {
 .bartender-content,
 [data-bartender-bar] {
   box-sizing: border-box;
+  margin: 0;
 }
 
 .bartender-main {
@@ -27,7 +28,6 @@ html {
   min-height: 100%;
   transition: $bartender-transition;
   background: #fff;
-  color: #000;
 }
 
 [data-bartender-bar] {
