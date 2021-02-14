@@ -214,7 +214,7 @@ class Bartender {
   addBar (bar) {
     try {
       // Get bar configuration
-      var position = bar.getAttribute('data-bartender-bar')
+      let position = bar.getAttribute('data-bartender-bar')
 
       // Validate required elements
       if (!this.mainWrap || !this.contentWrap) return this
@@ -357,7 +357,7 @@ class Bartender {
     if (!this.currentOpenBar) return
     if (!this.currentOpenBar.mode) return
 
-    var transform = null
+    let transform = null
 
     // Hide overflow of main wrapper
     // This has to be done first in order to get correct width/height
