@@ -258,6 +258,20 @@ class Bartender {
       bar.enableFocus()
       bar.element.classList.add('bartender-bar--open')
 
+      // Wait until transition ends and dispatch event
+      bar.element.addEventListener('transitionend', () => {
+        this.debug('Opening bar \'' + this.currentOpenBar.position + '\' was finished')
+
+        this.mainWrap.dispatchEvent(new CustomEvent('afterOpen', {
+          detail: {
+            bar: bar,
+            button: button,
+          }
+        }))
+      }, {
+        once: true,
+      })
+
       // Mark this bar as open
       this.currentOpenBar = bar
 
@@ -311,6 +325,13 @@ class Bartender {
     try {
       if (!this.currentOpenBar) return
 
+      // Dispatch event
+      this.mainWrap.dispatchEvent(new CustomEvent('close', {
+        detail: {
+          bar: this.currentOpenBar,
+        }
+      }))
+
       // Close bar
       this.debug('Closing bar \'' + this.currentOpenBar.position + '\'')
       this.currentOpenBar.disableFocus()
@@ -338,14 +359,19 @@ class Bartender {
       // Hide overlay
       this.hideOverlay()
 
-      // Dispatch event
-      this.mainWrap.dispatchEvent(new CustomEvent('close', {
-        detail: {
-          bar: this.currentOpenBar,
-        }
-      }))
+      // Wait until transition ends and dispatch event
+      this.currentOpenBar.element.addEventListener('transitionend', () => {
+        this.mainWrap.dispatchEvent(new CustomEvent('afterClose', {
+          detail: {
+            bar: this.currentOpenBar,
+          }
+        }))
 
-      this.currentOpenBar = null
+        this.debug('Closing bar \'' + this.currentOpenBar.position + '\' was finished')
+        this.currentOpenBar = null
+      }, {
+        once: true,
+      })
     } catch (error) {
       this.logError(error)
     }
@@ -381,7 +407,7 @@ class Bartender {
         break
     }
 
-    if (['push', 'slide'].indexOf(this.currentOpenBar.mode) >= 0) {
+    if (['push', 'reveal'].indexOf(this.currentOpenBar.mode) >= 0) {
       // Transform content wrapper
       this.contentWrap.style.transform = transform
     }
@@ -434,7 +460,7 @@ class BartenderBar {
     }
 
     // Validate mode
-    if (['float', 'push', 'slide'].indexOf(this.mode) < 0) throw 'Invalid mode \'' + this.mode + '\' for bar \'' + this.position + '\'. Use one of the following values: float, push, slide.'
+    if (['float', 'push', 'reveal'].indexOf(this.mode) < 0) throw 'Invalid mode \'' + this.mode + '\' for bar \'' + this.position + '\'. Use one of the following values: float, push, reveal.'
 
     // Disable focus
     this.disableFocus()
