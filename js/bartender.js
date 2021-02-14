@@ -1,11 +1,8 @@
 'use strict';
 
-class OffCanvas {
+class Bartender {
 
   constructor (options) {
-    // Run polyfill
-    this.polyfillCustomEvent()
-
     // Apply user configuration
     this.options = Object.assign({
       // Debug mode
@@ -18,14 +15,14 @@ class OffCanvas {
       closeOnEsc: true,
 
       // Selector to find main wrapper
-      mainWrapSelector: '.offcanvas-main',
+      mainWrapSelector: '.bartender-main',
 
       // Selector to find content wrapper
-      contentWrapSelector: '.offcanvas-content',
+      contentWrapSelector: '.bartender-content',
 
       // Classes
-      readyClass: 'offcanvas-ready',
-      openClass: 'offcanvas-open',
+      readyClass: 'bartender-ready',
+      openClass: 'bartender-open',
     }, options)
 
     // Overlay element
@@ -56,37 +53,21 @@ class OffCanvas {
     this.init()
   }
 
-  // Polyfill for custom event
-  polyfillCustomEvent () {
-    if (typeof window.CustomEvent === 'function') return false;
-
-    window.CustomEvent = function (event, params) {
-      params = params || {
-        bubbles: false,
-        cancelable: false,
-        detail: null
-      }
-      var evt = document.createEvent('CustomEvent')
-      evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail)
-      return evt;
-    }
-  }
-
   // Logging function
   log (text = '') {
-    console.log('Off-canvas: ' + text)
+    console.log('Bartender: ' + text)
   }
 
   // Error logging function
   logError (text = '') {
-    console.error('Off-canvas: ' + text)
+    console.error('Bartender: ' + text)
   }
 
   // Debug logging function
   debug (text = '') {
     if (!this.options.debug) return
 
-    console.log('Off-canvas debug: ' + text)
+    console.log('Bartender debug: ' + text)
   }
 
   // Initializer
@@ -100,16 +81,16 @@ class OffCanvas {
       if (!this.contentWrap) throw 'Content wrap element was not found with selector: ' + this.options.contentWrapSelector
 
       // Find buttons
-      this.openButtons = this.mainWrap.querySelectorAll('[data-offcanvas-open]')
-      this.closeButtons = this.mainWrap.querySelectorAll('[data-offcanvas-close]')
-      this.toggleButtons = this.mainWrap.querySelectorAll('[data-offcanvas-toggle]')
+      this.openButtons = this.mainWrap.querySelectorAll('[data-bartender-open]')
+      this.closeButtons = this.mainWrap.querySelectorAll('[data-bartender-close]')
+      this.toggleButtons = this.mainWrap.querySelectorAll('[data-bartender-toggle]')
 
       // Add classes
-      this.mainWrap.classList.add('offcanvas-main')
-      this.contentWrap.classList.add('offcanvas-content')
+      this.mainWrap.classList.add('bartender-main')
+      this.contentWrap.classList.add('bartender-content')
 
       // Find bars
-      this.mainWrap.querySelectorAll('[data-offcanvas-bar]').forEach(bar => {
+      this.mainWrap.querySelectorAll('[data-bartender-bar]').forEach(bar => {
         this.addBar(bar)
       })
 
@@ -118,7 +99,7 @@ class OffCanvas {
 
       // Open buttons
       this.openButtons.forEach(button => {
-        let position = button.getAttribute('data-offcanvas-open')
+        let position = button.getAttribute('data-bartender-open')
 
         if (!this.isValidPosition(position)) {
           this.logError('Open button has invalid bar position \'' + position + '\' defined. Use one of the following values: left, right, top, bottom')
@@ -142,7 +123,7 @@ class OffCanvas {
 
       // Toggle buttons
       this.toggleButtons.forEach(button => {
-        let position = button.getAttribute('data-offcanvas-toggle')
+        let position = button.getAttribute('data-bartender-toggle')
 
         if (!this.isValidPosition(position)) {
           this.logError('Toggle button has invalid bar position \'' + position + '\' defined. Use one of the following values: left, right, top, bottom')
@@ -179,14 +160,14 @@ class OffCanvas {
       })
 
       // Find pushable elements
-      this.pushElements = this.mainWrap.querySelectorAll('[data-offcanvas-push]')
+      this.pushElements = this.mainWrap.querySelectorAll('[data-bartender-push]')
 
       if (this.pushElements.length) this.debug('Registered ' + this.pushElements.length + ' pushable elements.')
 
       // Add overlay
       if (this.options.overlay && !this.overlay) {
         this.overlay = document.createElement('div')
-        this.overlay.classList.add('offcanvas-overlay')
+        this.overlay.classList.add('bartender-overlay')
         this.overlay.addEventListener('click', () => this.close())
         this.overlay.addEventListener('keydown', event => {
           if ([13, 32].indexOf(event.keyCode) >= 0) {
@@ -233,7 +214,7 @@ class OffCanvas {
   addBar (bar) {
     try {
       // Get bar configuration
-      var position = bar.getAttribute('data-offcanvas-bar')
+      var position = bar.getAttribute('data-bartender-bar')
 
       // Validate required elements
       if (!this.mainWrap || !this.contentWrap) return this
@@ -245,7 +226,7 @@ class OffCanvas {
       if (this.bars[position]) throw 'Duplicate bar with position \'' + position + '\''
 
       // Create new bar object
-      const newBar = new OffCanvasBar()
+      const newBar = new BartenderBar()
       newBar.element = bar
       newBar.init()
 
@@ -267,7 +248,7 @@ class OffCanvas {
       const bar = this.bars[position]
 
       if (!bar) throw 'Bar with position \'' + position + '\' is not defined. Use one of the following: ' + Object.keys(this.bars).join(', ') + '.'
-      if (bar.element.classList.contains('offcanvas-bar--open')) return
+      if (bar.element.classList.contains('bartender-bar--open')) return
 
       // Close other bars
       this.close()
@@ -275,7 +256,7 @@ class OffCanvas {
       // Open bar
       this.debug('Opening bar \'' + position + '\'')
       bar.enableFocus()
-      bar.element.classList.add('offcanvas-bar--open')
+      bar.element.classList.add('bartender-bar--open')
 
       // Mark this bar as open
       this.currentOpenBar = bar
@@ -333,7 +314,7 @@ class OffCanvas {
       // Close bar
       this.debug('Closing bar \'' + this.currentOpenBar.position + '\'')
       this.currentOpenBar.disableFocus()
-      this.currentOpenBar.element.classList.remove('offcanvas-bar--open')
+      this.currentOpenBar.element.classList.remove('bartender-bar--open')
 
       // Focus open button which was used to open the bar
       if (this.previousOpenButton) {
@@ -413,24 +394,24 @@ class OffCanvas {
 
   showOverlay () {
     if (!this.overlay) return
-    if (this.overlay.classList.contains('offcanvas-overlay--visible')) return
+    if (this.overlay.classList.contains('bartender-overlay--visible')) return
 
     this.debug('Showing overlay')
 
-    this.overlay.classList.add('offcanvas-overlay--visible')
+    this.overlay.classList.add('bartender-overlay--visible')
   }
 
   hideOverlay () {
     if (!this.overlay) return
-    if (!this.overlay.classList.contains('offcanvas-overlay--visible')) return
+    if (!this.overlay.classList.contains('bartender-overlay--visible')) return
 
     this.debug('Hiding overlay')
 
-    this.overlay.classList.remove('offcanvas-overlay--visible')
+    this.overlay.classList.remove('bartender-overlay--visible')
   }
 }
 
-class OffCanvasBar {
+class BartenderBar {
 
   constructor() {
     this.element = null
@@ -444,12 +425,12 @@ class OffCanvasBar {
     if (!this.element) throw 'Bar element for \'' + this.position + '\' was not found!'
 
     // Set position
-    this.position = this.element.getAttribute('data-offcanvas-bar')
+    this.position = this.element.getAttribute('data-bartender-bar')
     if (!this.position) throw 'Missing position for bar'
 
     // Set mode
-    if (this.element.getAttribute('data-offcanvas-bar-mode')) {
-      this.mode = this.element.getAttribute('data-offcanvas-bar-mode')
+    if (this.element.getAttribute('data-bartender-bar-mode')) {
+      this.mode = this.element.getAttribute('data-bartender-bar-mode')
     }
 
     // Validate mode

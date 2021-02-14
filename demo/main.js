@@ -1,17 +1,17 @@
 'use strict';
 
-var offCanvas = new OffCanvas({
+const bartender = new Bartender({
   debug: true,
   overlay: true,
 })
 
 // Test event listeners
-offCanvas.mainWrap.addEventListener('open', e => {
+bartender.mainWrap.addEventListener('open', e => {
   console.log('Event listener: Opening bar ' + e.detail.bar.position)
   console.log(e.detail)
 })
 
-offCanvas.mainWrap.addEventListener('close', e => {
+bartender.mainWrap.addEventListener('close', e => {
   console.log('Event listener: Closing bar ' + e.detail.bar.position)
   console.log(e.detail)
 })

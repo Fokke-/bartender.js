@@ -7,8 +7,8 @@ h2:first-child {
   margin-top: 0;
 }
 
-.offcanvas-content,
-[data-offcanvas-bar] {
+.bartender-content,
+[data-bartender-bar] {
   padding: 10vw 5vw 5vw 5vw;
 }
 
