@@ -342,6 +342,9 @@ class Bartender {
         this.previousOpenButton.focus()
         this.previousOpenButton.setAttribute('aria-expanded', 'false')
         this.previousOpenButton = null
+      } else {
+        // Bar was closed using keyboard, or using API. Focus on content element instead.
+        this.contentWrap.focus()
       }
 
       // Remove transforms from wrapper elements
@@ -363,7 +366,7 @@ class Bartender {
       this.currentOpenBar.element.addEventListener('transitionend', () => {
         this.mainWrap.dispatchEvent(new CustomEvent('afterClose', {
           detail: {
-            bar: this.currentOpenBar,
+            bar: this.bars[this.currentOpenBar.position],
           }
         }))
 
