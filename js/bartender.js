@@ -110,14 +110,8 @@ class Bartender {
         button.setAttribute('aria-expanded', 'false')
 
         // Event listeners for open buttons
-        button.addEventListener('click', event => {
+        button.addEventListener('click', () => {
           this.open(position, button)
-        })
-
-        button.addEventListener('keydown', event => {
-          if ([13, 32].indexOf(event.keyCode) >= 0) {
-            this.open(position, button)
-          }
         })
       })
 
@@ -134,28 +128,16 @@ class Bartender {
         button.setAttribute('aria-expanded', 'false')
 
         // Event listeners for toggle buttons
-        button.addEventListener('click', event => {
+        button.addEventListener('click', () => {
           this.toggle(position, button)
-        })
-
-        button.addEventListener('keydown', event => {
-          if ([13, 32].indexOf(event.keyCode) >= 0) {
-            this.toggle(position, button)
-          }
         })
       })
 
       // Close buttons
       this.closeButtons.forEach(button => {
         // Event listeners for close buttons
-        button.addEventListener('click', event => {
+        button.addEventListener('click', () => {
           this.close()
-        })
-
-        button.addEventListener('keydown', event => {
-          if ([13, 32].indexOf(event.keyCode) >= 0) {
-            this.close()
-          }
         })
       })
 
