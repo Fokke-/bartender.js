@@ -223,7 +223,7 @@ class Bartender {
       if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: left, right, top, bottom'
 
       // Check that bar is not already defined
-      if (this.bars[position]) throw 'Duplicate bar with position \'' + position + '\''
+      if (this.bars[position]) throw 'Bar with position \'' + position + '\' is already defined'
 
       // Create new bar object
       const newBar = new BartenderBar()
