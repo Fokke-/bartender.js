@@ -38,7 +38,7 @@ html {
   transition: $bartender-transition;
   overflow: auto;
 
-  &[data-bartender-bar-mode="slide"] {
+  &[data-bartender-bar-mode="reveal"] {
     z-index: 10;
   }
 
