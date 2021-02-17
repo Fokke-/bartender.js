@@ -1,7 +1,13 @@
 'use strict';
 
+/**
+ * Class for creating accessible off-canvas bars.
+ */
 class Bartender {
 
+  /**
+   * @param {object} options - User defined options
+   */
   constructor (options) {
     // Apply user configuration
     this.options = Object.assign({
@@ -56,24 +62,43 @@ class Bartender {
     this.init()
   }
 
-  // Logging function
+  /**
+   * Log to console
+   *
+   * @param {string} text - Text to log
+   * @returns {void}
+   */
   log (text = '') {
     console.log('Bartender: ' + text)
   }
 
-  // Error logging function
+  /**
+   * Log error to console
+   *
+   * @param {string} text - Text to log
+   * @returns {void}
+   */
   logError (text = '') {
     console.error('Bartender: ' + text)
   }
 
-  // Debug logging function
+  /**
+   * Log debug message to console
+   *
+   * @param {string} text - Text to log
+   * @returns {void}
+   */
   debug (text = '') {
     if (!this.options.debug) return
 
     console.log('Bartender debug: ' + text)
   }
 
-  // Initializer
+  /**
+   * Initialize Bartender
+   *
+   * @returns {object} Bartender instance
+   */
   init () {
     try {
       // Find and validate required elements
@@ -185,10 +210,22 @@ class Bartender {
     return this
   }
 
+  /**
+   * Is defined bar position valid?
+   *
+   * @param {string} position - Position to validate
+   * @returns {boolean}
+   */
   isValidPosition (position = null) {
     return this.validBarPositions.indexOf(position) >= 0
   }
 
+  /**
+   * Add a new off-canvas bar
+   *
+   * @param {object} - BartenderBar instance
+   * @returns {object} Added bar instance
+   */
   addBar (bar) {
     try {
       // Get bar configuration
@@ -216,10 +253,19 @@ class Bartender {
       this.logError(error)
     }
 
-    return this
+    return bar
   }
 
-  async open (position = null, button = null) {
+  /**
+   * Open off-canvas bar
+   *
+   * @param {string} position - Bar position
+   * @param {object} button - Button which was used to run this method
+   * @returns {object} Opened bar instance
+   */
+  async open (position = '', button = null) {
+    console.log(typeof button)
+    console.log(button)
     try {
       // Validate position
       if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: ' + this.validBarPositions.join(', ')
@@ -281,28 +327,40 @@ class Bartender {
           button: button,
         }
       }))
+
+      return bar
     } catch (error) {
       this.logError(error)
     }
   }
 
+  /**
+   * Toggle off-canvas bar
+   *
+   * @param {string} position - Bar position
+   * @param {object} button - Button which was used to run this method
+   * @returns {object} Toggled bar instance
+   */
   async toggle (position = null, button = null) {
     try {
       if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: ' + this.validBarPositions.join(', ')
 
       if (this.currentOpenBar && this.currentOpenBar.position == position) {
-        this.close()
+        return this.close()
       } else {
         await this.close()
-        this.open(position, button)
+        return this.open(position, button)
       }
     } catch (error) {
       this.logError(error)
     }
-
-    return this
   }
 
+  /**
+   * Close any open off-canvas bar
+   *
+   * @returns {Promise} Resolve with closed bar or reject with an error
+   */
   close () {
     return new Promise((resolve, reject) => {
       try {
@@ -364,7 +422,7 @@ class Bartender {
           setTimeout(() => {
             this.debug('Closing bar \'' + bar.position + '\' was finished')
 
-            return resolve()
+            return resolve(bar)
           }, 200)
         }, {
           once: true,
@@ -377,6 +435,11 @@ class Bartender {
     })
   }
 
+  /**
+   * Set transforms for pushable elements
+   *
+   * @returns {void}
+   */
   setPush () {
     if (!this.currentOpenBar || !this.currentOpenBar.mode) return
 
@@ -415,6 +478,11 @@ class Bartender {
     })
   }
 
+  /**
+   * Show shading overlay
+   *
+   * @returns {void}
+   */
   showOverlay () {
     if (!this.overlay) return
     if (this.overlay.classList.contains('bartender-overlay--visible')) return
@@ -422,6 +490,11 @@ class Bartender {
     this.overlay.classList.add('bartender-overlay--visible')
   }
 
+  /**
+   * Hide shading overlay
+   *
+   * @returns {void}
+   */
   hideOverlay () {
     if (!this.overlay) return
     if (!this.overlay.classList.contains('bartender-overlay--visible')) return
@@ -430,6 +503,9 @@ class Bartender {
   }
 }
 
+/**
+ * Class representing a single Bartender bar
+ */
 class BartenderBar {
 
   constructor() {
@@ -440,6 +516,11 @@ class BartenderBar {
     this.validModes = ['float', 'push', 'reveal']
   }
 
+  /**
+   * Initialize bar
+   *
+   * @returns {object} Bar instance
+   */
   init () {
     // Check that defined bar element exists
     if (!this.element) throw 'Bar element for \'' + this.position + '\' was not found!'
@@ -462,6 +543,11 @@ class BartenderBar {
     return this
   }
 
+  /**
+   * Disable focus on bar child elements
+   *
+   * @returns {object} Bar instance
+   */
   disableFocus () {
     // Disable focus on bar child elements
     this.element.querySelectorAll(this.focusableElementSelector).forEach(item => {
@@ -475,6 +561,11 @@ class BartenderBar {
     return this
   }
 
+  /**
+   * Enable focus on bar child elements
+   *
+   * @returns {object} Bar instance
+   */
   enableFocus () {
     // Enable focus on bar child elements
     this.element.querySelectorAll(this.focusableElementSelector).forEach(item => {
