@@ -221,24 +221,26 @@ class Bartender {
 
   async open (position = null, button = null) {
     try {
+      // Validate position
       if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: ' + this.validBarPositions.join(', ')
 
+      // Get bar instance
       const bar = this.bars[position]
 
       if (!bar) throw 'Bar with position \'' + position + '\' is not defined. Use one of the following: ' + Object.keys(this.bars).join(', ') + '.'
-      if (bar.element.classList.contains('bartender-bar--open')) return
 
       // Close other bars
       await this.close()
 
-      // Open bar
       this.debug('Opening bar \'' + position + '\'')
-      bar.enableFocus()
-      bar.element.classList.add('bartender-bar--open')
 
       // Wait until transition ends and dispatch event
       bar.element.addEventListener('transitionend', () => {
-        this.debug('Opening bar \'' + this.currentOpenBar.position + '\' was finished')
+        // User might close bar before the transition ends,
+        // so make sure that this bar is still open.
+        if (this.currentOpenBar === null || this.currentOpenBar.position !== bar.position) return
+
+        this.debug('Opening bar \'' + bar.position + '\' was finished')
 
         this.mainWrap.dispatchEvent(new CustomEvent('afterOpen', {
           detail: {
@@ -250,8 +252,12 @@ class Bartender {
         once: true,
       })
 
+      // Focus on bar
+      bar.enableFocus()
+
       // Mark this bar as open
       this.currentOpenBar = bar
+      bar.element.classList.add('bartender-bar--open')
 
       // Push elements
       this.setPush()
@@ -328,6 +334,8 @@ class Bartender {
         bar.disableFocus()
         bar.element.classList.remove('bartender-bar--open')
 
+        this.currentOpenBar = null
+
         // Wait until bar transition ends
         bar.element.addEventListener('transitionend', () => {
           // Dispatch event
@@ -355,7 +363,6 @@ class Bartender {
 
           setTimeout(() => {
             this.debug('Closing bar \'' + bar.position + '\' was finished')
-            this.currentOpenBar = null
 
             return resolve()
           }, 200)
@@ -371,8 +378,7 @@ class Bartender {
   }
 
   setPush () {
-    if (!this.currentOpenBar) return
-    if (!this.currentOpenBar.mode) return
+    if (!this.currentOpenBar || !this.currentOpenBar.mode) return
 
     let transform = null
 
@@ -413,16 +419,12 @@ class Bartender {
     if (!this.overlay) return
     if (this.overlay.classList.contains('bartender-overlay--visible')) return
 
-    this.debug('Showing overlay')
-
     this.overlay.classList.add('bartender-overlay--visible')
   }
 
   hideOverlay () {
     if (!this.overlay) return
     if (!this.overlay.classList.contains('bartender-overlay--visible')) return
-
-    this.debug('Hiding overlay')
 
     this.overlay.classList.remove('bartender-overlay--visible')
   }
