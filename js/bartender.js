@@ -46,8 +46,11 @@ class Bartender {
     this.toggleButtons = []
 
     // Array for storing pushable elements
-    // These elements will be moved when bar with "push" mode is being opened.
+    // These elements will be moved when bar with "push" or "reveal" mode is being opened.
     this.pushElements = []
+
+    // Valid bar positions
+    this.validBarPositions = ['left', 'right', 'top', 'bottom']
 
     // Run initializer
     this.init()
@@ -102,7 +105,7 @@ class Bartender {
         let position = button.getAttribute('data-bartender-open')
 
         if (!this.isValidPosition(position)) {
-          this.logError('Open button has invalid bar position \'' + position + '\' defined. Use one of the following values: left, right, top, bottom')
+          this.logError('Open button has invalid bar position \'' + position + '\' defined. Use one of the following values: ' + this.validBarPositions.join(', '))
           return
         }
 
@@ -120,7 +123,7 @@ class Bartender {
         let position = button.getAttribute('data-bartender-toggle')
 
         if (!this.isValidPosition(position)) {
-          this.logError('Toggle button has invalid bar position \'' + position + '\' defined. Use one of the following values: left, right, top, bottom')
+          this.logError('Toggle button has invalid bar position \'' + position + '\' defined. Use one of the following values: ' + this.validBarPositions.join(', '))
           return
         }
 
@@ -151,12 +154,6 @@ class Bartender {
         this.overlay = document.createElement('div')
         this.overlay.classList.add('bartender-overlay')
         this.overlay.addEventListener('click', () => this.close())
-        this.overlay.addEventListener('keydown', event => {
-          if ([13, 32].indexOf(event.keyCode) >= 0) {
-            event.preventDefault()
-            this.close()
-          }
-        })
 
         this.contentWrap.appendChild(this.overlay)
       }
@@ -165,7 +162,6 @@ class Bartender {
       if (this.options.closeOnEsc) {
         window.addEventListener('keydown', event => {
           if (event.keyCode === 27) {
-            event.preventDefault()
             this.close()
           }
         })
@@ -190,7 +186,7 @@ class Bartender {
   }
 
   isValidPosition (position = null) {
-    return ['left', 'right', 'top', 'bottom'].indexOf(position) >= 0
+    return this.validBarPositions.indexOf(position) >= 0
   }
 
   addBar (bar) {
@@ -202,7 +198,7 @@ class Bartender {
       if (!this.mainWrap || !this.contentWrap) return this
 
       // Validate position
-      if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: left, right, top, bottom'
+      if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: ' + this.validBarPositions.join(', ')
 
       // Check that bar is not already defined
       if (this.bars[position]) throw 'Bar with position \'' + position + '\' is already defined'
@@ -223,9 +219,9 @@ class Bartender {
     return this
   }
 
-  open (position = null, button = null) {
+  async open (position = null, button = null) {
     try {
-      if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: left, right, top, bottom'
+      if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: ' + this.validBarPositions.join(', ')
 
       const bar = this.bars[position]
 
@@ -233,7 +229,7 @@ class Bartender {
       if (bar.element.classList.contains('bartender-bar--open')) return
 
       // Close other bars
-      this.close()
+      await this.close()
 
       // Open bar
       this.debug('Opening bar \'' + position + '\'')
@@ -282,18 +278,16 @@ class Bartender {
     } catch (error) {
       this.logError(error)
     }
-
-    return this
   }
 
-  toggle (position = null, button = null) {
+  async toggle (position = null, button = null) {
     try {
-      if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: left, right, top, bottom'
+      if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: ' + this.validBarPositions.join(', ')
 
       if (this.currentOpenBar && this.currentOpenBar.position == position) {
         this.close()
       } else {
-        this.close()
+        await this.close()
         this.open(position, button)
       }
     } catch (error) {
@@ -304,64 +298,76 @@ class Bartender {
   }
 
   close () {
-    try {
-      if (!this.currentOpenBar) return
+    return new Promise((resolve, reject) => {
+      try {
+        if (!this.currentOpenBar) return resolve()
 
-      // Dispatch event
-      this.mainWrap.dispatchEvent(new CustomEvent('close', {
-        detail: {
-          bar: this.currentOpenBar,
-        }
-      }))
+        let bar = this.bars[this.currentOpenBar.position]
 
-      // Close bar
-      this.debug('Closing bar \'' + this.currentOpenBar.position + '\'')
-      this.currentOpenBar.disableFocus()
-      this.currentOpenBar.element.classList.remove('bartender-bar--open')
+        this.debug('Closing bar \'' + bar.position + '\'')
 
-      // Focus open button which was used to open the bar
-      if (this.previousOpenButton) {
-        this.previousOpenButton.focus()
-        this.previousOpenButton.setAttribute('aria-expanded', 'false')
-        this.previousOpenButton = null
-      } else {
-        // Bar was closed using keyboard, or using API. Focus on content element instead.
-        this.contentWrap.focus()
-      }
-
-      // Remove transforms from wrapper elements
-      this.contentWrap.style.removeProperty('transform')
-      this.mainWrap.style.removeProperty('overflow')
-
-      // Remove transforms from pushable elements
-      this.pushElements.forEach(el => {
-        el.style.removeProperty('transform')
-      })
-
-      // Remove class from the main wrap
-      this.mainWrap.classList.remove(this.options.openClass)
-
-      // Hide overlay
-      this.hideOverlay()
-
-      // Wait until transition ends and dispatch event
-      this.currentOpenBar.element.addEventListener('transitionend', () => {
-        this.mainWrap.dispatchEvent(new CustomEvent('afterClose', {
+        // Dispatch event
+        this.mainWrap.dispatchEvent(new CustomEvent('close', {
           detail: {
-            bar: this.bars[this.currentOpenBar.position],
+            bar: bar,
           }
         }))
 
-        this.debug('Closing bar \'' + this.currentOpenBar.position + '\' was finished')
-        this.currentOpenBar = null
-      }, {
-        once: true,
-      })
-    } catch (error) {
-      this.logError(error)
-    }
+        // Hide overlay
+        this.hideOverlay()
 
-    return this
+        // Remove transform from wrapper element
+        this.contentWrap.style.removeProperty('transform')
+
+        // Remove transforms from pushable elements
+        this.pushElements.forEach(el => {
+          el.style.removeProperty('transform')
+        })
+
+        // Close bar
+        bar.disableFocus()
+        bar.element.classList.remove('bartender-bar--open')
+
+        // Wait until bar transition ends
+        bar.element.addEventListener('transitionend', () => {
+          // Dispatch event
+          this.mainWrap.dispatchEvent(new CustomEvent('afterClose', {
+            detail: {
+              bar: bar,
+            }
+          }))
+
+          // Restore scrolling to the main wrap
+          this.mainWrap.style.removeProperty('overflow')
+
+          // Remove class from the main wrap
+          this.mainWrap.classList.remove(this.options.openClass)
+
+          // Focus open button which was used to open the bar
+          if (this.previousOpenButton) {
+            this.previousOpenButton.focus()
+            this.previousOpenButton.setAttribute('aria-expanded', 'false')
+            this.previousOpenButton = null
+          } else {
+            // Bar was closed using keyboard or API. Focus on content element instead.
+            this.contentWrap.focus()
+          }
+
+          setTimeout(() => {
+            this.debug('Closing bar \'' + bar.position + '\' was finished')
+            this.currentOpenBar = null
+
+            return resolve()
+          }, 200)
+        }, {
+          once: true,
+        })
+      } catch (error) {
+        this.logError(error)
+
+        return reject(error)
+      }
+    })
   }
 
   setPush () {
@@ -429,6 +435,7 @@ class BartenderBar {
     this.position = null
     this.mode = 'float'
     this.focusableElementSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    this.validModes = ['float', 'push', 'reveal']
   }
 
   init () {
@@ -445,7 +452,7 @@ class BartenderBar {
     }
 
     // Validate mode
-    if (['float', 'push', 'reveal'].indexOf(this.mode) < 0) throw 'Invalid mode \'' + this.mode + '\' for bar \'' + this.position + '\'. Use one of the following values: float, push, reveal.'
+    if (this.validModes.indexOf(this.mode) < 0) throw 'Invalid mode \'' + this.mode + '\' for bar \'' + this.position + '\'. Use one of the following values: ' + this.validModes.join(', ')
 
     // Disable focus
     this.disableFocus()
