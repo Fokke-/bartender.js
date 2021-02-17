@@ -66,7 +66,7 @@ const js = () => {
     .pipe(sourcemaps.init())
     .pipe(eslint(config.eslint))
     .pipe(eslint.format())
-    .pipe(babel(config.babel))
+    // .pipe(babel(config.babel))
     .pipe(terser(config.terser))
     .pipe(sourcemaps.write('.'))
     .pipe(sizereport(config.sizereport))
