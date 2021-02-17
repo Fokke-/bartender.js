@@ -1,8 +1,8 @@
 {
-  "name": "offcanvas",
+  "name": "bartender.js",
   "version": "1.0.0",
   "description": "",
-  "author": "Nokikana / Ville Fokke Saarivaara",
+  "author": "Ville Fokke Saarivaara",
   "license": "MIT",
   "config": {
     "paths": {
@@ -12,7 +12,7 @@
         "dist": "./dist/"
       },
       "js": {
-        "src": "./js/",
+        "src": "./src/",
         "dist": "./dist/"
       }
     },
