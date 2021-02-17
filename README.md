@@ -13,17 +13,19 @@ The following accessibility concerns have been taken into account:
 Check `/demo/minimal.html` for minimal working example:
 
 ```html
-<!doctype html>
+<!DOCTYPE html>
 
 <html>
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+    />
     <link rel="stylesheet" href="bartender.css" />
   </head>
 
   <!-- Main wrap for bartender -->
   <body class="bartender-main">
-
     <!-- Wrapper for page content -->
     <div class="bartender-content">
       <button data-bartender-open="left">Open left bar</button>
@@ -37,7 +39,7 @@ Check `/demo/minimal.html` for minimal working example:
     <script src="bartender.js"></script>
     <script>
       // Initialize Bartender
-      const bartender = new Bartender()
+      const bartender = new Bartender();
     </script>
   </body>
 </html>
@@ -63,9 +65,7 @@ This element will act as a main wrapper for Bartender. Most likely this will be 
 
 ```html
 <!-- Main wrap for bartender -->
-<body class="bartender-main">
-  ...
-</body>
+<body class="bartender-main"></body>
 ```
 
 #### bartender-content
@@ -74,25 +74,19 @@ This element will be the wrapper for your page main content. **Place this elemen
 
 ```html
 <!-- Wrapper for page content -->
-<div class="bartender-content">
-  ...
-</div>
+<div class="bartender-content"></div>
 ```
 
 ### 4. Add one more more bars
 
-The bar elements need to have `data-bartender-bar` attribute with desired position (left, right, top, bottom) as a value. **Place all bar elements as  direct children of Bartender main element.**
+The bar elements need to have `data-bartender-bar` attribute with desired position (left, right, top, bottom) as a value. **Place all bar elements as direct children of Bartender main element.**
 
 ```html
 <!-- Left bar -->
-<div data-bartender-bar="left" data-bartender-bar-mode="float">
-  ...
-</div>
+<div data-bartender-bar="left" data-bartender-bar-mode="float"></div>
 
 <!-- Right bar -->
-<div data-bartender-bar="right" data-bartender-bar-mode="float">
-  ...
-</div>
+<div data-bartender-bar="right" data-bartender-bar-mode="float"></div>
 ```
 
 You can also specify `data-bartender-bar-mode` attribute to specify transition mode for the bar. The following modes are available:
@@ -119,15 +113,24 @@ Note that these buttons can also be placed in bars too.
 <button data-bartender-close>Close any open bar</button>
 ```
 
-### 6. Initialize Bartender
+### 6. Add buttons for closing bars (optional)
+
+If you want to create button (or any other element) to close any open bar, add `data-bartender-close` attribute to the element.
+
+```html
+<button data-bartender-close>Close bar</button>
+```
+
+### 7. Initialize Bartender
 
 ```javascript
-const bartender = new Bartender()
+// Use default options
+const bartender = new Bartender();
 ```
 
 ## Options
 
-You can pass an object as an argument for Bartender class constructor to modify default options.
+You can pass an object as an argument for Bartender constructor to modify default options.
 
 ```javascript
 const bartender = new Bartender({
@@ -138,7 +141,7 @@ const bartender = new Bartender({
   contentWrapSelector: '.bartender-content',
   readyClass: 'bartender-ready',
   openClass: 'bartender-open',
-})
+});
 ```
 
 ### debug
@@ -190,8 +193,7 @@ This class will be added to the main wrapper when any bar is open.
 Open bar element. Specify bar position (left, right, top, bottom) as an argument.
 
 ```javascript
-// Open left bar
-bartender.open('left')
+bartender.open('left');
 ```
 
 ### close()
@@ -199,16 +201,15 @@ bartender.open('left')
 Close any open bar element.
 
 ```javascript
-bartender.close()
+bartender.close();
 ```
 
 ### toggle(position)
 
-Toggle bar element. Specify bar position (left, right, top, bottom) as an argument.
+Toggle bar element. If bar is closed, open it. Otherwise close it. Specify bar position (left, right, top, bottom) as an argument.
 
 ```javascript
-// If left bar is closed, open it. Otherwise close it.
-bartender.toggle('left')
+bartender.toggle('left');
 ```
 
 ## Events
@@ -233,7 +234,7 @@ This event is triggered when bar has _finished to close_ (transition is finished
 
 ```javascript
 // Example event listener
-bartender.mainWrap.addEventListener('open', e => {
-  console.log('Opening bar \'' + e.detail.bar.position + '\'')
-})
+bartender.mainWrap.addEventListener('open', (e) => {
+  console.log("Opening bar '" + e.detail.bar.position + "'");
+});
 ```
