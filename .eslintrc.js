@@ -4,7 +4,6 @@ module.exports = {
     ecmaVersion: 8,
   },
   env: {
-    node: true,
     browser: true,
   },
   globals: {
