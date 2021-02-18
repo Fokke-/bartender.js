@@ -103,14 +103,13 @@ The bar will slide in, and the content wrapper will be pushed away from the bar.
 
 Content wrapper will be pushed away, revealing bar underneath.
 
-### 5. Add buttons for toggling bars (optional)
+### 5. Add buttons for opening or toggling bars (optional)
 
-Note that these buttons can also be placed in bars too.
+Note that these buttons can also be placed in bars too. For example, you can open right bar from the left bar.
 
 ```html
 <button data-bartender-open="left">Open left bar</button>
-<button data-bartender-toggle="toggle">Toggle left bar</button>
-<button data-bartender-close>Close any open bar</button>
+<button data-bartender-toggle="left">Toggle left bar</button>
 ```
 
 ### 6. Add buttons for closing bars (optional)
