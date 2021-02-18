@@ -264,8 +264,6 @@ class Bartender {
    * @returns {object} Opened bar instance
    */
   async open (position = '', button = null) {
-    console.log(typeof button)
-    console.log(button)
     try {
       // Validate position
       if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: ' + this.validBarPositions.join(', ')
