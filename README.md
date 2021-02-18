@@ -101,7 +101,7 @@ The bar will slide in, and the content wrapper will be pushed away from the bar.
 
 #### reveal
 
-Content wrapper will be pushed away, revealing bar underneath.
+Content wrapper will be pushed away, revealing the bar underneath.
 
 ### 5. Add buttons for opening or toggling bars (optional)
 
@@ -213,27 +213,29 @@ bartender.toggle('left');
 
 ## Events
 
-Add event listener(s) to the Bartender main wrapper element to catch event triggered by the library. The following events are available:
-
-### open
-
-This event is triggered immediately when bar has _started to open_. The bar object and the button used to open the bar will be included in `detail` object.
-
-### afterOpen
-
-This event is triggered when bar has _finished to open_ (transition is finished). The bar object and the button used to open the bar will be included in `detail` object.
-
-### close
-
-This event is triggered immediately when bar has _started to open_. The bar object and the button used to open the bar will be included in `detail` object.
-
-### afterClose
-
-This event is triggered when bar has _finished to close_ (transition is finished). The bar object and the button used to open the bar will be included in `detail` object.
+Add event listener(s) to the Bartender main wrapper element to catch event triggered by the library. All these events bubble, so you can add event listener to the window object too.
 
 ```javascript
 // Example event listener
-bartender.mainWrap.addEventListener('open', (e) => {
+bartender.mainWrap.addEventListener('bartender-open', (e) => {
   console.log("Opening bar '" + e.detail.bar.position + "'");
 });
 ```
+
+### The following events are available
+
+#### bartender-open
+
+This event is triggered immediately when bar has _started to open_. The bar object and the button used to open the bar will be included in `detail` object.
+
+#### bartender-afterOpen
+
+This event is triggered when bar has _finished to open_ (transition is finished). The bar object and the button used to open the bar will be included in `detail` object.
+
+#### bartender-close
+
+This event is triggered immediately when bar has _started to open_. The bar object and the button used to open the bar will be included in `detail` object.
+
+#### bartender-afterClose
+
+This event is triggered when bar has _finished to close_ (transition is finished). The bar object and the button used to open the bar will be included in `detail` object.
