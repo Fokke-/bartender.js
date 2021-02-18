@@ -77,7 +77,7 @@ This element will be the wrapper for your page main content. **Place this elemen
 <div class="bartender-content"></div>
 ```
 
-### 4. Add one more more bars
+### 4. Add one or more bars
 
 The bar elements need to have `data-bartender-bar` attribute with desired position (left, right, top, bottom) as a value. **Place all bar elements as direct children of Bartender main element.**
 
