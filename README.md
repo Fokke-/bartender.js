@@ -24,7 +24,7 @@ Check `/demo/minimal.html` for minimal working example. Note that it's highly re
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <link rel="stylesheet" href="dist/bartender.min.css">
+    <link rel="stylesheet" href="../dist/bartender.min.css">
   </head>
 
   <!-- Main wrap for bartender -->
@@ -40,7 +40,7 @@ Check `/demo/minimal.html` for minimal working example. Note that it's highly re
       <button data-bartender-close>Close</button>
     </div>
 
-    <script src="dist/bartender.min.js"></script>
+    <script src="../dist/bartender.min.js"></script>
     <script>
       // Initialize Bartender
       const bartender = new Bartender();
@@ -50,6 +50,7 @@ Check `/demo/minimal.html` for minimal working example. Note that it's highly re
 ```
 
 ### 1. Include CSS
+
 #### Import SCSS
 
 ```scss
