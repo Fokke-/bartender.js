@@ -13,15 +13,12 @@ The following accessibility concerns have been taken into account:
 Check `/demo/minimal.html` for minimal working example:
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 
 <html>
   <head>
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
-    />
-    <link rel="stylesheet" href="bartender.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="bartender.css">
   </head>
 
   <!-- Main wrap for bartender -->
