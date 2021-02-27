@@ -1,14 +1,16 @@
 {
   "name": "@fokke-/bartender.js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Accessible off-canvas bars",
   "author": "Ville Fokke Saarivaara",
   "license": "MIT",
+  "private": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/Fokke-/bartender.js"
   },
   "files": [
+    "LICENSE",
     "README.md",
     "index.js",
     "dist"
