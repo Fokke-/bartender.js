@@ -147,6 +147,32 @@ If you want to create button (or any other element) to close any open bar, add `
 const bartender = new Bartender();
 ```
 
+## Styling
+
+### Bars
+
+```css
+/* Left bar */
+[data-bartender-bar='left'] {
+  background: #ff69b4;
+}
+```
+
+By default bars will be animated using transition `transform 250ms linear`. You can override this if you're using scss:
+
+```scss
+$bartender-transition: transform 500ms linear;
+```
+
+### Overlay shading
+
+```css
+.bartender-overlay {
+  background: #ff69b4;
+  opacity: 0.5;
+}
+```
+
 ## Options
 
 You can pass an object as an argument for Bartender constructor to modify default options.
