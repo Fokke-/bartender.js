@@ -4,6 +4,15 @@
   "description": "Accessible off-canvas bars",
   "author": "Ville Fokke Saarivaara",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Fokke-/bartender.js"
+  },
+  "files": [
+    "README.md",
+    "index.js",
+    "dist"
+  ],
   "devDependencies": {
     "beeper": "^2.0.0",
     "browser-sync": "^2.26.7",
