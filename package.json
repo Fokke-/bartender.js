@@ -1,60 +1,25 @@
 {
-  "name": "bartender.js",
+  "name": "@fokke-/bartender.js",
   "version": "1.0.0",
-  "description": "",
+  "description": "Accessible off-canvas bars",
   "author": "Ville Fokke Saarivaara",
   "license": "MIT",
-  "config": {
-    "paths": {
-      "base": "./",
-      "css": {
-        "src": "./scss/",
-        "dist": "./dist/"
-      },
-      "js": {
-        "src": "./src/",
-        "dist": "./dist/"
-      }
-    },
-    "terser": {},
-    "babel": {
-      "presets": [
-        "@babel/env"
-      ],
-      "plugins": [
-        "@babel/plugin-transform-object-assign",
-        "babel-plugin-loop-optimizer"
-      ]
-    },
-    "sizereport": {
-      "gzip": true
-    },
-    "browserSync": {
-      "server": {
-        "baseDir": "demo/"
-      },
-      "online": true
-    }
-  },
   "devDependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/plugin-transform-object-assign": "^7.2.0",
-    "@babel/preset-env": "^7.5.5",
-    "babel-plugin-loop-optimizer": "^1.4.1",
     "beeper": "^2.0.0",
     "browser-sync": "^2.26.7",
     "gulp": "^4.0.2",
-    "gulp-babel": "^8.0.0",
     "gulp-clean-css": "^4.2.0",
     "gulp-concat": "^2.6.1",
     "gulp-eslint": "^6.0.0",
+    "gulp-footer": "^2.0.2",
     "gulp-notify": "^3.2.0",
     "gulp-plumber": "^1.2.1",
+    "gulp-rename": "^2.0.0",
     "gulp-sass": "^4.0.2",
     "gulp-sass-lint": "^1.4.0",
     "gulp-sizereport": "^1.2.1",
-    "gulp-sourcemaps": "^2.6.5",
-    "gulp-terser": "^1.2.0",
-    "node-sass": "^4.12.0"
+    "gulp-sourcemaps": "^3.0.0",
+    "gulp-terser": "^2.0.0",
+    "node-sass": "^5.0.0"
   }
 }

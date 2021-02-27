@@ -1,4 +1,3 @@
-const config = require('./package.json').config
 const gulp = require('gulp')
 const sizereport = require('gulp-sizereport')
 const plumber = require('gulp-plumber')
@@ -8,10 +7,36 @@ const sourcemaps = require('gulp-sourcemaps')
 const sass = require('gulp-sass')
 const browserSync = require('browser-sync').create()
 const cleanCSS = require('gulp-clean-css')
-const babel = require('gulp-babel')
 const terser = require('gulp-terser')
 const eslint = require('gulp-eslint')
 const sasslint = require('gulp-sass-lint')
+const footer = require('gulp-footer')
+const rename = require('gulp-rename')
+
+// Configuration
+const config = {
+  paths: {
+    base: './',
+    css: {
+      src: './scss/',
+      dist: './dist/',
+    },
+    js: {
+      src: './src/',
+      dist: './dist/',
+    },
+  },
+  sizereport: {
+    gzip: true,
+  },
+  browserSync: {
+    server: {
+      baseDir: './',
+      directory: true,
+    },
+    online: true,
+  },
+}
 
 // Error handler
 function plumbError () {
@@ -19,14 +44,14 @@ function plumbError () {
     errorHandler: function (err) {
       notify.onError({
         templateOptions: {
-          date: new Date()
+          date: new Date(),
         },
         title: 'Gulp error in ' + err.plugin,
-        message: err.formatted
+        message: err.formatted,
       })(err)
       beeper()
       this.emit('end')
-    }
+    },
   })
 }
 
@@ -44,8 +69,11 @@ const browserSyncReload = (done) => {
 
 // Task: CSS
 const css = () => {
-  return gulp.src(config.paths.css.src + '*.scss')
+  return gulp
+    .src(config.paths.css.src + '*.scss')
+    .pipe(gulp.dest(config.paths.css.dist))
     .pipe(plumbError())
+    .pipe(rename('bartender.min.css'))
     .pipe(sourcemaps.init())
     .pipe(sasslint(config.sasslint))
     .pipe(sasslint.format())
@@ -55,39 +83,61 @@ const css = () => {
     .pipe(sourcemaps.write('.'))
     .pipe(sizereport(config.sizereport))
     .pipe(gulp.dest(config.paths.css.dist))
-    .pipe(gulp.dest(config.paths.base + 'demo/')
-    )
 }
 
 // Task: JS
 const js = () => {
-  return gulp.src(config.paths.js.src + '*.js')
+  return gulp
+    .src(config.paths.js.src + 'bartender.js')
     .pipe(plumbError())
+    .pipe(rename('bartender.min.js'))
     .pipe(sourcemaps.init())
-    .pipe(eslint(config.eslint))
+    .pipe(eslint())
     .pipe(eslint.format())
-    // .pipe(babel(config.babel))
-    .pipe(terser(config.terser))
+    .pipe(eslint.failAfterError())
+    .pipe(terser())
     .pipe(sourcemaps.write('.'))
     .pipe(sizereport(config.sizereport))
     .pipe(gulp.dest(config.paths.js.dist))
-    .pipe(gulp.dest(config.paths.base + 'demo/')
-    )
+}
+
+// Task: JS Module
+const jsModule = () => {
+  return gulp
+    .src(config.paths.js.src + 'bartender.js')
+    .pipe(plumbError())
+    .pipe(rename('bartender.module.js'))
+    .pipe(sourcemaps.init())
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError())
+    .pipe(footer('\n\nexport default Bartender'))
+    .pipe(sizereport(config.sizereport))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(config.paths.js.dist))
 }
 
 // Watch
 const watch = () => {
-  gulp.watch([
-    config.paths.css.src + '**/*.scss',
-  ], gulp.series(css, browserSyncReload))
+  gulp.watch(
+    [
+      config.paths.css.src + '**/*.scss',
+    ],
+    gulp.series(css, browserSyncReload)
+  )
 
-  gulp.watch([
-    config.paths.js.src + '**/*.js',
-  ], gulp.series(js, browserSyncReload))
+  gulp.watch(
+    [
+      config.paths.js.src + '**/*.js',
+    ],
+    gulp.series(js, jsModule, browserSyncReload)
+  )
 
-  gulp.watch([
-    config.paths.base + '**/*.html',
-  ], gulp.series(browserSyncReload))
+  gulp.watch(
+    [
+      config.paths.base + '**/*.html',
+    ],
+    gulp.series(browserSyncReload))
 }
 
 // Task: Dev
@@ -96,5 +146,6 @@ const dev = gulp.parallel(browserSyncInit, watch)
 // Exports
 exports.css = css
 exports.js = js
+exports.jsModule = jsModule
 exports.dev = dev
 exports.default = dev

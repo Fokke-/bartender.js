@@ -591,3 +591,6 @@ class BartenderBar {
   }
 
 }
+
+export default Bartender
+//# sourceMappingURL=bartender.module.js.map

@@ -1,0 +1,129 @@
+$bartender-transition: transform 250ms linear !default;
+
+html {
+  height: 100%;
+}
+
+.bartender-main,
+.bartender-content,
+[data-bartender-bar] {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.bartender-main {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  &.bartender-open {
+    overflow: hidden !important;
+  }
+}
+
+.bartender-content {
+  z-index: 30;
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+  transition: $bartender-transition;
+  background: #fff;
+}
+
+[data-bartender-bar] {
+  z-index: 50;
+  position: fixed;
+  background: #000;
+  color: #fff;
+  transition: $bartender-transition;
+  overflow: auto;
+
+  &[data-bartender-bar-mode='reveal'] {
+    z-index: 10;
+  }
+
+  &:focus {
+    outline: 0;
+  }
+}
+
+[data-bartender-bar='left'],
+[data-bartender-bar='right'] {
+  top: 0;
+  width: 80%;
+  max-width: 400px;
+  height: 100%;
+
+  &.bartender-bar--open {
+    transform: translateX(0) !important;
+  }
+}
+
+[data-bartender-bar='top'],
+[data-bartender-bar='bottom'] {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  height: 50%;
+
+  &.bartender-bar--open {
+    transform: translateY(0) !important;
+  }
+}
+
+[data-bartender-bar='left'] {
+  left: 0;
+
+  &[data-bartender-bar-mode='float'],
+  &[data-bartender-bar-mode='push'] {
+    transform: translateX(-100%);
+  }
+}
+
+[data-bartender-bar='right'] {
+  right: 0;
+
+  &[data-bartender-bar-mode='float'],
+  &[data-bartender-bar-mode='push'] {
+    transform: translateX(100%);
+  }
+}
+
+[data-bartender-bar='top'] {
+  top: 0;
+
+  &[data-bartender-bar-mode='float'],
+  &[data-bartender-bar-mode='push'] {
+    transform: translateY(-100%);
+  }
+}
+
+[data-bartender-bar='bottom'] {
+  bottom: 0;
+
+  &[data-bartender-bar-mode='float'],
+  &[data-bartender-bar-mode='push'] {
+    transform: translateY(100%);
+  }
+}
+
+[data-bartender-push] {
+  transition: $bartender-transition;
+}
+
+.bartender-overlay {
+  z-index: 9999;
+  visibility: hidden;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #000;
+  opacity: 0.75;
+  transition: opacity 500ms ease;
+
+  &--visible {
+    visibility: visible;
+  }
+}
