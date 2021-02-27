@@ -8,9 +8,15 @@ The following accessibility concerns have been taken into account:
 - When bar is open, it's child elements are focusable, and the focus will be initially set on the bar element
 - After closing the bar the focus will return to the button which was used to open the bar
 
-## Getting started
+## Install using NPM
 
-Check `/demo/minimal.html` for minimal working example:
+```console
+npm i @fokke-/bartender.js
+```
+
+## Using the library
+
+Check `/demo/minimal.html` for minimal working example. Note that it's highly recommended to define viewport meta tag to avoid buggy rendering when using bars with `push` or `reveal` modes.
 
 ```html
 <!doctype html>
@@ -18,11 +24,12 @@ Check `/demo/minimal.html` for minimal working example:
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <link rel="stylesheet" href="bartender.css">
+    <link rel="stylesheet" href="dist/bartender.min.css">
   </head>
 
   <!-- Main wrap for bartender -->
   <body class="bartender-main">
+
     <!-- Wrapper for page content -->
     <div class="bartender-content">
       <button data-bartender-open="left">Open left bar</button>
@@ -33,7 +40,7 @@ Check `/demo/minimal.html` for minimal working example:
       <button data-bartender-close>Close</button>
     </div>
 
-    <script src="bartender.js"></script>
+    <script src="dist/bartender.min.js"></script>
     <script>
       // Initialize Bartender
       const bartender = new Bartender();
@@ -43,12 +50,30 @@ Check `/demo/minimal.html` for minimal working example:
 ```
 
 ### 1. Include CSS
+#### Import SCSS
+
+```scss
+// If you're using webpack etc...
+@import '@fokke-/bartender.js/dist/bartender.scss';
+
+// Or if you extracted the library in your project directory
+@import './dist/bartender.scss'
+```
+
+#### ...or include CSS manually
 
 ```html
-<link rel="stylesheet" href="bartender.css" />
+<link rel="stylesheet" href="bartender.css">
 ```
 
 ### 2. Include JS
+
+#### Import module
+
+```javascript
+import Bartender from '@fokke-/bartender.js'
+```
+#### ...or include JS manually
 
 ```html
 <script src="bartender.js"></script>
@@ -56,22 +81,19 @@ Check `/demo/minimal.html` for minimal working example:
 
 ### 3. Set the required wrapper elements
 
-#### bartender-main
-
-This element will act as a main wrapper for Bartender. Most likely this will be your body element.
+- `bartender-main` will act as a main wrapper for Bartender. Most likely this will be your body element.
+- `bartender-content` is the wrapper element for your page content.
 
 ```html
 <!-- Main wrap for bartender -->
-<body class="bartender-main"></body>
-```
+<body class="bartender-main">
+  <!-- Wrapper for page content -->
+  <div class="bartender-content">
 
-#### bartender-content
+  </div>
 
-This element will be the wrapper for your page main content. **Place this element as a direct child of Bartender main element.**
-
-```html
-<!-- Wrapper for page content -->
-<div class="bartender-content"></div>
+  <!-- Place your bars here later -->
+</body>
 ```
 
 ### 4. Add one or more bars
