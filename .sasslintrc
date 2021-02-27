@@ -1,6 +1,6 @@
 {
   "files": {
-    "include": "public/site/templates/resources/css/**/*.scss"
+    "include": "scss/*.scss"
   },
   "options": {
     "merge-default-rules": false
