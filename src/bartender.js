@@ -291,7 +291,8 @@ class Bartender {
 
         this.debug('Opening bar \'' + bar.position + '\' was finished')
 
-        this.mainWrap.dispatchEvent(new CustomEvent('afterOpen', {
+        this.mainWrap.dispatchEvent(new CustomEvent('bartender-afterOpen', {
+          bubbles: true,
           detail: {
             bar: bar,
             button: button,
@@ -324,7 +325,8 @@ class Bartender {
       this.showOverlay()
 
       // Dispatch event
-      this.mainWrap.dispatchEvent(new CustomEvent('open', {
+      this.mainWrap.dispatchEvent(new CustomEvent('bartender-open', {
+        bubbles: true,
         detail: {
           bar: bar,
           button: button,
@@ -374,7 +376,8 @@ class Bartender {
         this.debug('Closing bar \'' + bar.position + '\'')
 
         // Dispatch event
-        this.mainWrap.dispatchEvent(new CustomEvent('close', {
+        this.mainWrap.dispatchEvent(new CustomEvent('bartender-close', {
+          bubbles: true,
           detail: {
             bar: bar,
           },
@@ -400,7 +403,8 @@ class Bartender {
         // Wait until bar transition ends
         bar.element.addEventListener('transitionend', () => {
           // Dispatch event
-          this.mainWrap.dispatchEvent(new CustomEvent('afterClose', {
+          this.mainWrap.dispatchEvent(new CustomEvent('bartender-afterClose', {
+            bubbles: true,
             detail: {
               bar: bar,
             },

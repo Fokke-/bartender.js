@@ -74,7 +74,7 @@ This element will be the wrapper for your page main content. **Place this elemen
 <div class="bartender-content"></div>
 ```
 
-### 4. Add one more more bars
+### 4. Add one or more bars
 
 The bar elements need to have `data-bartender-bar` attribute with desired position (left, right, top, bottom) as a value. **Place all bar elements as direct children of Bartender main element.**
 
@@ -98,16 +98,15 @@ The bar will slide in, and the content wrapper will be pushed away from the bar.
 
 #### reveal
 
-Content wrapper will be pushed away, revealing bar underneath.
+Content wrapper will be pushed away, revealing the bar underneath.
 
-### 5. Add buttons for toggling bars (optional)
+### 5. Add buttons for opening or toggling bars (optional)
 
-Note that these buttons can also be placed in bars too.
+Note that these buttons can also be placed in bars too. For example, you can open right bar from the left bar.
 
 ```html
 <button data-bartender-open="left">Open left bar</button>
-<button data-bartender-toggle="toggle">Toggle left bar</button>
-<button data-bartender-close>Close any open bar</button>
+<button data-bartender-toggle="left">Toggle left bar</button>
 ```
 
 ### 6. Add buttons for closing bars (optional)
@@ -211,27 +210,29 @@ bartender.toggle('left');
 
 ## Events
 
-Add event listener(s) to the Bartender main wrapper element to catch event triggered by the library. The following events are available:
-
-### open
-
-This event is triggered immediately when bar has _started to open_. The bar object and the button used to open the bar will be included in `detail` object.
-
-### afterOpen
-
-This event is triggered when bar has _finished to open_ (transition is finished). The bar object and the button used to open the bar will be included in `detail` object.
-
-### close
-
-This event is triggered immediately when bar has _started to open_. The bar object and the button used to open the bar will be included in `detail` object.
-
-### afterClose
-
-This event is triggered when bar has _finished to close_ (transition is finished). The bar object and the button used to open the bar will be included in `detail` object.
+Add event listener(s) to the Bartender main wrapper element to catch event triggered by the library. All these events bubble, so you can add event listener to the window object too.
 
 ```javascript
 // Example event listener
-bartender.mainWrap.addEventListener('open', (e) => {
+bartender.mainWrap.addEventListener('bartender-open', (e) => {
   console.log("Opening bar '" + e.detail.bar.position + "'");
 });
 ```
+
+### The following events are available
+
+#### bartender-open
+
+This event is triggered immediately when bar has _started to open_. The bar object and the button used to open the bar will be included in `detail` object.
+
+#### bartender-afterOpen
+
+This event is triggered when bar has _finished to open_ (transition is finished). The bar object and the button used to open the bar will be included in `detail` object.
+
+#### bartender-close
+
+This event is triggered immediately when bar has _started to open_. The bar object and the button used to open the bar will be included in `detail` object.
+
+#### bartender-afterClose
+
+This event is triggered when bar has _finished to close_ (transition is finished). The bar object and the button used to open the bar will be included in `detail` object.
