@@ -28,6 +28,10 @@ html {
   min-height: 100%;
   transition: $bartender-transition;
   background: #fff;
+
+  &:focus {
+    outline: 0;
+  }
 }
 
 [data-bartender-bar] {

@@ -26,6 +26,9 @@ class Bartender {
       // Selector to find content wrapper
       contentWrapSelector: '.bartender-content',
 
+      // Selector for focusable elements
+      focusableElementSelector: 'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])',
+
       // Classes
       readyClass: 'bartender-ready',
       openClass: 'bartender-open',
@@ -97,6 +100,53 @@ class Bartender {
     if (!this.options.debug) return
 
     console.log('Bartender debug: ' + text)
+  }
+
+  /**
+   * Disable focus on element and it's children
+   *
+   * @param {object} DOM element
+   * @returns {object} DOM element
+   */
+  disableFocus (element) {
+    // Disable focus of element children
+    element.querySelectorAll(this.options.focusableElementSelector).forEach(item => {
+      // Remember the current tabindex and disable focus of the element
+      item.setAttribute('data-bartender-prevtabindex', item.getAttribute('tabindex'))
+      item.setAttribute('tabindex', '-1')
+    })
+
+    // Disable focus of the element
+    element.setAttribute('tabindex', '-1')
+    element.setAttribute('aria-hidden', 'true')
+
+    return element
+  }
+
+  /**
+   * Enable focus on element and it's children
+   *
+   * @param {object} DOM element
+   * @returns {object} DOM element
+   */
+  enableFocus (element) {
+    // Enable focus of element children
+    element.querySelectorAll('[data-bartender-prevtabindex').forEach(item => {
+      // If element has previous tabindex marked, return it. Otherwise just remove tabindex attribute.
+      if (item.getAttribute('data-bartender-prevtabindex') != 'null') {
+        item.setAttribute('tabindex', item.getAttribute('data-bartender-prevtabindex'))
+      } else {
+        item.removeAttribute('tabindex')
+      }
+
+      item.removeAttribute('data-bartender-prevtabindex')
+    })
+
+    // Enable focus of the element
+    element.setAttribute('tabindex', '0')
+    element.removeAttribute('aria-hidden')
+
+    return element
   }
 
   /**
@@ -250,6 +300,9 @@ class Bartender {
       newBar.element = bar
       newBar.init()
 
+      // Initially disable focus of the bar
+      this.disableFocus(newBar.element)
+
       // Insert new bar
       this.bars[position] = newBar
 
@@ -302,8 +355,12 @@ class Bartender {
         once: true,
       })
 
-      // Focus on bar
-      bar.enableFocus()
+      // Disable focus on content element
+      this.disableFocus(this.contentWrap)
+
+      // Enable focus on bar element and focus on bar
+      this.enableFocus(bar.element)
+      bar.element.focus()
 
       // Mark this bar as open
       this.currentOpenBar = bar
@@ -394,11 +451,11 @@ class Bartender {
           el.style.removeProperty('transform')
         })
 
-        // Close bar
-        bar.disableFocus()
-        bar.element.classList.remove('bartender-bar--open')
+        // Disable focus on bar element
+        this.disableFocus(bar.element)
 
-        this.currentOpenBar = null
+        // Enable focus on content element
+        this.enableFocus(this.contentWrap)
 
         // Wait until bar transition ends
         bar.element.addEventListener('transitionend', () => {
@@ -434,6 +491,10 @@ class Bartender {
         }, {
           once: true,
         })
+
+        // Close the bar
+        bar.element.classList.remove('bartender-bar--open')
+        this.currentOpenBar = null
       } catch (error) {
         this.logError(error)
 
@@ -520,7 +581,6 @@ class BartenderBar {
     this.element = null
     this.position = null
     this.mode = 'float'
-    this.focusableElementSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     this.validModes = [
       'float',
       'push',
@@ -549,52 +609,10 @@ class BartenderBar {
     // Validate mode
     if (this.validModes.indexOf(this.mode) < 0) throw 'Invalid mode \'' + this.mode + '\' for bar \'' + this.position + '\'. Use one of the following values: ' + this.validModes.join(', ')
 
-    // Disable focus
-    this.disableFocus()
-
     return this
   }
-
-  /**
-   * Disable focus on bar child elements
-   *
-   * @returns {object} Bar instance
-   */
-  disableFocus () {
-    // Disable focus on bar child elements
-    this.element.querySelectorAll(this.focusableElementSelector).forEach(item => {
-      item.setAttribute('tabindex', '-1')
-    })
-
-    // Disable focus on bar
-    this.element.setAttribute('tabindex', '-1')
-    this.element.setAttribute('aria-hidden', 'true')
-
-    return this
-  }
-
-  /**
-   * Enable focus on bar child elements
-   *
-   * @returns {object} Bar instance
-   */
-  enableFocus () {
-    // Enable focus on bar child elements
-    this.element.querySelectorAll(this.focusableElementSelector).forEach(item => {
-      item.removeAttribute('tabindex')
-    })
-
-    // Enable focus on bar
-    this.element.removeAttribute('aria-hidden')
-    this.element.setAttribute('tabindex', '0')
-
-    // Focus on bar
-    this.element.focus()
-
-    return this
-  }
-
 }
+
 
 export default Bartender
 //# sourceMappingURL=bartender.module.js.map
