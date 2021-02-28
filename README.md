@@ -153,7 +153,12 @@ const bartender = new Bartender();
 ### Bars
 
 ```css
-/* Left bar */
+/* These styles apply to all bars */
+[data-bartender-bar] {
+  background: red;
+}
+
+/* These styles apply only to the left bar */
 [data-bartender-bar='left'] {
   background: #ff69b4;
 }
