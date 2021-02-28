@@ -5,7 +5,7 @@ Bartender is a simple zero-dependency library for creating accessible off-canvas
 The following accessibility concerns have been taken into account:
 
 - When off-canvas bar is closed, it's child elements are not focusable
-- When bar is open, it's child elements are focusable, and the focus will be initially set on the bar element
+- When bar is open, only it's child elements are focusable, and the focus will be initially set on the bar element
 - After closing the bar the focus will return to the button which was used to open the bar
 
 ## Install using NPM
@@ -74,6 +74,7 @@ Check `/demo/minimal.html` for minimal working example. Note that it's highly re
 ```javascript
 import Bartender from '@fokke-/bartender.js'
 ```
+
 #### ...or include JS manually
 
 ```html
@@ -184,6 +185,7 @@ const bartender = new Bartender({
   closeOnEsc: true,
   mainWrapSelector: '.bartender-main',
   contentWrapSelector: '.bartender-content',
+  focusableElementSelector: 'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])',
   readyClass: 'bartender-ready',
   openClass: 'bartender-open',
 });
@@ -218,6 +220,12 @@ This selector will be used to find main wrapper.
 Type: `string`, Default: `.bartender-content`
 
 This selector will be used to find content wrapper.
+
+### focusableElementSelector
+
+Type: `string`, Default: `a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])`
+
+This selector will be used to find focusable elements.
 
 ### readyClass
 
