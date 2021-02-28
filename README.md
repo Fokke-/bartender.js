@@ -67,6 +67,12 @@ Check `/demo/minimal.html` for minimal working example. Note that it's highly re
 <link rel="stylesheet" href="bartender.css">
 ```
 
+#### ...or include CSS from CDN
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/@fokke-/bartender.js@1.0.3/dist/bartender.min.css">
+```
+
 ### 2. Include JS
 
 #### Import module
@@ -79,6 +85,12 @@ import Bartender from '@fokke-/bartender.js'
 
 ```html
 <script src="bartender.js"></script>
+```
+
+#### ...or include JS from CDN
+
+```html
+<script src="https://unpkg.com/@fokke-/bartender.js@1.0.3/dist/bartender.min.js"></script>
 ```
 
 ### 3. Set the required wrapper elements
