@@ -17,6 +17,10 @@ module.exports = {
     'no-unused-vars': 'off',
     'no-undef': 'off',
     'no-useless-escape': 'off',
+    'eol-last': [
+      'error',
+      'always',
+    ],
     indent: [
       'error',
       2,
