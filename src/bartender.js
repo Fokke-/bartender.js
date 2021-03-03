@@ -535,8 +535,10 @@ class Bartender {
         break
     }
 
-    if (['push',
-      'reveal',].indexOf(this.currentOpenBar.mode) >= 0) {
+    if ([
+      'push',
+      'reveal',
+    ].indexOf(this.currentOpenBar.mode) >= 0) {
       // Transform content wrapper
       this.contentWrap.style.transform = transform
     }
