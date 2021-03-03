@@ -27,7 +27,7 @@ class Bartender {
       contentWrapSelector: '.bartender-content',
 
       // Selector for focusable elements
-      focusableElementSelector: 'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])',
+      focusableElementSelector: '[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])',
 
       // Classes
       readyClass: 'bartender-ready',
@@ -65,6 +65,9 @@ class Bartender {
       'top',
       'bottom',
     ]
+
+    // TODO REMOVE THIS
+    this.focusableElementCache = {}
 
     // Run initializer
     this.init()
@@ -109,16 +112,26 @@ class Bartender {
    * @returns {object} DOM element
    */
   disableFocus (element) {
-    // Disable focus of element children
-    element.querySelectorAll(this.options.focusableElementSelector).forEach(item => {
-      // Remember the current tabindex and disable focus of the element
-      item.setAttribute('data-bartender-prevtabindex', item.getAttribute('tabindex'))
-      item.setAttribute('tabindex', '-1')
-    })
+    if (this.options.debug === true) {
+      var startTime = performance.now()
+    }
+
+    // Enable focus of element children
+    var children = this.focusableElementCache[element.getAttribute('data-bartender-bar') || 'contentWrap']
+
+    for (var i = 0; i < children.length; i++) {
+      children[i].setAttribute('data-bartender-prevtabindex', children[i].getAttribute('tabindex'))
+      children[i].setAttribute('tabindex', '-1')
+    }
 
     // Disable focus of the element
     element.setAttribute('tabindex', '-1')
     element.setAttribute('aria-hidden', 'true')
+
+    if (this.options.debug === true) {
+      var endTime = performance.now()
+      this.debug('Disabled focus of ' + children.length + ' elements in ' + (endTime - startTime))
+    }
 
     return element
   }
@@ -130,21 +143,32 @@ class Bartender {
    * @returns {object} DOM element
    */
   enableFocus (element) {
+    if (this.options.debug === true) {
+      var startTime = performance.now()
+    }
+
     // Enable focus of element children
-    element.querySelectorAll('[data-bartender-prevtabindex').forEach(item => {
+    var children = this.focusableElementCache[element.getAttribute('data-bartender-bar') || 'contentWrap']
+
+    for (var i = 0; i < children.length; i++) {
       // If element has previous tabindex marked, return it. Otherwise just remove tabindex attribute.
-      if (item.getAttribute('data-bartender-prevtabindex') != 'null') {
-        item.setAttribute('tabindex', item.getAttribute('data-bartender-prevtabindex'))
+      if (children[i].getAttribute('data-bartender-prevtabindex') != 'null') {
+        children[i].setAttribute('tabindex', children[i].getAttribute('data-bartender-prevtabindex'))
       } else {
-        item.removeAttribute('tabindex')
+        children[i].removeAttribute('tabindex')
       }
 
-      item.removeAttribute('data-bartender-prevtabindex')
-    })
+      children[i].removeAttribute('data-bartender-prevtabindex')
+    }
 
     // Enable focus of the element
     element.setAttribute('tabindex', '0')
     element.removeAttribute('aria-hidden')
+
+    if (this.options.debug === true) {
+      var endTime = performance.now()
+      this.debug('Enabled focus of ' + children.length + ' elements in ' + (endTime - startTime))
+    }
 
     return element
   }
@@ -171,6 +195,9 @@ class Bartender {
       // Add classes
       this.mainWrap.classList.add('bartender-main')
       this.contentWrap.classList.add('bartender-content')
+
+      // Cache focusable elements
+      this.focusableElementCache.contentWrap = this.contentWrap.querySelectorAll(this.options.focusableElementSelector)
 
       // Find bars
       this.mainWrap.querySelectorAll('[data-bartender-bar]').forEach(bar => {
@@ -299,12 +326,13 @@ class Bartender {
       const newBar = new BartenderBar()
       newBar.element = bar
       newBar.init()
+      this.bars[position] = newBar
+
+      // Cache focusable elements
+      this.focusableElementCache[position] = newBar.element.querySelectorAll(this.options.focusableElementSelector)
 
       // Initially disable focus of the bar
       this.disableFocus(newBar.element)
-
-      // Insert new bar
-      this.bars[position] = newBar
 
       this.debug('Added bar \'' + position + '\' with mode \'' + newBar.mode + '\'')
     } catch (error) {
@@ -332,15 +360,18 @@ class Bartender {
       if (!bar) throw 'Bar with position \'' + position + '\' is not defined. Use one of the following: ' + Object.keys(this.bars).join(', ') + '.'
 
       // Close other bars
-      await this.close()
+      if (this.currentOpenBar) await this.close()
 
       this.debug('Opening bar \'' + position + '\'')
 
-      // Wait until transition ends and dispatch event
+      // Dispatch event when transition ends
       bar.element.addEventListener('transitionend', () => {
         // User might close bar before the transition ends,
         // so make sure that this bar is still open.
         if (this.currentOpenBar === null || this.currentOpenBar.position !== bar.position) return
+
+        // Add class to the main wrap
+        this.mainWrap.classList.add(this.options.openClass)
 
         this.debug('Opening bar \'' + bar.position + '\' was finished')
 
@@ -355,24 +386,18 @@ class Bartender {
         once: true,
       })
 
-      // Disable focus on content element
-      this.disableFocus(this.contentWrap)
+      // Mark this bar as open
+      this.currentOpenBar = bar
+      bar.element.classList.add('bartender-bar--open')
 
       // Enable focus on bar element and focus on bar
       this.enableFocus(bar.element)
       bar.element.focus()
 
-      // Mark this bar as open
-      this.currentOpenBar = bar
-      bar.element.classList.add('bartender-bar--open')
-
       // Push elements
       this.setPush()
 
-      // Add class to the main wrap
-      this.mainWrap.classList.add(this.options.openClass)
-
-      // Remember the button which was used to open off-canvas
+      // Remember the button which was used to open the bar
       this.previousOpenButton = button
 
       // Set ARIA attributes of the button
@@ -380,6 +405,9 @@ class Bartender {
 
       // Show overlay
       this.showOverlay()
+
+      // Disable focus on content element
+      this.disableFocus(this.contentWrap)
 
       // Dispatch event
       this.mainWrap.dispatchEvent(new CustomEvent('bartender-open', {
@@ -483,11 +511,9 @@ class Bartender {
             this.contentWrap.focus()
           }
 
-          setTimeout(() => {
-            this.debug('Closing bar \'' + bar.position + '\' was finished')
+          this.debug('Closing bar \'' + bar.position + '\' was finished')
 
-            return resolve(bar)
-          }, 200)
+          return resolve(bar)
         }, {
           once: true,
         })
