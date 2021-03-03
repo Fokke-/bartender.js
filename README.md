@@ -202,7 +202,7 @@ const bartender = new Bartender({
   closeOnEsc: true,
   mainWrapSelector: '.bartender-main',
   contentWrapSelector: '.bartender-content',
-  focusableElementSelector: 'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])',
+  focusableElementSelector: '[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])',
   readyClass: 'bartender-ready',
   openClass: 'bartender-open',
 });
@@ -240,7 +240,7 @@ This selector will be used to find content wrapper.
 
 ### focusableElementSelector
 
-Type: `string`, Default: `a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])`
+Type: `string`, Default: `[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])`
 
 This selector will be used to find focusable elements.
 
