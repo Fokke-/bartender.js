@@ -20,6 +20,9 @@ class Bartender {
       // Close open bar with escape key?
       closeOnEsc: true,
 
+      // Trap focus to the open bar?
+      trapFocus: false,
+
       // Selector to find main wrapper
       mainWrapSelector: '.bartender-main',
 
@@ -305,7 +308,7 @@ class Bartender {
   /**
    * Add a new off-canvas bar
    *
-   * @param {object} - BartenderBar instance
+   * @param {object} bar - BartenderBar instance
    * @returns {object} Added bar instance
    */
   addBar (bar) {
@@ -407,7 +410,7 @@ class Bartender {
       this.showOverlay()
 
       // Disable focus on content element
-      this.disableFocus(this.contentWrap)
+      if (this.options.trapFocus === true) this.disableFocus(this.contentWrap)
 
       // Dispatch event
       this.mainWrap.dispatchEvent(new CustomEvent('bartender-open', {
@@ -483,7 +486,7 @@ class Bartender {
         this.disableFocus(bar.element)
 
         // Enable focus on content element
-        this.enableFocus(this.contentWrap)
+        if (this.options.trapFocus === true) this.enableFocus(this.contentWrap)
 
         // Wait until bar transition ends
         bar.element.addEventListener('transitionend', () => {

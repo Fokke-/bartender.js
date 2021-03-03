@@ -200,6 +200,7 @@ const bartender = new Bartender({
   debug: false,
   overlay: true,
   closeOnEsc: true,
+  trapFocus: false,
   mainWrapSelector: '.bartender-main',
   contentWrapSelector: '.bartender-content',
   focusableElementSelector: '[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])',
@@ -225,6 +226,14 @@ Show shading overlay when bar is open.
 Type: `boolean`, Default: `true`
 
 Close any open bar using escape key.
+
+### trapFocus
+
+Type: `boolean`, Default: `false`
+
+If bar is open, focus will be trapped to the open bar and it's child elements, and elements within content wrap are not focusable. If this option is enabled, you **should** provide user a way to close the bar with keyboard by adding close button in the bar.
+
+If you have lots of focusable elements, this operation can also be quite expensive performance-wise.
 
 ### mainWrapSelector
 
