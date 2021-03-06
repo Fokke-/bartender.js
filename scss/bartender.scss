@@ -73,37 +73,37 @@ $bartender-transition: transform 250ms linear !default;
 
 [data-bartender-bar='left'] {
   left: 0;
+  transform: translateX(-100%);
 
-  &[data-bartender-bar-mode='float'],
-  &[data-bartender-bar-mode='push'] {
-    transform: translateX(-100%);
+  &[data-bartender-bar-mode='reveal'] {
+    transform: translateX(0);
   }
 }
 
 [data-bartender-bar='right'] {
   right: 0;
+  transform: translateX(100%);
 
-  &[data-bartender-bar-mode='float'],
-  &[data-bartender-bar-mode='push'] {
-    transform: translateX(100%);
+  &[data-bartender-bar-mode='reveal'] {
+    transform: translateX(0);
   }
 }
 
 [data-bartender-bar='top'] {
   top: 0;
+  transform: translateY(-100%);
 
-  &[data-bartender-bar-mode='float'],
-  &[data-bartender-bar-mode='push'] {
-    transform: translateY(-100%);
+  &[data-bartender-bar-mode='reveal'] {
+    transform: translateY(0);
   }
 }
 
 [data-bartender-bar='bottom'] {
   bottom: 0;
+  transform: translateY(100%);
 
-  &[data-bartender-bar-mode='float'],
-  &[data-bartender-bar-mode='push'] {
-    transform: translateY(100%);
+  &[data-bartender-bar-mode='reveal'] {
+    transform: translateY(0);
   }
 }
 
