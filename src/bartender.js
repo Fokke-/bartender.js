@@ -257,7 +257,9 @@ class Bartender {
       // Enable closing the bar with escape key
       if (this.options.closeOnEsc) {
         window.addEventListener('keydown', event => {
-          if (event.keyCode === 27) {
+          let key = event.key || event.keyCode
+
+          if (key === 'Escape' || key === 'Esc' || key === 27) {
             this.close()
           }
         })
