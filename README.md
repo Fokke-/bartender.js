@@ -322,4 +322,4 @@ This event is triggered immediately when bar has _started to open_. The bar obje
 
 #### bartender-close
 
-This event is triggered immediately when bar has _started to close_. The bar object and the button used to open the bar will be included in `detail` object.
+This event is triggered immediately when bar has _started to close_. The bar object will be included in `detail` object.
