@@ -427,14 +427,14 @@ class Bartender {
    * @param {object} button - Button which was used to run this method
    * @returns {object} Toggled bar instance
    */
-  async toggle (position = null, button = null) {
+  toggle (position = null, button = null) {
     try {
       if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: ' + this.validBarPositions.join(', ')
 
       if (this.currentOpenBar && this.currentOpenBar.position == position) {
         return this.close()
       } else {
-        await this.close()
+        this.close()
         return this.open(position, button)
       }
     } catch (error) {

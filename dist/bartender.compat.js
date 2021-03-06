@@ -3,10 +3,6 @@
  * Class for creating accessible off-canvas bars.
  */
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -430,64 +426,23 @@ var Bartender = /*#__PURE__*/function () {
 
   }, {
     key: "toggle",
-    value: function () {
-      var _toggle = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-        var position,
-            button,
-            _args = arguments;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                position = _args.length > 0 && _args[0] !== undefined ? _args[0] : null;
-                button = _args.length > 1 && _args[1] !== undefined ? _args[1] : null;
-                _context.prev = 2;
+    value: function toggle() {
+      var position = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+      var button = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
-                if (this.isValidPosition(position)) {
-                  _context.next = 5;
-                  break;
-                }
+      try {
+        if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: ' + this.validBarPositions.join(', ');
 
-                throw 'Invalid bar position \'' + position + '\'. Use one of the following values: ' + this.validBarPositions.join(', ');
-
-              case 5:
-                if (!(this.currentOpenBar && this.currentOpenBar.position == position)) {
-                  _context.next = 9;
-                  break;
-                }
-
-                return _context.abrupt("return", this.close());
-
-              case 9:
-                _context.next = 11;
-                return this.close();
-
-              case 11:
-                return _context.abrupt("return", this.open(position, button));
-
-              case 12:
-                _context.next = 17;
-                break;
-
-              case 14:
-                _context.prev = 14;
-                _context.t0 = _context["catch"](2);
-                this.logError(_context.t0);
-
-              case 17:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, this, [[2, 14]]);
-      }));
-
-      function toggle() {
-        return _toggle.apply(this, arguments);
+        if (this.currentOpenBar && this.currentOpenBar.position == position) {
+          return this.close();
+        } else {
+          this.close();
+          return this.open(position, button);
+        }
+      } catch (error) {
+        this.logError(error);
       }
-
-      return toggle;
-    }()
+    }
     /**
      * Close any open off-canvas bar
      *
