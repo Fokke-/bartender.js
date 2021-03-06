@@ -308,14 +308,6 @@ bartender.mainWrap.addEventListener('bartender-open', (e) => {
 
 This event is triggered immediately when bar has _started to open_. The bar object and the button used to open the bar will be included in `detail` object.
 
-#### bartender-afterOpen
-
-This event is triggered when bar has _finished to open_ (transition is finished). The bar object and the button used to open the bar will be included in `detail` object.
-
 #### bartender-close
 
 This event is triggered immediately when bar has _started to open_. The bar object and the button used to open the bar will be included in `detail` object.
-
-#### bartender-afterClose
-
-This event is triggered when bar has _finished to close_ (transition is finished). The bar object and the button used to open the bar will be included in `detail` object.
