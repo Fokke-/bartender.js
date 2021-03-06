@@ -69,6 +69,13 @@ class Bartender {
       'bottom',
     ]
 
+    // Valid bar modes
+    this.validModes = [
+      'float',
+      'push',
+      'reveal',
+    ]
+
     // Run initializer
     this.init()
   }
@@ -299,26 +306,34 @@ class Bartender {
     try {
       // Get bar configuration
       let position = bar.getAttribute('data-bartender-bar')
+      let mode = bar.getAttribute('data-bartender-bar-mode')
 
-      // Validate required elements
-      if (!this.mainWrap || !this.contentWrap) return this
+      // If mode is not specified, fall back to 'float'
+      if (!mode) {
+        mode = 'float'
+        bar.setAttribute('data-bartender-bar-mode', mode)
+      }
 
-      // Validate position
+      // Validate configuration
       if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: ' + this.validBarPositions.join(', ')
+      if (this.validModes.indexOf(mode) < 0) throw 'Invalid mode \'' + mode + '\' for bar \'' + position + '\'. Use one of the following values: ' + this.validModes.join(', ')
 
       // Check that bar is not already defined
       if (this.bars[position]) throw 'Bar with position \'' + position + '\' is already defined'
 
       // Create new bar object
-      const newBar = new BartenderBar()
-      newBar.element = bar
-      newBar.init()
+      const newBar = {
+        element: bar,
+        position: position,
+        mode: mode,
+      }
+
       this.bars[position] = newBar
 
       // Initially disable focus of the bar
       this.disableFocus(newBar.element)
 
-      this.debug('Added bar \'' + position + '\' with mode \'' + newBar.mode + '\'')
+      this.debug('Added bar \'' + position + '\' with mode \'' + mode + '\'')
     } catch (error) {
       this.logError(error)
     }
@@ -341,7 +356,7 @@ class Bartender {
       // Get bar instance
       const bar = this.bars[position]
 
-      if (!bar) throw 'Bar with position \'' + position + '\' is not defined. Use one of the following: ' + Object.keys(this.bars).join(', ') + '.'
+      if (!bar) throw 'Bar with position \'' + position + '\' is not defined.'
 
       // Close other bars
       if (this.currentOpenBar) {
@@ -351,8 +366,6 @@ class Bartender {
       }
 
       this.debug('Opening bar \'' + position + '\'')
-
-      this.mainWrap.classList.add(this.options.openClass)
 
       // Mark this bar as open
       this.currentOpenBar = bar
@@ -373,6 +386,9 @@ class Bartender {
 
       // Show overlay
       this.showOverlay()
+
+      // Add class to the main element
+      this.mainWrap.classList.add(this.options.openClass)
 
       // Dispatch event
       this.mainWrap.dispatchEvent(new CustomEvent('bartender-open', {
@@ -544,46 +560,5 @@ class Bartender {
     if (!this.overlay.classList.contains('bartender-overlay--visible')) return
 
     this.overlay.classList.remove('bartender-overlay--visible')
-  }
-}
-
-/**
- * Class representing a single Bartender bar
- */
-class BartenderBar {
-
-  constructor () {
-    this.element = null
-    this.position = null
-    this.mode = 'float'
-    this.validModes = [
-      'float',
-      'push',
-      'reveal',
-    ]
-  }
-
-  /**
-   * Initialize bar
-   *
-   * @returns {object} Bar instance
-   */
-  init () {
-    // Check that defined bar element exists
-    if (!this.element) throw 'Bar element for \'' + this.position + '\' was not found!'
-
-    // Set position
-    this.position = this.element.getAttribute('data-bartender-bar')
-    if (!this.position) throw 'Missing position for bar'
-
-    // Set mode
-    if (this.element.getAttribute('data-bartender-bar-mode')) {
-      this.mode = this.element.getAttribute('data-bartender-bar-mode')
-    }
-
-    // Validate mode
-    if (this.validModes.indexOf(this.mode) < 0) throw 'Invalid mode \'' + this.mode + '\' for bar \'' + this.position + '\'. Use one of the following values: ' + this.validModes.join(', ')
-
-    return this
   }
 }
