@@ -8,6 +8,10 @@ The following accessibility concerns have been taken into account:
 - When bar is open, only it's child elements are focusable, and the focus will be initially set on the bar element
 - After closing the bar the focus will return to the button which was used to open the bar
 
+## Browser support
+
+All major browsers are supported. If you need to support IE11, use compatibility build.
+
 ## Install using NPM
 
 ```console
@@ -64,13 +68,13 @@ Check `/demo/minimal.html` for minimal working example. Note that it's highly re
 #### ...or include CSS manually
 
 ```html
-<link rel="stylesheet" href="bartender.css">
+<link rel="stylesheet" href="dist/bartender.css">
 ```
 
 #### ...or include CSS from CDN
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/@fokke-/bartender.js@1.0.3/dist/bartender.min.css">
+<link rel="stylesheet" href="https://unpkg.com/@fokke-/bartender.js@1.0.4/dist/bartender.min.css">
 ```
 
 ### 2. Include JS
@@ -84,13 +88,21 @@ import Bartender from '@fokke-/bartender.js'
 #### ...or include JS manually
 
 ```html
-<script src="bartender.js"></script>
+<!-- Standard build -->
+<script src="dist/bartender.js"></script>
+
+<!-- Compatibility build with IE11 support -->
+<script src="dist/bartender.compat.js"></script>
 ```
 
 #### ...or include JS from CDN
 
 ```html
-<script src="https://unpkg.com/@fokke-/bartender.js@1.0.3/dist/bartender.min.js"></script>
+<!-- Standard build -->
+<script src="https://unpkg.com/@fokke-/bartender.js@1.0.4/dist/bartender.min.js"></script>
+
+<!-- Compatibility build with IE11 support -->
+<script src="https://unpkg.com/@fokke-/bartender.js@1.0.4/dist/bartender.compat.js"></script>
 ```
 
 ### 3. Set the required wrapper elements
@@ -158,37 +170,6 @@ If you want to create button (or any other element) to close any open bar, add `
 ```javascript
 // Use default options
 const bartender = new Bartender();
-```
-
-## Styling
-
-### Bars
-
-```css
-/* These styles apply to all bars */
-[data-bartender-bar] {
-  background: red;
-}
-
-/* These styles apply only to the left bar */
-[data-bartender-bar='left'] {
-  background: #ff69b4;
-}
-```
-
-By default bars will be animated using transition `transform 250ms linear`. You can override this if you're using scss:
-
-```scss
-$bartender-transition: transform 500ms linear;
-```
-
-### Overlay shading
-
-```css
-.bartender-overlay {
-  background: #ff69b4;
-  opacity: 0.5;
-}
 ```
 
 ## Options
@@ -289,6 +270,37 @@ Toggle bar element. If bar is closed, open it. Otherwise close it. Specify bar p
 
 ```javascript
 bartender.toggle('left');
+```
+
+## Styling
+
+### Bars
+
+```css
+/* These styles apply to all bars */
+[data-bartender-bar] {
+  background: red;
+}
+
+/* These styles apply only to the left bar */
+[data-bartender-bar='left'] {
+  background: #ff69b4;
+}
+```
+
+By default bars will be animated using transition `transform 250ms linear`. You can override this if you're using scss:
+
+```scss
+$bartender-transition: transform 500ms linear;
+```
+
+### Overlay shading
+
+```css
+.bartender-overlay {
+  background: #ff69b4;
+  opacity: 0.5;
+}
 ```
 
 ## Events
