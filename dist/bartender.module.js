@@ -9,6 +9,21 @@ class Bartender {
    * @param {object} options - User defined options
    */
   constructor (options) {
+    // Polyfill custom events
+    if (typeof window.CustomEvent !== 'function') {
+      window.CustomEvent = function (event, params) {
+        params = params || {
+          bubbles: false,
+          cancelable: false,
+          detail: null,
+        }
+
+        var evt = document.createEvent('CustomEvent')
+        evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail)
+        return evt
+      }
+    }
+
     // Apply user configuration
     this.options = Object.assign({
       // Debug mode
@@ -69,8 +84,12 @@ class Bartender {
       'bottom',
     ]
 
-    // TODO REMOVE THIS
-    this.focusableElementCache = {}
+    // Valid bar modes
+    this.validModes = [
+      'float',
+      'push',
+      'reveal',
+    ]
 
     // Run initializer
     this.init()
@@ -115,14 +134,12 @@ class Bartender {
    * @returns {object} DOM element
    */
   disableFocus (element) {
-    if (this.options.debug === true) {
-      var startTime = performance.now()
-    }
+    const startTime = performance.now()
 
-    // Enable focus of element children
-    var children = this.focusableElementCache[element.getAttribute('data-bartender-bar') || 'contentWrap']
+    // Disable focus of element children
+    const children = element.querySelectorAll(this.options.focusableElementSelector)
 
-    for (var i = 0; i < children.length; i++) {
+    for (let i = 0; i < children.length; i++) {
       children[i].setAttribute('data-bartender-prevtabindex', children[i].getAttribute('tabindex'))
       children[i].setAttribute('tabindex', '-1')
     }
@@ -131,10 +148,8 @@ class Bartender {
     element.setAttribute('tabindex', '-1')
     element.setAttribute('aria-hidden', 'true')
 
-    if (this.options.debug === true) {
-      var endTime = performance.now()
-      this.debug('Disabled focus of ' + children.length + ' elements in ' + (endTime - startTime))
-    }
+    const endTime = performance.now()
+    this.debug('Disabled focus of ' + children.length + ' elements in ' + (endTime - startTime))
 
     return element
   }
@@ -146,14 +161,12 @@ class Bartender {
    * @returns {object} DOM element
    */
   enableFocus (element) {
-    if (this.options.debug === true) {
-      var startTime = performance.now()
-    }
+    const startTime = performance.now()
 
     // Enable focus of element children
-    var children = this.focusableElementCache[element.getAttribute('data-bartender-bar') || 'contentWrap']
+    const children = element.querySelectorAll('[data-bartender-prevtabindex]')
 
-    for (var i = 0; i < children.length; i++) {
+    for (let i = 0; i < children.length; i++) {
       // If element has previous tabindex marked, return it. Otherwise just remove tabindex attribute.
       if (children[i].getAttribute('data-bartender-prevtabindex') != 'null') {
         children[i].setAttribute('tabindex', children[i].getAttribute('data-bartender-prevtabindex'))
@@ -168,12 +181,20 @@ class Bartender {
     element.setAttribute('tabindex', '0')
     element.removeAttribute('aria-hidden')
 
-    if (this.options.debug === true) {
-      var endTime = performance.now()
-      this.debug('Enabled focus of ' + children.length + ' elements in ' + (endTime - startTime))
-    }
+    const endTime = performance.now()
+    this.debug('Enabled focus of ' + children.length + ' elements in ' + (endTime - startTime))
 
     return element
+  }
+
+  /**
+   * Is defined bar position valid?
+   *
+   * @param {string} position - Position to validate
+   * @returns {boolean}
+   */
+  isValidPosition (position = null) {
+    return this.validBarPositions.indexOf(position) >= 0
   }
 
   /**
@@ -199,19 +220,16 @@ class Bartender {
       this.mainWrap.classList.add('bartender-main')
       this.contentWrap.classList.add('bartender-content')
 
-      // Cache focusable elements
-      this.focusableElementCache.contentWrap = this.contentWrap.querySelectorAll(this.options.focusableElementSelector)
-
       // Find bars
-      this.mainWrap.querySelectorAll('[data-bartender-bar]').forEach(bar => {
-        this.addBar(bar)
-      })
+      const bars = this.mainWrap.querySelectorAll('[data-bartender-bar]')
 
-      // Check that there's at least one bar defined
-      if (!Object.keys(this.bars).length) throw 'Cannot find any bars.'
+      for (let i = 0; i < bars.length; i++) {
+        this.addBar(bars[i])
+      }
 
       // Open buttons
-      this.openButtons.forEach(button => {
+      for (let i = 0; i < this.openButtons.length; i++) {
+        let button = this.openButtons[i]
         let position = button.getAttribute('data-bartender-open')
 
         if (!this.isValidPosition(position)) {
@@ -219,17 +237,15 @@ class Bartender {
           return
         }
 
-        // Add ARIA attributes
         button.setAttribute('aria-expanded', 'false')
-
-        // Event listeners for open buttons
         button.addEventListener('click', () => {
           this.open(position, button)
         })
-      })
+      }
 
       // Toggle buttons
-      this.toggleButtons.forEach(button => {
+      for (let i = 0; i < this.toggleButtons.length; i++) {
+        let button = this.toggleButtons[i]
         let position = button.getAttribute('data-bartender-toggle')
 
         if (!this.isValidPosition(position)) {
@@ -237,22 +253,20 @@ class Bartender {
           return
         }
 
-        // Add ARIA attributes
         button.setAttribute('aria-expanded', 'false')
-
-        // Event listeners for toggle buttons
         button.addEventListener('click', () => {
           this.toggle(position, button)
         })
-      })
+      }
 
       // Close buttons
-      this.closeButtons.forEach(button => {
-        // Event listeners for close buttons
+      for (let i = 0; i < this.closeButtons.length; i++) {
+        let button = this.closeButtons[i]
+
         button.addEventListener('click', () => {
           this.close()
         })
-      })
+      }
 
       // Find pushable elements
       this.pushElements = this.mainWrap.querySelectorAll('[data-bartender-push]')
@@ -271,7 +285,9 @@ class Bartender {
       // Enable closing the bar with escape key
       if (this.options.closeOnEsc) {
         window.addEventListener('keydown', event => {
-          if (event.keyCode === 27) {
+          let key = event.key || event.keyCode
+
+          if (key === 'Escape' || key === 'Esc' || key === 27) {
             this.close()
           }
         })
@@ -296,16 +312,6 @@ class Bartender {
   }
 
   /**
-   * Is defined bar position valid?
-   *
-   * @param {string} position - Position to validate
-   * @returns {boolean}
-   */
-  isValidPosition (position = null) {
-    return this.validBarPositions.indexOf(position) >= 0
-  }
-
-  /**
    * Add a new off-canvas bar
    *
    * @param {object} bar - BartenderBar instance
@@ -315,29 +321,34 @@ class Bartender {
     try {
       // Get bar configuration
       let position = bar.getAttribute('data-bartender-bar')
+      let mode = bar.getAttribute('data-bartender-bar-mode')
 
-      // Validate required elements
-      if (!this.mainWrap || !this.contentWrap) return this
+      // If mode is not specified, fall back to 'float'
+      if (!mode) {
+        mode = 'float'
+        bar.setAttribute('data-bartender-bar-mode', mode)
+      }
 
-      // Validate position
+      // Validate configuration
       if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: ' + this.validBarPositions.join(', ')
+      if (this.validModes.indexOf(mode) < 0) throw 'Invalid mode \'' + mode + '\' for bar \'' + position + '\'. Use one of the following values: ' + this.validModes.join(', ')
 
       // Check that bar is not already defined
       if (this.bars[position]) throw 'Bar with position \'' + position + '\' is already defined'
 
       // Create new bar object
-      const newBar = new BartenderBar()
-      newBar.element = bar
-      newBar.init()
-      this.bars[position] = newBar
+      const newBar = {
+        element: bar,
+        position: position,
+        mode: mode,
+      }
 
-      // Cache focusable elements
-      this.focusableElementCache[position] = newBar.element.querySelectorAll(this.options.focusableElementSelector)
+      this.bars[position] = newBar
 
       // Initially disable focus of the bar
       this.disableFocus(newBar.element)
 
-      this.debug('Added bar \'' + position + '\' with mode \'' + newBar.mode + '\'')
+      this.debug('Added bar \'' + position + '\' with mode \'' + mode + '\'')
     } catch (error) {
       this.logError(error)
     }
@@ -352,7 +363,7 @@ class Bartender {
    * @param {object} button - Button which was used to run this method
    * @returns {object} Opened bar instance
    */
-  async open (position = '', button = null) {
+  open (position = '', button = null) {
     try {
       // Validate position
       if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: ' + this.validBarPositions.join(', ')
@@ -360,40 +371,22 @@ class Bartender {
       // Get bar instance
       const bar = this.bars[position]
 
-      if (!bar) throw 'Bar with position \'' + position + '\' is not defined. Use one of the following: ' + Object.keys(this.bars).join(', ') + '.'
+      if (!bar) throw 'Bar with position \'' + position + '\' is not defined.'
 
       // Close other bars
-      if (this.currentOpenBar) await this.close()
+      if (this.currentOpenBar) {
+        this.close(false)
+      } else if (this.options.trapFocus === true) {
+        this.disableFocus(this.contentWrap)
+      }
 
       this.debug('Opening bar \'' + position + '\'')
-
-      // Dispatch event when transition ends
-      bar.element.addEventListener('transitionend', () => {
-        // User might close bar before the transition ends,
-        // so make sure that this bar is still open.
-        if (this.currentOpenBar === null || this.currentOpenBar.position !== bar.position) return
-
-        // Add class to the main wrap
-        this.mainWrap.classList.add(this.options.openClass)
-
-        this.debug('Opening bar \'' + bar.position + '\' was finished')
-
-        this.mainWrap.dispatchEvent(new CustomEvent('bartender-afterOpen', {
-          bubbles: true,
-          detail: {
-            bar: bar,
-            button: button,
-          },
-        }))
-      }, {
-        once: true,
-      })
 
       // Mark this bar as open
       this.currentOpenBar = bar
       bar.element.classList.add('bartender-bar--open')
 
-      // Enable focus on bar element and focus on bar
+      // Focus on bar
       this.enableFocus(bar.element)
       bar.element.focus()
 
@@ -409,8 +402,8 @@ class Bartender {
       // Show overlay
       this.showOverlay()
 
-      // Disable focus on content element
-      if (this.options.trapFocus === true) this.disableFocus(this.contentWrap)
+      // Add class to the main element
+      this.mainWrap.classList.add(this.options.openClass)
 
       // Dispatch event
       this.mainWrap.dispatchEvent(new CustomEvent('bartender-open', {
@@ -452,84 +445,66 @@ class Bartender {
   /**
    * Close any open off-canvas bar
    *
-   * @returns {Promise} Resolve with closed bar or reject with an error
+   * @param {boolean} enableFocusOfContentWrap - Enable focus of content wrap
+   * @returns {object} Closed bar
    */
-  close () {
-    return new Promise((resolve, reject) => {
-      try {
-        if (!this.currentOpenBar) return resolve()
+  close (enableFocusOfContentWrap = true) {
+    try {
+      if (!this.currentOpenBar) return
 
-        let bar = this.bars[this.currentOpenBar.position]
+      let bar = this.bars[this.currentOpenBar.position]
 
-        this.debug('Closing bar \'' + bar.position + '\'')
+      this.debug('Closing bar \'' + bar.position + '\'')
 
-        // Dispatch event
-        this.mainWrap.dispatchEvent(new CustomEvent('bartender-close', {
-          bubbles: true,
-          detail: {
-            bar: bar,
-          },
-        }))
+      // Dispatch event
+      this.mainWrap.dispatchEvent(new CustomEvent('bartender-close', {
+        bubbles: true,
+        detail: {
+          bar: bar,
+        },
+      }))
 
-        // Hide overlay
-        this.hideOverlay()
+      // Hide overlay
+      this.hideOverlay()
 
-        // Remove transform from wrapper element
-        this.contentWrap.style.removeProperty('transform')
+      // Remove transform from wrapper element
+      this.contentWrap.style.removeProperty('transform')
 
-        // Remove transforms from pushable elements
-        this.pushElements.forEach(el => {
-          el.style.removeProperty('transform')
-        })
-
-        // Disable focus on bar element
-        this.disableFocus(bar.element)
-
-        // Enable focus on content element
-        if (this.options.trapFocus === true) this.enableFocus(this.contentWrap)
-
-        // Wait until bar transition ends
-        bar.element.addEventListener('transitionend', () => {
-          // Dispatch event
-          this.mainWrap.dispatchEvent(new CustomEvent('bartender-afterClose', {
-            bubbles: true,
-            detail: {
-              bar: bar,
-            },
-          }))
-
-          // Restore scrolling to the main wrap
-          this.mainWrap.style.removeProperty('overflow')
-
-          // Remove class from the main wrap
-          this.mainWrap.classList.remove(this.options.openClass)
-
-          // Focus open button which was used to open the bar
-          if (this.previousOpenButton) {
-            this.previousOpenButton.focus()
-            this.previousOpenButton.setAttribute('aria-expanded', 'false')
-            this.previousOpenButton = null
-          } else {
-            // Bar was closed using keyboard or API. Focus on content element instead.
-            this.contentWrap.focus()
-          }
-
-          this.debug('Closing bar \'' + bar.position + '\' was finished')
-
-          return resolve(bar)
-        }, {
-          once: true,
-        })
-
-        // Close the bar
-        bar.element.classList.remove('bartender-bar--open')
-        this.currentOpenBar = null
-      } catch (error) {
-        this.logError(error)
-
-        return reject(error)
+      // Remove transforms from pushable elements
+      for (let i = 0; i < this.pushElements.length; i++) {
+        this.pushElements[i].style.removeProperty('transform')
       }
-    })
+
+      // Disable focus on bar element
+      this.disableFocus(bar.element)
+
+      // Enable focus on content element
+      if (this.options.trapFocus === true && enableFocusOfContentWrap === true) this.enableFocus(this.contentWrap)
+
+      // Close the bar
+      bar.element.classList.remove('bartender-bar--open')
+      this.currentOpenBar = null
+
+      // Restore scrolling to the main wrap
+      this.mainWrap.style.removeProperty('overflow')
+
+      // Remove class from the main wrap
+      this.mainWrap.classList.remove(this.options.openClass)
+
+      // Focus open button which was used to open the bar
+      if (this.previousOpenButton && this.previousOpenButton.getAttribute('tabindex') >= 0) {
+        this.previousOpenButton.focus()
+        this.previousOpenButton.setAttribute('aria-expanded', 'false')
+        this.previousOpenButton = null
+      } else if (enableFocusOfContentWrap === true) {
+        // Bar was closed using keyboard or API. Focus on content wrapper instead.
+        this.contentWrap.focus()
+      }
+
+      return bar
+    } catch (error) {
+      this.logError(error)
+    }
   }
 
   /**
@@ -564,16 +539,18 @@ class Bartender {
         break
     }
 
-    if (['push',
-      'reveal',].indexOf(this.currentOpenBar.mode) >= 0) {
+    if ([
+      'push',
+      'reveal',
+    ].indexOf(this.currentOpenBar.mode) >= 0) {
       // Transform content wrapper
       this.contentWrap.style.transform = transform
     }
 
     // Transform other pushable elements
-    this.pushElements.forEach(el => {
-      el.style.transform = transform
-    })
+    for (let i = 0; i < this.pushElements.length; i++) {
+      this.pushElements[i].style.transform = transform
+    }
   }
 
   /**
@@ -600,48 +577,6 @@ class Bartender {
     this.overlay.classList.remove('bartender-overlay--visible')
   }
 }
-
-/**
- * Class representing a single Bartender bar
- */
-class BartenderBar {
-
-  constructor () {
-    this.element = null
-    this.position = null
-    this.mode = 'float'
-    this.validModes = [
-      'float',
-      'push',
-      'reveal',
-    ]
-  }
-
-  /**
-   * Initialize bar
-   *
-   * @returns {object} Bar instance
-   */
-  init () {
-    // Check that defined bar element exists
-    if (!this.element) throw 'Bar element for \'' + this.position + '\' was not found!'
-
-    // Set position
-    this.position = this.element.getAttribute('data-bartender-bar')
-    if (!this.position) throw 'Missing position for bar'
-
-    // Set mode
-    if (this.element.getAttribute('data-bartender-bar-mode')) {
-      this.mode = this.element.getAttribute('data-bartender-bar-mode')
-    }
-
-    // Validate mode
-    if (this.validModes.indexOf(this.mode) < 0) throw 'Invalid mode \'' + this.mode + '\' for bar \'' + this.position + '\'. Use one of the following values: ' + this.validModes.join(', ')
-
-    return this
-  }
-}
-
 
 export default Bartender
 //# sourceMappingURL=bartender.module.js.map
