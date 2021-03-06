@@ -44,6 +44,8 @@ var Bartender = /*#__PURE__*/function () {
       closeOnEsc: true,
       // Trap focus to the open bar?
       trapFocus: false,
+      // Scroll bar to the top when opening it?
+      scrollTop: true,
       // Selector to find main wrapper
       mainWrapSelector: '.bartender-main',
       // Selector to find content wrapper
@@ -389,7 +391,12 @@ var Bartender = /*#__PURE__*/function () {
         this.debug('Opening bar \'' + position + '\''); // Mark this bar as open
 
         this.currentOpenBar = bar;
-        bar.element.classList.add('bartender-bar--open'); // Focus on bar
+        bar.element.classList.add('bartender-bar--open'); // Scroll to top
+
+        if (this.options.scrollTop) {
+          bar.element.scrollTop = 0;
+        } // Focus on bar
+
 
         this.enableFocus(bar.element);
         bar.element.focus(); // Push elements

@@ -38,6 +38,9 @@ class Bartender {
       // Trap focus to the open bar?
       trapFocus: false,
 
+      // Scroll bar to the top when opening it?
+      scrollTop: true,
+
       // Selector to find main wrapper
       mainWrapSelector: '.bartender-main',
 
@@ -385,6 +388,11 @@ class Bartender {
       // Mark this bar as open
       this.currentOpenBar = bar
       bar.element.classList.add('bartender-bar--open')
+
+      // Scroll to top
+      if (this.options.scrollTop) {
+        bar.element.scrollTop = 0
+      }
 
       // Focus on bar
       this.enableFocus(bar.element)
