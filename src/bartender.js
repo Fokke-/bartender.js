@@ -477,11 +477,11 @@ class Bartender {
       this.mainWrap.classList.remove(this.options.openClass)
 
       // Focus open button which was used to open the bar
-      if (this.previousOpenButton) {
+      if (this.previousOpenButton && this.previousOpenButton.getAttribute('tabindex') >= 0) {
         this.previousOpenButton.focus()
         this.previousOpenButton.setAttribute('aria-expanded', 'false')
         this.previousOpenButton = null
-      } else {
+      } else if (enableFocusOfContentWrap === true) {
         // Bar was closed using keyboard or API. Focus on content wrapper instead.
         this.contentWrap.focus()
       }
