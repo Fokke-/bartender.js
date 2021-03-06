@@ -117,7 +117,7 @@ class Bartender {
     // Disable focus of element children
     const children = element.querySelectorAll(this.options.focusableElementSelector)
 
-    for (var i = 0; i < children.length; i++) {
+    for (let i = 0; i < children.length; i++) {
       children[i].setAttribute('data-bartender-prevtabindex', children[i].getAttribute('tabindex'))
       children[i].setAttribute('tabindex', '-1')
     }
@@ -144,7 +144,7 @@ class Bartender {
     // Enable focus of element children
     const children = element.querySelectorAll('[data-bartender-prevtabindex]')
 
-    for (var i = 0; i < children.length; i++) {
+    for (let i = 0; i < children.length; i++) {
       // If element has previous tabindex marked, return it. Otherwise just remove tabindex attribute.
       if (children[i].getAttribute('data-bartender-prevtabindex') != 'null') {
         children[i].setAttribute('tabindex', children[i].getAttribute('data-bartender-prevtabindex'))
