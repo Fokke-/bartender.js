@@ -69,9 +69,6 @@ class Bartender {
       'bottom',
     ]
 
-    // TODO REMOVE THIS
-    this.focusableElementCache = {}
-
     // Run initializer
     this.init()
   }
@@ -145,7 +142,7 @@ class Bartender {
     const startTime = performance.now()
 
     // Enable focus of element children
-    const children = this.focusableElementCache[element.getAttribute('data-bartender-bar') || 'contentWrap']
+    const children = element.querySelectorAll('[data-bartender-prevtabindex]')
 
     for (var i = 0; i < children.length; i++) {
       // If element has previous tabindex marked, return it. Otherwise just remove tabindex attribute.
@@ -190,9 +187,6 @@ class Bartender {
       // Add classes
       this.mainWrap.classList.add('bartender-main')
       this.contentWrap.classList.add('bartender-content')
-
-      // Cache focusable elements
-      this.focusableElementCache.contentWrap = this.contentWrap.querySelectorAll(this.options.focusableElementSelector)
 
       // Find bars
       this.mainWrap.querySelectorAll('[data-bartender-bar]').forEach(bar => {
@@ -322,9 +316,6 @@ class Bartender {
       newBar.element = bar
       newBar.init()
       this.bars[position] = newBar
-
-      // Cache focusable elements
-      this.focusableElementCache[position] = newBar.element.querySelectorAll(this.options.focusableElementSelector)
 
       // Initially disable focus of the bar
       this.disableFocus(newBar.element)
