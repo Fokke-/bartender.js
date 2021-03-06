@@ -115,12 +115,10 @@ class Bartender {
    * @returns {object} DOM element
    */
   disableFocus (element) {
-    if (this.options.debug === true) {
-      var startTime = performance.now()
-    }
+    const startTime = performance.now()
 
-    // Enable focus of element children
-    var children = this.focusableElementCache[element.getAttribute('data-bartender-bar') || 'contentWrap']
+    // Disable focus of element children
+    const children = element.querySelectorAll(this.options.focusableElementSelector)
 
     for (var i = 0; i < children.length; i++) {
       children[i].setAttribute('data-bartender-prevtabindex', children[i].getAttribute('tabindex'))
@@ -131,10 +129,8 @@ class Bartender {
     element.setAttribute('tabindex', '-1')
     element.setAttribute('aria-hidden', 'true')
 
-    if (this.options.debug === true) {
-      var endTime = performance.now()
-      this.debug('Disabled focus of ' + children.length + ' elements in ' + (endTime - startTime))
-    }
+    const endTime = performance.now()
+    this.debug('Disabled focus of ' + children.length + ' elements in ' + (endTime - startTime))
 
     return element
   }
@@ -146,12 +142,10 @@ class Bartender {
    * @returns {object} DOM element
    */
   enableFocus (element) {
-    if (this.options.debug === true) {
-      var startTime = performance.now()
-    }
+    const startTime = performance.now()
 
     // Enable focus of element children
-    var children = this.focusableElementCache[element.getAttribute('data-bartender-bar') || 'contentWrap']
+    const children = this.focusableElementCache[element.getAttribute('data-bartender-bar') || 'contentWrap']
 
     for (var i = 0; i < children.length; i++) {
       // If element has previous tabindex marked, return it. Otherwise just remove tabindex attribute.
@@ -168,10 +162,8 @@ class Bartender {
     element.setAttribute('tabindex', '0')
     element.removeAttribute('aria-hidden')
 
-    if (this.options.debug === true) {
-      var endTime = performance.now()
-      this.debug('Enabled focus of ' + children.length + ' elements in ' + (endTime - startTime))
-    }
+    const endTime = performance.now()
+    this.debug('Enabled focus of ' + children.length + ' elements in ' + (endTime - startTime))
 
     return element
   }
@@ -564,8 +556,10 @@ class Bartender {
         break
     }
 
-    if (['push',
-      'reveal',].indexOf(this.currentOpenBar.mode) >= 0) {
+    if ([
+      'push',
+      'reveal',
+    ].indexOf(this.currentOpenBar.mode) >= 0) {
       // Transform content wrapper
       this.contentWrap.style.transform = transform
     }
