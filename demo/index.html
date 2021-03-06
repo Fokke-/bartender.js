@@ -64,7 +64,10 @@
     <script src="../dist/bartender.min.js"></script>
     <script>
       // Initialize Bartender
-      const bartender = new Bartender()
+      const bartender = new Bartender({
+        debug: true,
+        trapFocus: true,
+      })
     </script>
   </body>
 </html>
