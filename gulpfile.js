@@ -75,7 +75,7 @@ const css = () => {
     .pipe(plumbError())
     .pipe(rename('bartender.min.css'))
     .pipe(sourcemaps.init())
-    .pipe(sasslint(config.sasslint))
+    .pipe(sasslint())
     .pipe(sasslint.format())
     .pipe(sasslint.failOnError())
     .pipe(sass())
