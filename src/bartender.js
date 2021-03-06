@@ -166,6 +166,16 @@ class Bartender {
   }
 
   /**
+   * Is defined bar position valid?
+   *
+   * @param {string} position - Position to validate
+   * @returns {boolean}
+   */
+  isValidPosition (position = null) {
+    return this.validBarPositions.indexOf(position) >= 0
+  }
+
+  /**
    * Initialize Bartender
    *
    * @returns {object} Bartender instance
@@ -189,15 +199,18 @@ class Bartender {
       this.contentWrap.classList.add('bartender-content')
 
       // Find bars
-      this.mainWrap.querySelectorAll('[data-bartender-bar]').forEach(bar => {
-        this.addBar(bar)
-      })
+      const bars = this.mainWrap.querySelectorAll('[data-bartender-bar]')
+
+      for (let i = 0; i < bars.length; i++) {
+        this.addBar(bars[i])
+      }
 
       // Check that there's at least one bar defined
       if (!Object.keys(this.bars).length) throw 'Cannot find any bars.'
 
       // Open buttons
-      this.openButtons.forEach(button => {
+      for (let i = 0; i < this.openButtons.length; i++) {
+        let button = this.openButtons[i]
         let position = button.getAttribute('data-bartender-open')
 
         if (!this.isValidPosition(position)) {
@@ -205,17 +218,15 @@ class Bartender {
           return
         }
 
-        // Add ARIA attributes
         button.setAttribute('aria-expanded', 'false')
-
-        // Event listeners for open buttons
         button.addEventListener('click', () => {
           this.open(position, button)
         })
-      })
+      }
 
       // Toggle buttons
-      this.toggleButtons.forEach(button => {
+      for (let i = 0; i < this.toggleButtons.length; i++) {
+        let button = this.toggleButtons[i]
         let position = button.getAttribute('data-bartender-toggle')
 
         if (!this.isValidPosition(position)) {
@@ -223,22 +234,21 @@ class Bartender {
           return
         }
 
-        // Add ARIA attributes
         button.setAttribute('aria-expanded', 'false')
-
-        // Event listeners for toggle buttons
         button.addEventListener('click', () => {
           this.toggle(position, button)
         })
-      })
+      }
 
       // Close buttons
-      this.closeButtons.forEach(button => {
-        // Event listeners for close buttons
+      for (let i = 0; i < this.closeButtons.length; i++) {
+        let button = this.closeButtons[i]
+        console.log(button)
+
         button.addEventListener('click', () => {
           this.close()
         })
-      })
+      }
 
       // Find pushable elements
       this.pushElements = this.mainWrap.querySelectorAll('[data-bartender-push]')
@@ -281,16 +291,6 @@ class Bartender {
     }
 
     return this
-  }
-
-  /**
-   * Is defined bar position valid?
-   *
-   * @param {string} position - Position to validate
-   * @returns {boolean}
-   */
-  isValidPosition (position = null) {
-    return this.validBarPositions.indexOf(position) >= 0
   }
 
   /**
@@ -463,9 +463,9 @@ class Bartender {
         this.contentWrap.style.removeProperty('transform')
 
         // Remove transforms from pushable elements
-        this.pushElements.forEach(el => {
-          el.style.removeProperty('transform')
-        })
+        for (let i = 0; i < this.pushElements.length; i++) {
+          this.pushElements[i].style.removeProperty('transform')
+        }
 
         // Disable focus on bar element
         this.disableFocus(bar.element)
@@ -558,9 +558,9 @@ class Bartender {
     }
 
     // Transform other pushable elements
-    this.pushElements.forEach(el => {
-      el.style.transform = transform
-    })
+    for (let i = 0; i < this.pushElements.length; i++) {
+      this.pushElements[i].style.transform = transform
+    }
   }
 
   /**
