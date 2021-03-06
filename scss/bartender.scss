@@ -1,9 +1,5 @@
 $bartender-transition: transform 250ms linear !default;
 
-html {
-  height: 100%;
-}
-
 .bartender-main,
 .bartender-content,
 [data-bartender-bar] {
@@ -14,7 +10,7 @@ html {
 .bartender-main {
   position: relative;
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
 
   &.bartender-open {
     overflow: hidden !important;
@@ -25,7 +21,7 @@ html {
   z-index: 30;
   position: relative;
   width: 100%;
-  min-height: 100%;
+  min-height: 100vh;
   transition: $bartender-transition;
   background: #fff;
 
@@ -56,7 +52,7 @@ html {
   top: 0;
   width: 80%;
   max-width: 400px;
-  height: 100%;
+  height: 100vh;
 
   &.bartender-bar--open {
     transform: translateX(0) !important;
