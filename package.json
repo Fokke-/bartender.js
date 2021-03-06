@@ -9,6 +9,11 @@
     "type": "git",
     "url": "https://github.com/Fokke-/bartender.js"
   },
+  "keywords": [
+    "off-canvas",
+    "accessibility",
+    "a11y"
+  ],
   "files": [
     "LICENSE",
     "README.md",
