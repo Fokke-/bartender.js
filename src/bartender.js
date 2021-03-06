@@ -205,9 +205,6 @@ class Bartender {
         this.addBar(bars[i])
       }
 
-      // Check that there's at least one bar defined
-      if (!Object.keys(this.bars).length) throw 'Cannot find any bars.'
-
       // Open buttons
       for (let i = 0; i < this.openButtons.length; i++) {
         let button = this.openButtons[i]
