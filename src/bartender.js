@@ -345,7 +345,11 @@ class Bartender {
       if (!bar) throw 'Bar with position \'' + position + '\' is not defined. Use one of the following: ' + Object.keys(this.bars).join(', ') + '.'
 
       // Close other bars
-      if (this.currentOpenBar) await this.close()
+      if (this.currentOpenBar) {
+        await this.close(false)
+      } else if (this.options.trapFocus === true) {
+        this.disableFocus(this.contentWrap)
+      }
 
       this.debug('Opening bar \'' + position + '\'')
 
@@ -391,9 +395,6 @@ class Bartender {
       // Show overlay
       this.showOverlay()
 
-      // Disable focus on content element
-      if (this.options.trapFocus === true) this.disableFocus(this.contentWrap)
-
       // Dispatch event
       this.mainWrap.dispatchEvent(new CustomEvent('bartender-open', {
         bubbles: true,
@@ -434,9 +435,10 @@ class Bartender {
   /**
    * Close any open off-canvas bar
    *
+   * @param {boolean} enableFocusOfContentWrap - Enable focus of content wrap
    * @returns {Promise} Resolve with closed bar or reject with an error
    */
-  close () {
+  close (enableFocusOfContentWrap = true) {
     return new Promise((resolve, reject) => {
       try {
         if (!this.currentOpenBar) return resolve()
@@ -468,7 +470,7 @@ class Bartender {
         this.disableFocus(bar.element)
 
         // Enable focus on content element
-        if (this.options.trapFocus === true) this.enableFocus(this.contentWrap)
+        if (this.options.trapFocus === true && enableFocusOfContentWrap === true) this.enableFocus(this.contentWrap)
 
         // Wait until bar transition ends
         bar.element.addEventListener('transitionend', () => {
