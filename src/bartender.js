@@ -9,6 +9,21 @@ class Bartender {
    * @param {object} options - User defined options
    */
   constructor (options) {
+    // Polyfill custom events
+    if (typeof window.CustomEvent !== 'function') {
+      window.CustomEvent = function (event, params) {
+        params = params || {
+          bubbles: false,
+          cancelable: false,
+          detail: null,
+        }
+
+        var evt = document.createEvent('CustomEvent')
+        evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail)
+        return evt
+      }
+    }
+
     // Apply user configuration
     this.options = Object.assign({
       // Debug mode
