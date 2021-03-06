@@ -216,6 +216,12 @@ If bar is open, focus will be trapped to the open bar and it's child elements, a
 
 If you have lots of focusable elements, this operation can also be quite expensive performance-wise.
 
+### scrollTop
+
+Type: `boolean`, Default: `true`
+
+Scroll bar to the top when opening it.
+
 ### mainWrapSelector
 
 Type: `string`, Default: `.bartender-main`
