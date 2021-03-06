@@ -240,7 +240,6 @@ class Bartender {
       // Close buttons
       for (let i = 0; i < this.closeButtons.length; i++) {
         let button = this.closeButtons[i]
-        console.log(button)
 
         button.addEventListener('click', () => {
           this.close()
@@ -334,7 +333,7 @@ class Bartender {
    * @param {object} button - Button which was used to run this method
    * @returns {object} Opened bar instance
    */
-  async open (position = '', button = null) {
+  open (position = '', button = null) {
     try {
       // Validate position
       if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: ' + this.validBarPositions.join(', ')
@@ -346,40 +345,20 @@ class Bartender {
 
       // Close other bars
       if (this.currentOpenBar) {
-        await this.close(false)
+        this.close(false)
       } else if (this.options.trapFocus === true) {
         this.disableFocus(this.contentWrap)
       }
 
       this.debug('Opening bar \'' + position + '\'')
 
-      // Dispatch event when transition ends
-      bar.element.addEventListener('transitionend', () => {
-        // User might close bar before the transition ends,
-        // so make sure that this bar is still open.
-        if (this.currentOpenBar === null || this.currentOpenBar.position !== bar.position) return
-
-        // Add class to the main wrap
-        this.mainWrap.classList.add(this.options.openClass)
-
-        this.debug('Opening bar \'' + bar.position + '\' was finished')
-
-        this.mainWrap.dispatchEvent(new CustomEvent('bartender-afterOpen', {
-          bubbles: true,
-          detail: {
-            bar: bar,
-            button: button,
-          },
-        }))
-      }, {
-        once: true,
-      })
+      this.mainWrap.classList.add(this.options.openClass)
 
       // Mark this bar as open
       this.currentOpenBar = bar
       bar.element.classList.add('bartender-bar--open')
 
-      // Enable focus on bar element and focus on bar
+      // Focus on bar
       this.enableFocus(bar.element)
       bar.element.focus()
 
@@ -436,84 +415,65 @@ class Bartender {
    * Close any open off-canvas bar
    *
    * @param {boolean} enableFocusOfContentWrap - Enable focus of content wrap
-   * @returns {Promise} Resolve with closed bar or reject with an error
+   * @returns {object} Closed bar
    */
   close (enableFocusOfContentWrap = true) {
-    return new Promise((resolve, reject) => {
-      try {
-        if (!this.currentOpenBar) return resolve()
+    try {
+      if (!this.currentOpenBar) return
 
-        let bar = this.bars[this.currentOpenBar.position]
+      let bar = this.bars[this.currentOpenBar.position]
 
-        this.debug('Closing bar \'' + bar.position + '\'')
+      this.debug('Closing bar \'' + bar.position + '\'')
 
-        // Dispatch event
-        this.mainWrap.dispatchEvent(new CustomEvent('bartender-close', {
-          bubbles: true,
-          detail: {
-            bar: bar,
-          },
-        }))
+      // Dispatch event
+      this.mainWrap.dispatchEvent(new CustomEvent('bartender-close', {
+        bubbles: true,
+        detail: {
+          bar: bar,
+        },
+      }))
 
-        // Hide overlay
-        this.hideOverlay()
+      // Hide overlay
+      this.hideOverlay()
 
-        // Remove transform from wrapper element
-        this.contentWrap.style.removeProperty('transform')
+      // Remove transform from wrapper element
+      this.contentWrap.style.removeProperty('transform')
 
-        // Remove transforms from pushable elements
-        for (let i = 0; i < this.pushElements.length; i++) {
-          this.pushElements[i].style.removeProperty('transform')
-        }
-
-        // Disable focus on bar element
-        this.disableFocus(bar.element)
-
-        // Enable focus on content element
-        if (this.options.trapFocus === true && enableFocusOfContentWrap === true) this.enableFocus(this.contentWrap)
-
-        // Wait until bar transition ends
-        bar.element.addEventListener('transitionend', () => {
-          // Dispatch event
-          this.mainWrap.dispatchEvent(new CustomEvent('bartender-afterClose', {
-            bubbles: true,
-            detail: {
-              bar: bar,
-            },
-          }))
-
-          // Restore scrolling to the main wrap
-          this.mainWrap.style.removeProperty('overflow')
-
-          // Remove class from the main wrap
-          this.mainWrap.classList.remove(this.options.openClass)
-
-          // Focus open button which was used to open the bar
-          if (this.previousOpenButton) {
-            this.previousOpenButton.focus()
-            this.previousOpenButton.setAttribute('aria-expanded', 'false')
-            this.previousOpenButton = null
-          } else {
-            // Bar was closed using keyboard or API. Focus on content element instead.
-            this.contentWrap.focus()
-          }
-
-          this.debug('Closing bar \'' + bar.position + '\' was finished')
-
-          return resolve(bar)
-        }, {
-          once: true,
-        })
-
-        // Close the bar
-        bar.element.classList.remove('bartender-bar--open')
-        this.currentOpenBar = null
-      } catch (error) {
-        this.logError(error)
-
-        return reject(error)
+      // Remove transforms from pushable elements
+      for (let i = 0; i < this.pushElements.length; i++) {
+        this.pushElements[i].style.removeProperty('transform')
       }
-    })
+
+      // Disable focus on bar element
+      this.disableFocus(bar.element)
+
+      // Enable focus on content element
+      if (this.options.trapFocus === true && enableFocusOfContentWrap === true) this.enableFocus(this.contentWrap)
+
+      // Close the bar
+      bar.element.classList.remove('bartender-bar--open')
+      this.currentOpenBar = null
+
+      // Restore scrolling to the main wrap
+      this.mainWrap.style.removeProperty('overflow')
+
+      // Remove class from the main wrap
+      this.mainWrap.classList.remove(this.options.openClass)
+
+      // Focus open button which was used to open the bar
+      if (this.previousOpenButton) {
+        this.previousOpenButton.focus()
+        this.previousOpenButton.setAttribute('aria-expanded', 'false')
+        this.previousOpenButton = null
+      } else {
+        // Bar was closed using keyboard or API. Focus on content wrapper instead.
+        this.contentWrap.focus()
+      }
+
+      return bar
+    } catch (error) {
+      this.logError(error)
+    }
   }
 
   /**
