@@ -1,6 +1,7 @@
 {
   "files": {
-    "include": "scss/*.scss"
+    "include": "scss/*.scss",
+    "ignore": "**/*.css"
   },
   "options": {
     "merge-default-rules": false

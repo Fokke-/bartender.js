@@ -8,6 +8,10 @@ The following accessibility concerns have been taken into account:
 - When bar is open, only it's child elements are focusable, and the focus will be initially set on the bar element
 - After closing the bar the focus will return to the button which was used to open the bar
 
+## Browser support
+
+All major browsers are supported. If you need to support IE11, use compatibility build.
+
 ## Install using NPM
 
 ```console
@@ -64,13 +68,13 @@ Check `/demo/minimal.html` for minimal working example. Note that it's highly re
 #### ...or include CSS manually
 
 ```html
-<link rel="stylesheet" href="bartender.css">
+<link rel="stylesheet" href="dist/bartender.css">
 ```
 
 #### ...or include CSS from CDN
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/@fokke-/bartender.js@1.0.3/dist/bartender.min.css">
+<link rel="stylesheet" href="https://unpkg.com/@fokke-/bartender.js@1.0.4/dist/bartender.min.css">
 ```
 
 ### 2. Include JS
@@ -84,13 +88,21 @@ import Bartender from '@fokke-/bartender.js'
 #### ...or include JS manually
 
 ```html
-<script src="bartender.js"></script>
+<!-- Standard build -->
+<script src="dist/bartender.js"></script>
+
+<!-- Compatibility build with IE11 support -->
+<script src="dist/bartender.compat.js"></script>
 ```
 
 #### ...or include JS from CDN
 
 ```html
-<script src="https://unpkg.com/@fokke-/bartender.js@1.0.3/dist/bartender.min.js"></script>
+<!-- Standard build -->
+<script src="https://unpkg.com/@fokke-/bartender.js@1.0.4/dist/bartender.min.js"></script>
+
+<!-- Compatibility build with IE11 support -->
+<script src="https://unpkg.com/@fokke-/bartender.js@1.0.4/dist/bartender.compat.js"></script>
 ```
 
 ### 3. Set the required wrapper elements
@@ -160,37 +172,6 @@ If you want to create button (or any other element) to close any open bar, add `
 const bartender = new Bartender();
 ```
 
-## Styling
-
-### Bars
-
-```css
-/* These styles apply to all bars */
-[data-bartender-bar] {
-  background: red;
-}
-
-/* These styles apply only to the left bar */
-[data-bartender-bar='left'] {
-  background: #ff69b4;
-}
-```
-
-By default bars will be animated using transition `transform 250ms linear`. You can override this if you're using scss:
-
-```scss
-$bartender-transition: transform 500ms linear;
-```
-
-### Overlay shading
-
-```css
-.bartender-overlay {
-  background: #ff69b4;
-  opacity: 0.5;
-}
-```
-
 ## Options
 
 You can pass an object as an argument for Bartender constructor to modify default options.
@@ -200,9 +181,10 @@ const bartender = new Bartender({
   debug: false,
   overlay: true,
   closeOnEsc: true,
+  trapFocus: false,
   mainWrapSelector: '.bartender-main',
   contentWrapSelector: '.bartender-content',
-  focusableElementSelector: 'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])',
+  focusableElementSelector: '[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])',
   readyClass: 'bartender-ready',
   openClass: 'bartender-open',
 });
@@ -226,6 +208,20 @@ Type: `boolean`, Default: `true`
 
 Close any open bar using escape key.
 
+### trapFocus
+
+Type: `boolean`, Default: `false`
+
+If bar is open, focus will be trapped to the open bar and it's child elements, and elements within content wrap are not focusable. If this option is enabled, you **should** provide user a way to close the bar with keyboard by adding close button in the bar.
+
+If you have lots of focusable elements, this operation can also be quite expensive performance-wise.
+
+### scrollTop
+
+Type: `boolean`, Default: `true`
+
+Scroll bar to the top when opening it.
+
 ### mainWrapSelector
 
 Type: `string`, Default: `.bartender-main`
@@ -240,7 +236,7 @@ This selector will be used to find content wrapper.
 
 ### focusableElementSelector
 
-Type: `string`, Default: `a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])`
+Type: `string`, Default: `[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])`
 
 This selector will be used to find focusable elements.
 
@@ -282,6 +278,37 @@ Toggle bar element. If bar is closed, open it. Otherwise close it. Specify bar p
 bartender.toggle('left');
 ```
 
+## Styling
+
+### Bars
+
+```css
+/* These styles apply to all bars */
+[data-bartender-bar] {
+  background: red;
+}
+
+/* These styles apply only to the left bar */
+[data-bartender-bar='left'] {
+  background: #ff69b4;
+}
+```
+
+By default bars will be animated using transition `transform 250ms linear`. You can override this if you're using scss:
+
+```scss
+$bartender-transition: transform 500ms linear;
+```
+
+### Overlay shading
+
+```css
+.bartender-overlay {
+  background: #ff69b4;
+  opacity: 0.5;
+}
+```
+
 ## Events
 
 Add event listener(s) to the Bartender main wrapper element to catch event triggered by the library. All these events bubble, so you can add event listener to the window object too.
@@ -299,14 +326,6 @@ bartender.mainWrap.addEventListener('bartender-open', (e) => {
 
 This event is triggered immediately when bar has _started to open_. The bar object and the button used to open the bar will be included in `detail` object.
 
-#### bartender-afterOpen
-
-This event is triggered when bar has _finished to open_ (transition is finished). The bar object and the button used to open the bar will be included in `detail` object.
-
 #### bartender-close
 
-This event is triggered immediately when bar has _started to open_. The bar object and the button used to open the bar will be included in `detail` object.
-
-#### bartender-afterClose
-
-This event is triggered when bar has _finished to close_ (transition is finished). The bar object and the button used to open the bar will be included in `detail` object.
+This event is triggered immediately when bar has _started to close_. The bar object will be included in `detail` object.

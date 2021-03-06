@@ -1,9 +1,5 @@
 $bartender-transition: transform 250ms linear !default;
 
-html {
-  height: 100%;
-}
-
 .bartender-main,
 .bartender-content,
 [data-bartender-bar] {
@@ -14,7 +10,8 @@ html {
 .bartender-main {
   position: relative;
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
+  margin: 0;
 
   &.bartender-open {
     overflow: hidden !important;
@@ -25,7 +22,7 @@ html {
   z-index: 30;
   position: relative;
   width: 100%;
-  min-height: 100%;
+  min-height: 100vh;
   transition: $bartender-transition;
   background: #fff;
 
@@ -56,7 +53,7 @@ html {
   top: 0;
   width: 80%;
   max-width: 400px;
-  height: 100%;
+  height: 100vh;
 
   &.bartender-bar--open {
     transform: translateX(0) !important;
@@ -77,37 +74,37 @@ html {
 
 [data-bartender-bar='left'] {
   left: 0;
+  transform: translateX(-100%);
 
-  &[data-bartender-bar-mode='float'],
-  &[data-bartender-bar-mode='push'] {
-    transform: translateX(-100%);
+  &[data-bartender-bar-mode='reveal'] {
+    transform: translateX(0);
   }
 }
 
 [data-bartender-bar='right'] {
   right: 0;
+  transform: translateX(100%);
 
-  &[data-bartender-bar-mode='float'],
-  &[data-bartender-bar-mode='push'] {
-    transform: translateX(100%);
+  &[data-bartender-bar-mode='reveal'] {
+    transform: translateX(0);
   }
 }
 
 [data-bartender-bar='top'] {
   top: 0;
+  transform: translateY(-100%);
 
-  &[data-bartender-bar-mode='float'],
-  &[data-bartender-bar-mode='push'] {
-    transform: translateY(-100%);
+  &[data-bartender-bar-mode='reveal'] {
+    transform: translateY(0);
   }
 }
 
 [data-bartender-bar='bottom'] {
   bottom: 0;
+  transform: translateY(100%);
 
-  &[data-bartender-bar-mode='float'],
-  &[data-bartender-bar-mode='push'] {
-    transform: translateY(100%);
+  &[data-bartender-bar-mode='reveal'] {
+    transform: translateY(0);
   }
 }
 

@@ -12,9 +12,6 @@
 
   <!-- Main wrap for bartender -->
   <body class="bartender-main">
-    <!-- Fixed button, which will be pushed when bartender bar is open -->
-    <button data-bartender-toggle="left" data-bartender-push class="fixedButton">Fixed toggle button</button>
-
     <!-- Wrapper for page content -->
     <div class="bartender-content">
       <h1>Bartender Demo</h1>
@@ -26,10 +23,10 @@
     </div>
 
     <!-- Top bar -->
-    <div data-bartender-bar="top" data-bartender-bar-mode="push">
+    <div data-bartender-bar="top" data-bartender-bar-mode="float">
       <button data-bartender-close>Close</button>
       <button data-bartender-open="right">Open right</button>
-      <h2>Top bar (push mode)</h2>
+      <h2>Top bar (float mode)</h2>
       <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque sunt ipsa distinctio magnam nisi sequi voluptate
         esse molestiae nihil, quis corporis quasi natus. Unde, obcaecati rem debitis earum asperiores aut.</p>
     </div>
@@ -64,7 +61,10 @@
     <script src="../dist/bartender.min.js"></script>
     <script>
       // Initialize Bartender
-      const bartender = new Bartender()
+      const bartender = new Bartender({
+        debug: true,
+        trapFocus: true,
+      })
     </script>
   </body>
 </html>

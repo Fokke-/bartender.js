@@ -1,6 +1,6 @@
 {
   "name": "@fokke-/bartender.js",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Accessible off-canvas bars",
   "author": "Ville Fokke Saarivaara",
   "license": "MIT",
@@ -9,6 +9,11 @@
     "type": "git",
     "url": "https://github.com/Fokke-/bartender.js"
   },
+  "keywords": [
+    "off-canvas",
+    "accessibility",
+    "a11y"
+  ],
   "files": [
     "LICENSE",
     "README.md",
@@ -16,9 +21,13 @@
     "dist"
   ],
   "devDependencies": {
+    "@babel/plugin-transform-object-assign": "^7.12.13",
+    "@babel/plugin-transform-parameters": "^7.13.0",
+    "@babel/preset-env": "^7.13.9",
     "beeper": "^2.0.0",
     "browser-sync": "^2.26.7",
     "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
     "gulp-clean-css": "^4.2.0",
     "gulp-concat": "^2.6.1",
     "gulp-eslint": "^6.0.0",
