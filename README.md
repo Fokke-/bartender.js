@@ -182,6 +182,7 @@ const bartender = new Bartender({
   overlay: true,
   closeOnEsc: true,
   trapFocus: false,
+  scrollTop: true,
   mainWrapSelector: '.bartender-main',
   contentWrapSelector: '.bartender-content',
   focusableElementSelector: '[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])',
