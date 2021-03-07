@@ -74,7 +74,7 @@ Check `/demo/minimal.html` for minimal working example. Note that it's highly re
 #### ...or include CSS from CDN
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/@fokke-/bartender.js@1.0.4/dist/bartender.min.css">
+<link rel="stylesheet" href="https://unpkg.com/@fokke-/bartender.js@1.0.5/dist/bartender.min.css">
 ```
 
 ### 2. Include JS
@@ -99,10 +99,10 @@ import Bartender from '@fokke-/bartender.js'
 
 ```html
 <!-- Standard build -->
-<script src="https://unpkg.com/@fokke-/bartender.js@1.0.4/dist/bartender.min.js"></script>
+<script src="https://unpkg.com/@fokke-/bartender.js@1.0.5/dist/bartender.min.js"></script>
 
 <!-- Compatibility build with IE11 support -->
-<script src="https://unpkg.com/@fokke-/bartender.js@1.0.4/dist/bartender.compat.js"></script>
+<script src="https://unpkg.com/@fokke-/bartender.js@1.0.5/dist/bartender.compat.js"></script>
 ```
 
 ### 3. Set the required wrapper elements
