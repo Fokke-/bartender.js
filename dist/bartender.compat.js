@@ -40,6 +40,8 @@ var Bartender = /*#__PURE__*/function () {
       debug: false,
       // Show shading overlay over content wrapper when bar is open?
       overlay: true,
+      // Close open bar by clicking the overlay?
+      closeOnOverlayClick: true,
       // Close open bar with escape key?
       closeOnEsc: true,
       // Trap focus to the open bar?
@@ -288,9 +290,13 @@ var Bartender = /*#__PURE__*/function () {
         if (this.options.overlay && !this.overlay) {
           this.overlay = document.createElement('div');
           this.overlay.classList.add('bartender-overlay');
-          this.overlay.addEventListener('click', function () {
-            return _this.close();
-          });
+
+          if (this.options.closeOnOverlayClick === true) {
+            this.overlay.addEventListener('click', function () {
+              return _this.close();
+            });
+          }
+
           this.contentWrap.appendChild(this.overlay);
         } // Enable closing the bar with escape key
 
@@ -323,31 +329,49 @@ var Bartender = /*#__PURE__*/function () {
     /**
      * Add a new off-canvas bar
      *
-     * @param {object} bar - BartenderBar instance
+     * @param {object} element - DOM element. If undefined, the element will be created.
+     * @param {object} options - Bar options
      * @returns {object} Added bar instance
      */
 
   }, {
     key: "addBar",
-    value: function addBar(bar) {
+    value: function addBar() {
+      var element = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
       try {
-        // Get bar configuration
-        var position = bar.getAttribute('data-bartender-bar');
-        var mode = bar.getAttribute('data-bartender-bar-mode'); // If mode is not specified, fall back to 'float'
+        // If element doesn't exist, create it
+        var newElement = false;
 
-        if (!mode) {
-          mode = 'float';
-          bar.setAttribute('data-bartender-bar-mode', mode);
-        } // Validate configuration
+        if (element === null) {
+          newElement = true;
+          element = document.createElement('div');
+        } // Initially remove transition
 
+
+        element.style.transition = 'none'; // Get bar configuration
+
+        var position = options.position || element.getAttribute('data-bartender-bar');
+        var mode = options.mode || element.getAttribute('data-bartender-bar-mode'); // If mode is not specified, fall back to 'float'
+
+        mode = mode || 'float'; // Validate configuration
 
         if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: ' + this.validBarPositions.join(', ');
-        if (this.validModes.indexOf(mode) < 0) throw 'Invalid mode \'' + mode + '\' for bar \'' + position + '\'. Use one of the following values: ' + this.validModes.join(', '); // Check that bar is not already defined
+        if (this.validModes.indexOf(mode) < 0) throw 'Invalid mode \'' + mode + '\' for bar \'' + position + '\'. Use one of the following values: ' + this.validModes.join(', ');
+        if (this.bars[position]) throw 'Bar with position \'' + position + '\' is already defined'; // Set data-attributes
 
-        if (this.bars[position]) throw 'Bar with position \'' + position + '\' is already defined'; // Create new bar object
+        element.setAttribute('data-bartender-bar', position);
+        element.setAttribute('data-bartender-bar-mode', mode); // If element is new, append to main container
+
+        if (newElement === true) this.mainWrap.appendChild(element); // Return transition
+
+        setTimeout(function () {
+          element.style.transition = null;
+        }); // Create new bar object
 
         var newBar = {
-          element: bar,
+          element: element,
           position: position,
           mode: mode
         };
@@ -355,11 +379,45 @@ var Bartender = /*#__PURE__*/function () {
 
         this.disableFocus(newBar.element);
         this.debug('Added bar \'' + position + '\' with mode \'' + mode + '\'');
+        return newBar;
+      } catch (error) {
+        this.logError(error);
+        return null;
+      }
+    }
+    /**
+     * Remove bar
+     *
+     * @param {string} position - Bar position to remove
+     * @param {boolean} removeElement - Remove DOM element?
+     * @returns {void}
+     */
+
+  }, {
+    key: "removeBar",
+    value: function removeBar() {
+      var position = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+      var removeElement = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+      try {
+        // If this bar is currently open, close it first
+        if (this.currentOpenBar && this.currentOpenBar.position === position) {
+          this.close();
+        } // Validate position
+
+
+        if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: ' + this.validBarPositions.join(', ');
+        if (!this.bars[position]) throw 'Bar with position \'' + position + '\' doesn\'t exist';
+
+        if (removeElement === true) {
+          this.mainWrap.removeChild(this.bars[position].element);
+        }
+
+        delete this.bars[position];
+        this.debug('Removed bar with position \'' + position + '\'');
       } catch (error) {
         this.logError(error);
       }
-
-      return bar;
     }
     /**
      * Open off-canvas bar
