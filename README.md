@@ -74,7 +74,7 @@ Check `/demo/minimal.html` for minimal working example. Note that it's highly re
 #### ...or include CSS from CDN
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/@fokke-/bartender.js@1.0.4/dist/bartender.min.css">
+<link rel="stylesheet" href="https://unpkg.com/@fokke-/bartender.js@1.0.5/dist/bartender.min.css">
 ```
 
 ### 2. Include JS
@@ -99,10 +99,10 @@ import Bartender from '@fokke-/bartender.js'
 
 ```html
 <!-- Standard build -->
-<script src="https://unpkg.com/@fokke-/bartender.js@1.0.4/dist/bartender.min.js"></script>
+<script src="https://unpkg.com/@fokke-/bartender.js@1.0.5/dist/bartender.min.js"></script>
 
 <!-- Compatibility build with IE11 support -->
-<script src="https://unpkg.com/@fokke-/bartender.js@1.0.4/dist/bartender.compat.js"></script>
+<script src="https://unpkg.com/@fokke-/bartender.js@1.0.5/dist/bartender.compat.js"></script>
 ```
 
 ### 3. Set the required wrapper elements
@@ -180,6 +180,7 @@ You can pass an object as an argument for Bartender constructor to modify defaul
 const bartender = new Bartender({
   debug: false,
   overlay: true,
+  closeOnOverlayClick: true,
   closeOnEsc: true,
   trapFocus: false,
   scrollTop: true,
@@ -202,6 +203,12 @@ Enable debugging mode. If enabled, Bartender will log it's activity to console.
 Type: `boolean`, Default: `true`
 
 Show shading overlay when bar is open.
+
+### closeOnOverlayClick
+
+Type: `boolean`, Default: `true`
+
+Close any open bar by clicking the overlay.
 
 ### closeOnEsc
 
@@ -277,6 +284,36 @@ Toggle bar element. If bar is closed, open it. Otherwise close it. Specify bar p
 
 ```javascript
 bartender.toggle('left');
+```
+
+### addBar(element, options)
+
+Creates a new bar. If element is undefined, it will be created. Specify options as second argument.
+
+```javascript
+// Use existing element
+bartender.addBar(document.querySelector('my-new-bar'), {
+  position: 'right',
+  mode: 'float',
+});
+
+// Create new element
+bartender.addBar(null, {
+  position: 'right',
+  mode: 'float',
+});
+```
+
+### removeBar(position, removeElement)
+
+Removes existing bar. Specify bar position (left, right, top, bottom) as first argument. By default the bar element will be removed.
+
+```javascript
+// Remove bar and destroy the element
+bartender.removeBar('right')
+
+// Remove bar, but don't destroy the element
+bartender.removeBar('right', false)
 ```
 
 ## Styling

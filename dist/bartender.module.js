@@ -32,6 +32,9 @@ class Bartender {
       // Show shading overlay over content wrapper when bar is open?
       overlay: true,
 
+      // Close open bar by clicking the overlay?
+      closeOnOverlayClick: true,
+
       // Close open bar with escape key?
       closeOnEsc: true,
 
@@ -280,7 +283,10 @@ class Bartender {
       if (this.options.overlay && !this.overlay) {
         this.overlay = document.createElement('div')
         this.overlay.classList.add('bartender-overlay')
-        this.overlay.addEventListener('click', () => this.close())
+
+        if (this.options.closeOnOverlayClick === true) {
+          this.overlay.addEventListener('click', () => this.close())
+        }
 
         this.contentWrap.appendChild(this.overlay)
       }
@@ -317,31 +323,50 @@ class Bartender {
   /**
    * Add a new off-canvas bar
    *
-   * @param {object} bar - BartenderBar instance
+   * @param {object} element - DOM element. If undefined, the element will be created.
+   * @param {object} options - Bar options
    * @returns {object} Added bar instance
    */
-  addBar (bar) {
+  addBar (element = null, options = {}) {
     try {
+      // If element doesn't exist, create it
+      let newElement = false
+
+      if (element === null) {
+        newElement = true
+        element = document.createElement('div')
+      }
+
+      // Initially remove transition
+      element.style.transition = 'none'
+
       // Get bar configuration
-      let position = bar.getAttribute('data-bartender-bar')
-      let mode = bar.getAttribute('data-bartender-bar-mode')
+      let position = options.position || element.getAttribute('data-bartender-bar')
+      let mode = options.mode || element.getAttribute('data-bartender-bar-mode')
 
       // If mode is not specified, fall back to 'float'
-      if (!mode) {
-        mode = 'float'
-        bar.setAttribute('data-bartender-bar-mode', mode)
-      }
+      mode = mode || 'float'
 
       // Validate configuration
       if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: ' + this.validBarPositions.join(', ')
       if (this.validModes.indexOf(mode) < 0) throw 'Invalid mode \'' + mode + '\' for bar \'' + position + '\'. Use one of the following values: ' + this.validModes.join(', ')
-
-      // Check that bar is not already defined
       if (this.bars[position]) throw 'Bar with position \'' + position + '\' is already defined'
+
+      // Set data-attributes
+      element.setAttribute('data-bartender-bar', position)
+      element.setAttribute('data-bartender-bar-mode', mode)
+
+      // If element is new, append to main container
+      if (newElement === true) this.mainWrap.appendChild(element)
+
+      // Return transition
+      setTimeout(() => {
+        element.style.transition = null
+      })
 
       // Create new bar object
       const newBar = {
-        element: bar,
+        element: element,
         position: position,
         mode: mode,
       }
@@ -352,11 +377,43 @@ class Bartender {
       this.disableFocus(newBar.element)
 
       this.debug('Added bar \'' + position + '\' with mode \'' + mode + '\'')
+
+      return newBar
+    } catch (error) {
+      this.logError(error)
+
+      return null
+    }
+  }
+
+  /**
+   * Remove bar
+   *
+   * @param {string} position - Bar position to remove
+   * @param {boolean} removeElement - Remove DOM element?
+   * @returns {void}
+   */
+  removeBar (position = null, removeElement = true) {
+    try {
+      // If this bar is currently open, close it first
+      if (this.currentOpenBar && this.currentOpenBar.position === position) {
+        this.close()
+      }
+
+      // Validate position
+      if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: ' + this.validBarPositions.join(', ')
+      if (!this.bars[position]) throw 'Bar with position \'' + position + '\' doesn\'t exist'
+
+      if (removeElement === true) {
+        this.mainWrap.removeChild(this.bars[position].element)
+      }
+
+      delete this.bars[position]
+
+      this.debug('Removed bar with position \'' + position + '\'')
     } catch (error) {
       this.logError(error)
     }
-
-    return bar
   }
 
   /**

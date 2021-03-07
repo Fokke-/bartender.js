@@ -1,5 +1,10 @@
 $bartender-transition: transform 250ms linear !default;
 
+html,
+body {
+  height: 100%;
+}
+
 .bartender-main,
 .bartender-content,
 [data-bartender-bar] {
@@ -10,7 +15,6 @@ $bartender-transition: transform 250ms linear !default;
 .bartender-main {
   position: relative;
   width: 100%;
-  min-height: 100vh;
   margin: 0;
 
   &.bartender-open {
@@ -22,8 +26,9 @@ $bartender-transition: transform 250ms linear !default;
   z-index: 30;
   position: relative;
   width: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh - calc(100vh - 100%));
   transition: $bartender-transition;
+  will-change: transform;
   background: #fff;
 
   &:focus {
@@ -37,6 +42,7 @@ $bartender-transition: transform 250ms linear !default;
   background: #000;
   color: #fff;
   transition: $bartender-transition;
+  will-change: transform;
   overflow: auto;
 
   &[data-bartender-bar-mode='reveal'] {
@@ -53,7 +59,7 @@ $bartender-transition: transform 250ms linear !default;
   top: 0;
   width: 80%;
   max-width: 400px;
-  height: 100vh;
+  height: calc(100vh - calc(100vh - 100%));
 
   &.bartender-bar--open {
     transform: translateX(0) !important;
@@ -123,6 +129,7 @@ $bartender-transition: transform 250ms linear !default;
   background: #000;
   opacity: 0.75;
   transition: opacity 500ms ease;
+  will-change: opacity;
 
   &--visible {
     visibility: visible;
