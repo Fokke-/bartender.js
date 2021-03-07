@@ -288,7 +288,7 @@ bartender.toggle('left');
 
 ### addBar(element, options)
 
-Creates a new bar. If element is undefined, it will be created.
+Creates a new bar. If element is undefined, it will be created. Specify options as second argument.
 
 ```javascript
 // Use existing element
