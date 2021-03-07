@@ -409,6 +409,8 @@ class Bartender {
       }
 
       delete this.bars[position]
+
+      this.debug('Removed bar with position \'' + position + '\'')
     } catch (error) {
       this.logError(error)
     }
