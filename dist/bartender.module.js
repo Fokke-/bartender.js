@@ -151,7 +151,7 @@ class Bartender {
       let element = elements[i]
 
       // Discard element if it's not focusable, or if it's already disabled
-      if (!element.matches(this.options.focusableElementSelector) || element.getAttribute('data-bartender-prevtabindex')) continue
+      if (typeof element.matches !== 'function' || !element.matches(this.options.focusableElementSelector) || element.getAttribute('data-bartender-prevtabindex')) continue
 
       element.setAttribute('data-bartender-prevtabindex', element.getAttribute('tabindex'))
       element.setAttribute('tabindex', '-1')
@@ -506,7 +506,7 @@ class Bartender {
 
       // Focus on bar
       bar.element.removeAttribute('aria-hidden')
-      this.enableFocus(bar.element.querySelectorAll(this.options.focusableElementSelector))
+      this.enableFocus(bar.element.querySelectorAll('[data-bartender-prevtabindex]'))
       bar.element.focus()
 
       // Push elements
@@ -603,7 +603,7 @@ class Bartender {
       this.contentWrap.removeAttribute('aria-hidden')
 
       if (this.options.trapFocus === true && enableFocusOfContentWrap === true) {
-        this.enableFocus(this.contentWrap.querySelectorAll(this.options.focusableElementSelector))
+        this.enableFocus(this.contentWrap.querySelectorAll('[data-bartender-prevtabindex]'))
       }
 
       // Close the bar

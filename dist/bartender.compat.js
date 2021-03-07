@@ -142,7 +142,7 @@ var Bartender = /*#__PURE__*/function () {
       for (var i = 0; i < elements.length; i++) {
         var element = elements[i]; // Discard element if it's not focusable, or if it's already disabled
 
-        if (!element.matches(this.options.focusableElementSelector) || element.getAttribute('data-bartender-prevtabindex')) continue;
+        if (typeof element.matches !== 'function' || !element.matches(this.options.focusableElementSelector) || element.getAttribute('data-bartender-prevtabindex')) continue;
         element.setAttribute('data-bartender-prevtabindex', element.getAttribute('tabindex'));
         element.setAttribute('tabindex', '-1');
         iterationCount++;
@@ -509,7 +509,7 @@ var Bartender = /*#__PURE__*/function () {
 
 
         bar.element.removeAttribute('aria-hidden');
-        this.enableFocus(bar.element.querySelectorAll(this.options.focusableElementSelector));
+        this.enableFocus(bar.element.querySelectorAll('[data-bartender-prevtabindex]'));
         bar.element.focus(); // Push elements
 
         this.setPush(); // Remember the button which was used to open the bar
@@ -601,7 +601,7 @@ var Bartender = /*#__PURE__*/function () {
         this.contentWrap.removeAttribute('aria-hidden');
 
         if (this.options.trapFocus === true && enableFocusOfContentWrap === true) {
-          this.enableFocus(this.contentWrap.querySelectorAll(this.options.focusableElementSelector));
+          this.enableFocus(this.contentWrap.querySelectorAll('[data-bartender-prevtabindex]'));
         } // Close the bar
 
 
