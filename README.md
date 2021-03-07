@@ -5,7 +5,8 @@ Bartender is a simple zero-dependency library for creating accessible off-canvas
 The following accessibility concerns have been taken into account:
 
 - When off-canvas bar is closed, it's child elements are not focusable
-- When bar is open, only it's child elements are focusable, and the focus will be initially set on the bar element
+- When bar is open, it's child elements are focusable, and the focus will be initially set on the bar element
+- Optionally trap focus to the open bar
 - After closing the bar the focus will return to the button which was used to open the bar
 
 ## Browser support
@@ -125,6 +126,8 @@ import Bartender from '@fokke-/bartender.js'
 ### 4. Add one or more bars
 
 The bar elements need to have `data-bartender-bar` attribute with desired position (left, right, top, bottom) as a value. **Place all bar elements as direct children of Bartender main element.**
+
+Note that you can also [add bars by using API](#addbarelement-options).
 
 ```html
 <!-- Left bar -->
