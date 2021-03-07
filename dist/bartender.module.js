@@ -97,6 +97,9 @@ class Bartender {
       'reveal',
     ]
 
+    // Mutation observer for content wrap
+    this.contentWrapMutationObserver = null
+
     // Run initializer
     this.init()
   }
@@ -134,63 +137,66 @@ class Bartender {
   }
 
   /**
-   * Disable focus on element and it's children
+   * Disable focus of elements
    *
-   * @param {object} DOM element
-   * @returns {object} DOM element
+   * @param {array} Array of DOM elements
+   * @returns {void}
    */
-  disableFocus (element) {
+  disableFocus (elements = []) {
     const startTime = performance.now()
 
-    // Disable focus of element children
-    const children = element.querySelectorAll(this.options.focusableElementSelector)
+    let iterationCount = 0
 
-    for (let i = 0; i < children.length; i++) {
-      children[i].setAttribute('data-bartender-prevtabindex', children[i].getAttribute('tabindex'))
-      children[i].setAttribute('tabindex', '-1')
+    for (let i = 0; i < elements.length; i++) {
+      let element = elements[i]
+
+      // Discard element if it's not focusable, or if it's already disabled
+      if (!element.matches(this.options.focusableElementSelector) || element.getAttribute('data-bartender-prevtabindex')) continue
+
+      element.setAttribute('data-bartender-prevtabindex', element.getAttribute('tabindex'))
+      element.setAttribute('tabindex', '-1')
+
+      iterationCount++
     }
 
-    // Disable focus of the element
-    element.setAttribute('tabindex', '-1')
-    element.setAttribute('aria-hidden', 'true')
-
     const endTime = performance.now()
-    this.debug('Disabled focus of ' + children.length + ' elements in ' + (endTime - startTime))
 
-    return element
+    if (iterationCount > 0) {
+      this.debug('Disabled focus of ' + iterationCount + ' elements in ' + (endTime - startTime))
+    }
   }
 
   /**
-   * Enable focus on element and it's children
+   * Enable focus of elements
    *
-   * @param {object} DOM element
-   * @returns {object} DOM element
+   * @param {array} Array of DOM elements
+   * @returns {void}
    */
-  enableFocus (element) {
+  enableFocus (elements = []) {
     const startTime = performance.now()
 
-    // Enable focus of element children
-    const children = element.querySelectorAll('[data-bartender-prevtabindex]')
+    let iterationCount = 0
 
-    for (let i = 0; i < children.length; i++) {
+    for (let i = 0; i < elements.length; i++) {
+      let element = elements[i]
+
       // If element has previous tabindex marked, return it. Otherwise just remove tabindex attribute.
-      if (children[i].getAttribute('data-bartender-prevtabindex') != 'null') {
-        children[i].setAttribute('tabindex', children[i].getAttribute('data-bartender-prevtabindex'))
+      if (element.getAttribute('data-bartender-prevtabindex') != 'null') {
+        element.setAttribute('tabindex', element.getAttribute('data-bartender-prevtabindex'))
       } else {
-        children[i].removeAttribute('tabindex')
+        element.removeAttribute('tabindex')
       }
 
-      children[i].removeAttribute('data-bartender-prevtabindex')
+      element.removeAttribute('data-bartender-prevtabindex')
+
+      iterationCount++
     }
 
-    // Enable focus of the element
-    element.setAttribute('tabindex', '0')
-    element.removeAttribute('aria-hidden')
-
     const endTime = performance.now()
-    this.debug('Enabled focus of ' + children.length + ' elements in ' + (endTime - startTime))
 
-    return element
+    if (iterationCount > 0) {
+      this.debug('Enabled focus of ' + iterationCount + ' elements in ' + (endTime - startTime))
+    }
   }
 
   /**
@@ -225,6 +231,7 @@ class Bartender {
       // Add classes
       this.mainWrap.classList.add('bartender-main')
       this.contentWrap.classList.add('bartender-content')
+      this.contentWrap.setAttribute('tabindex', '-1')
 
       // Find bars
       const bars = this.mainWrap.querySelectorAll('[data-bartender-bar]')
@@ -311,7 +318,30 @@ class Bartender {
         }, 200)
       })
 
-      // Add class
+      // Add mutation observer for content wrapper
+      if (this.options.trapFocus === true) {
+        this.contentWrapMutationObserver = new MutationObserver((mutationsList) => {
+          if (!this.currentOpenBar) return
+
+          for (let i = 0; i < mutationsList.length; i++) {
+            let mutation = mutationsList[i]
+
+            if (mutation.type === 'childList') {
+              if (mutation.addedNodes && mutation.addedNodes.length) {
+                this.disableFocus(mutation.addedNodes)
+              }
+            }
+          }
+        })
+
+        this.contentWrapMutationObserver.observe(this.contentWrap, {
+          attributes: false,
+          childList: true,
+          subtree: true,
+        })
+      }
+
+      // Add class to the main wrap
       this.mainWrap.classList.add(this.options.readyClass)
     } catch (error) {
       this.logError(error)
@@ -352,6 +382,11 @@ class Bartender {
       if (this.validModes.indexOf(mode) < 0) throw 'Invalid mode \'' + mode + '\' for bar \'' + position + '\'. Use one of the following values: ' + this.validModes.join(', ')
       if (this.bars[position]) throw 'Bar with position \'' + position + '\' is already defined'
 
+      // Initially disable focus of the bar and it's child elements
+      element.setAttribute('tabindex', '-1')
+      element.setAttribute('aria-hidden', 'true')
+      this.disableFocus(element.querySelectorAll(this.options.focusableElementSelector))
+
       // Set data-attributes
       element.setAttribute('data-bartender-bar', position)
       element.setAttribute('data-bartender-bar-mode', mode)
@@ -369,12 +404,28 @@ class Bartender {
         element: element,
         position: position,
         mode: mode,
+        mutationObserver: new MutationObserver((mutationsList) => {
+          if (this.currentOpenBar && this.currentOpenBar.position === position) return
+
+          for (let i = 0; i < mutationsList.length; i++) {
+            let mutation = mutationsList[i]
+
+            if (mutation.type === 'childList') {
+              if (mutation.addedNodes && mutation.addedNodes.length) {
+                this.disableFocus(mutation.addedNodes)
+              }
+            }
+          }
+        }),
       }
 
-      this.bars[position] = newBar
+      newBar.mutationObserver.observe(newBar.element, {
+        attributes: false,
+        childList: true,
+        subtree: true,
+      })
 
-      // Initially disable focus of the bar
-      this.disableFocus(newBar.element)
+      this.bars[position] = newBar
 
       this.debug('Added bar \'' + position + '\' with mode \'' + mode + '\'')
 
@@ -437,8 +488,10 @@ class Bartender {
       if (this.currentOpenBar) {
         this.close(false)
       } else if (this.options.trapFocus === true) {
-        this.disableFocus(this.contentWrap)
+        this.disableFocus(this.contentWrap.querySelectorAll(this.options.focusableElementSelector))
       }
+
+      this.contentWrap.setAttribute('aria-hidden', 'true')
 
       this.debug('Opening bar \'' + position + '\'')
 
@@ -452,7 +505,8 @@ class Bartender {
       }
 
       // Focus on bar
-      this.enableFocus(bar.element)
+      bar.element.removeAttribute('aria-hidden')
+      this.enableFocus(bar.element.querySelectorAll(this.options.focusableElementSelector))
       bar.element.focus()
 
       // Push elements
@@ -540,11 +594,17 @@ class Bartender {
         this.pushElements[i].style.removeProperty('transform')
       }
 
-      // Disable focus on bar element
-      this.disableFocus(bar.element)
+      // Disable focus of bar element
+      this.disableFocus(bar.element.querySelectorAll(this.options.focusableElementSelector))
+      bar.element.setAttribute('tabindex', '-1')
+      bar.element.setAttribute('aria-hidden', 'true')
 
       // Enable focus on content element
-      if (this.options.trapFocus === true && enableFocusOfContentWrap === true) this.enableFocus(this.contentWrap)
+      this.contentWrap.removeAttribute('aria-hidden')
+
+      if (this.options.trapFocus === true && enableFocusOfContentWrap === true) {
+        this.enableFocus(this.contentWrap.querySelectorAll(this.options.focusableElementSelector))
+      }
 
       // Close the bar
       bar.element.classList.remove('bartender-bar--open')

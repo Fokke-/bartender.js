@@ -78,7 +78,9 @@ var Bartender = /*#__PURE__*/function () {
 
     this.validBarPositions = ['left', 'right', 'top', 'bottom']; // Valid bar modes
 
-    this.validModes = ['float', 'push', 'reveal']; // Run initializer
+    this.validModes = ['float', 'push', 'reveal']; // Mutation observer for content wrap
+
+    this.contentWrapMutationObserver = null; // Run initializer
 
     this.init();
   }
@@ -124,62 +126,66 @@ var Bartender = /*#__PURE__*/function () {
       console.log('Bartender debug: ' + text);
     }
     /**
-     * Disable focus on element and it's children
+     * Disable focus of elements
      *
-     * @param {object} DOM element
-     * @returns {object} DOM element
+     * @param {array} Array of DOM elements
+     * @returns {void}
      */
 
   }, {
     key: "disableFocus",
-    value: function disableFocus(element) {
-      var startTime = performance.now(); // Disable focus of element children
+    value: function disableFocus() {
+      var elements = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+      var startTime = performance.now();
+      var iterationCount = 0;
 
-      var children = element.querySelectorAll(this.options.focusableElementSelector);
+      for (var i = 0; i < elements.length; i++) {
+        var element = elements[i]; // Discard element if it's not focusable, or if it's already disabled
 
-      for (var i = 0; i < children.length; i++) {
-        children[i].setAttribute('data-bartender-prevtabindex', children[i].getAttribute('tabindex'));
-        children[i].setAttribute('tabindex', '-1');
-      } // Disable focus of the element
+        if (!element.matches(this.options.focusableElementSelector) || element.getAttribute('data-bartender-prevtabindex')) continue;
+        element.setAttribute('data-bartender-prevtabindex', element.getAttribute('tabindex'));
+        element.setAttribute('tabindex', '-1');
+        iterationCount++;
+      }
 
-
-      element.setAttribute('tabindex', '-1');
-      element.setAttribute('aria-hidden', 'true');
       var endTime = performance.now();
-      this.debug('Disabled focus of ' + children.length + ' elements in ' + (endTime - startTime));
-      return element;
+
+      if (iterationCount > 0) {
+        this.debug('Disabled focus of ' + iterationCount + ' elements in ' + (endTime - startTime));
+      }
     }
     /**
-     * Enable focus on element and it's children
+     * Enable focus of elements
      *
-     * @param {object} DOM element
-     * @returns {object} DOM element
+     * @param {array} Array of DOM elements
+     * @returns {void}
      */
 
   }, {
     key: "enableFocus",
-    value: function enableFocus(element) {
-      var startTime = performance.now(); // Enable focus of element children
+    value: function enableFocus() {
+      var elements = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+      var startTime = performance.now();
+      var iterationCount = 0;
 
-      var children = element.querySelectorAll('[data-bartender-prevtabindex]');
+      for (var i = 0; i < elements.length; i++) {
+        var element = elements[i]; // If element has previous tabindex marked, return it. Otherwise just remove tabindex attribute.
 
-      for (var i = 0; i < children.length; i++) {
-        // If element has previous tabindex marked, return it. Otherwise just remove tabindex attribute.
-        if (children[i].getAttribute('data-bartender-prevtabindex') != 'null') {
-          children[i].setAttribute('tabindex', children[i].getAttribute('data-bartender-prevtabindex'));
+        if (element.getAttribute('data-bartender-prevtabindex') != 'null') {
+          element.setAttribute('tabindex', element.getAttribute('data-bartender-prevtabindex'));
         } else {
-          children[i].removeAttribute('tabindex');
+          element.removeAttribute('tabindex');
         }
 
-        children[i].removeAttribute('data-bartender-prevtabindex');
-      } // Enable focus of the element
+        element.removeAttribute('data-bartender-prevtabindex');
+        iterationCount++;
+      }
 
-
-      element.setAttribute('tabindex', '0');
-      element.removeAttribute('aria-hidden');
       var endTime = performance.now();
-      this.debug('Enabled focus of ' + children.length + ' elements in ' + (endTime - startTime));
-      return element;
+
+      if (iterationCount > 0) {
+        this.debug('Enabled focus of ' + iterationCount + ' elements in ' + (endTime - startTime));
+      }
     }
     /**
      * Is defined bar position valid?
@@ -217,7 +223,8 @@ var Bartender = /*#__PURE__*/function () {
         this.toggleButtons = this.mainWrap.querySelectorAll('[data-bartender-toggle]'); // Add classes
 
         this.mainWrap.classList.add('bartender-main');
-        this.contentWrap.classList.add('bartender-content'); // Find bars
+        this.contentWrap.classList.add('bartender-content');
+        this.contentWrap.setAttribute('tabindex', '-1'); // Find bars
 
         var bars = this.mainWrap.querySelectorAll('[data-bartender-bar]');
 
@@ -317,7 +324,29 @@ var Bartender = /*#__PURE__*/function () {
           _this.resizeTimeout = setTimeout(function () {
             _this.setPush();
           }, 200);
-        }); // Add class
+        }); // Add mutation observer for content wrapper
+
+        if (this.options.trapFocus === true) {
+          this.contentWrapMutationObserver = new MutationObserver(function (mutationsList) {
+            if (!_this.currentOpenBar) return;
+
+            for (var _i4 = 0; _i4 < mutationsList.length; _i4++) {
+              var mutation = mutationsList[_i4];
+
+              if (mutation.type === 'childList') {
+                if (mutation.addedNodes && mutation.addedNodes.length) {
+                  _this.disableFocus(mutation.addedNodes);
+                }
+              }
+            }
+          });
+          this.contentWrapMutationObserver.observe(this.contentWrap, {
+            attributes: false,
+            childList: true,
+            subtree: true
+          });
+        } // Add class to the main wrap
+
 
         this.mainWrap.classList.add(this.options.readyClass);
       } catch (error) {
@@ -337,6 +366,8 @@ var Bartender = /*#__PURE__*/function () {
   }, {
     key: "addBar",
     value: function addBar() {
+      var _this2 = this;
+
       var element = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
@@ -359,7 +390,11 @@ var Bartender = /*#__PURE__*/function () {
 
         if (!this.isValidPosition(position)) throw 'Invalid bar position \'' + position + '\'. Use one of the following values: ' + this.validBarPositions.join(', ');
         if (this.validModes.indexOf(mode) < 0) throw 'Invalid mode \'' + mode + '\' for bar \'' + position + '\'. Use one of the following values: ' + this.validModes.join(', ');
-        if (this.bars[position]) throw 'Bar with position \'' + position + '\' is already defined'; // Set data-attributes
+        if (this.bars[position]) throw 'Bar with position \'' + position + '\' is already defined'; // Initially disable focus of the bar and it's child elements
+
+        element.setAttribute('tabindex', '-1');
+        element.setAttribute('aria-hidden', 'true');
+        this.disableFocus(element.querySelectorAll(this.options.focusableElementSelector)); // Set data-attributes
 
         element.setAttribute('data-bartender-bar', position);
         element.setAttribute('data-bartender-bar-mode', mode); // If element is new, append to main container
@@ -373,11 +408,27 @@ var Bartender = /*#__PURE__*/function () {
         var newBar = {
           element: element,
           position: position,
-          mode: mode
-        };
-        this.bars[position] = newBar; // Initially disable focus of the bar
+          mode: mode,
+          mutationObserver: new MutationObserver(function (mutationsList) {
+            if (_this2.currentOpenBar && _this2.currentOpenBar.position === position) return;
 
-        this.disableFocus(newBar.element);
+            for (var i = 0; i < mutationsList.length; i++) {
+              var mutation = mutationsList[i];
+
+              if (mutation.type === 'childList') {
+                if (mutation.addedNodes && mutation.addedNodes.length) {
+                  _this2.disableFocus(mutation.addedNodes);
+                }
+              }
+            }
+          })
+        };
+        newBar.mutationObserver.observe(newBar.element, {
+          attributes: false,
+          childList: true,
+          subtree: true
+        });
+        this.bars[position] = newBar;
         this.debug('Added bar \'' + position + '\' with mode \'' + mode + '\'');
         return newBar;
       } catch (error) {
@@ -443,9 +494,10 @@ var Bartender = /*#__PURE__*/function () {
         if (this.currentOpenBar) {
           this.close(false);
         } else if (this.options.trapFocus === true) {
-          this.disableFocus(this.contentWrap);
+          this.disableFocus(this.contentWrap.querySelectorAll(this.options.focusableElementSelector));
         }
 
+        this.contentWrap.setAttribute('aria-hidden', 'true');
         this.debug('Opening bar \'' + position + '\''); // Mark this bar as open
 
         this.currentOpenBar = bar;
@@ -456,7 +508,8 @@ var Bartender = /*#__PURE__*/function () {
         } // Focus on bar
 
 
-        this.enableFocus(bar.element);
+        bar.element.removeAttribute('aria-hidden');
+        this.enableFocus(bar.element.querySelectorAll(this.options.focusableElementSelector));
         bar.element.focus(); // Push elements
 
         this.setPush(); // Remember the button which was used to open the bar
@@ -538,12 +591,19 @@ var Bartender = /*#__PURE__*/function () {
 
         for (var i = 0; i < this.pushElements.length; i++) {
           this.pushElements[i].style.removeProperty('transform');
-        } // Disable focus on bar element
+        } // Disable focus of bar element
 
 
-        this.disableFocus(bar.element); // Enable focus on content element
+        this.disableFocus(bar.element.querySelectorAll(this.options.focusableElementSelector));
+        bar.element.setAttribute('tabindex', '-1');
+        bar.element.setAttribute('aria-hidden', 'true'); // Enable focus on content element
 
-        if (this.options.trapFocus === true && enableFocusOfContentWrap === true) this.enableFocus(this.contentWrap); // Close the bar
+        this.contentWrap.removeAttribute('aria-hidden');
+
+        if (this.options.trapFocus === true && enableFocusOfContentWrap === true) {
+          this.enableFocus(this.contentWrap.querySelectorAll(this.options.focusableElementSelector));
+        } // Close the bar
+
 
         bar.element.classList.remove('bartender-bar--open');
         this.currentOpenBar = null; // Restore scrolling to the main wrap
