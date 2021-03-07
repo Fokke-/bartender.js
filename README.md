@@ -286,6 +286,36 @@ Toggle bar element. If bar is closed, open it. Otherwise close it. Specify bar p
 bartender.toggle('left');
 ```
 
+### addBar(element, options)
+
+Creates a new bar. If element is undefined, it will be created.
+
+```javascript
+// Use existing element
+bartender.addBar(document.querySelector('my-new-bar'), {
+  position: 'right',
+  mode: 'float',
+});
+
+// Create new element
+bartender.addBar(null, {
+  position: 'right',
+  mode: 'float',
+});
+```
+
+### removeBar(position, removeElement)
+
+Removes existing bar. Specify bar position (left, right, top, bottom) as first argument. By default the bar element will be removed.
+
+```javascript
+// Remove bar and destroy the element
+bartender.removeBar('right')
+
+// Remove bar, but don't destroy the element
+bartender.removeBar('right', false)
+```
+
 ## Styling
 
 ### Bars
