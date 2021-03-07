@@ -180,6 +180,7 @@ You can pass an object as an argument for Bartender constructor to modify defaul
 const bartender = new Bartender({
   debug: false,
   overlay: true,
+  closeOnOverlayClick: true,
   closeOnEsc: true,
   trapFocus: false,
   scrollTop: true,
@@ -202,6 +203,12 @@ Enable debugging mode. If enabled, Bartender will log it's activity to console.
 Type: `boolean`, Default: `true`
 
 Show shading overlay when bar is open.
+
+### closeOnOverlayClick
+
+Type: `boolean`, Default: `true`
+
+Close any open bar by clicking the overlay.
 
 ### closeOnEsc
 

@@ -32,6 +32,9 @@ class Bartender {
       // Show shading overlay over content wrapper when bar is open?
       overlay: true,
 
+      // Close open bar by clicking the overlay?
+      closeOnOverlayClick: true,
+
       // Close open bar with escape key?
       closeOnEsc: true,
 
@@ -280,7 +283,10 @@ class Bartender {
       if (this.options.overlay && !this.overlay) {
         this.overlay = document.createElement('div')
         this.overlay.classList.add('bartender-overlay')
-        this.overlay.addEventListener('click', () => this.close())
+
+        if (this.options.closeOnOverlayClick === true) {
+          this.overlay.addEventListener('click', () => this.close())
+        }
 
         this.contentWrap.appendChild(this.overlay)
       }
