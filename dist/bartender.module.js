@@ -79,7 +79,6 @@ class Bartender {
     this.toggleButtons = []
 
     // Array for storing pushable elements
-    // These elements will be moved when bar with "push" or "reveal" mode is being opened.
     this.pushElements = []
 
     // Valid bar positions
