@@ -216,22 +216,21 @@ class Bartender {
    */
   init () {
     try {
-      // Find and validate required elements
+      // Main wrap
       this.mainWrap = document.querySelector(this.options.mainWrapSelector)
       if (!this.mainWrap) throw 'Main wrap element was not found with selector: ' + this.options.mainWrapSelector
+      this.mainWrap.classList.add('bartender-main')
 
+      // Content wrap
       this.contentWrap = this.mainWrap.querySelector(this.options.contentWrapSelector)
       if (!this.contentWrap) throw 'Content wrap element was not found with selector: ' + this.options.contentWrapSelector
+      this.contentWrap.classList.add('bartender-content')
+      this.contentWrap.setAttribute('tabindex', '-1')
 
       // Find buttons
       this.openButtons = this.mainWrap.querySelectorAll('[data-bartender-open]')
       this.closeButtons = this.mainWrap.querySelectorAll('[data-bartender-close]')
       this.toggleButtons = this.mainWrap.querySelectorAll('[data-bartender-toggle]')
-
-      // Add classes
-      this.mainWrap.classList.add('bartender-main')
-      this.contentWrap.classList.add('bartender-content')
-      this.contentWrap.setAttribute('tabindex', '-1')
 
       // Find bars
       const bars = this.mainWrap.querySelectorAll('[data-bartender-bar]')
