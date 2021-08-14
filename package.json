@@ -24,7 +24,6 @@
     "@babel/plugin-transform-object-assign": "^7.12.13",
     "@babel/plugin-transform-parameters": "^7.13.0",
     "@babel/preset-env": "^7.13.9",
-    "beeper": "^3.0.0",
     "browser-sync": "^2.26.7",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
