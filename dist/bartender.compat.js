@@ -72,7 +72,6 @@ var Bartender = /*#__PURE__*/function () {
     this.openButtons = [];
     this.closeButtons = [];
     this.toggleButtons = []; // Array for storing pushable elements
-    // These elements will be moved when bar with "push" or "reveal" mode is being opened.
 
     this.pushElements = []; // Valid bar positions
 
@@ -212,19 +211,19 @@ var Bartender = /*#__PURE__*/function () {
       var _this = this;
 
       try {
-        // Find and validate required elements
+        // Main wrap
         this.mainWrap = document.querySelector(this.options.mainWrapSelector);
         if (!this.mainWrap) throw 'Main wrap element was not found with selector: ' + this.options.mainWrapSelector;
+        this.mainWrap.classList.add('bartender-main'); // Content wrap
+
         this.contentWrap = this.mainWrap.querySelector(this.options.contentWrapSelector);
-        if (!this.contentWrap) throw 'Content wrap element was not found with selector: ' + this.options.contentWrapSelector; // Find buttons
+        if (!this.contentWrap) throw 'Content wrap element was not found with selector: ' + this.options.contentWrapSelector;
+        this.contentWrap.classList.add('bartender-content');
+        this.contentWrap.setAttribute('tabindex', '-1'); // Find buttons
 
         this.openButtons = this.mainWrap.querySelectorAll('[data-bartender-open]');
         this.closeButtons = this.mainWrap.querySelectorAll('[data-bartender-close]');
-        this.toggleButtons = this.mainWrap.querySelectorAll('[data-bartender-toggle]'); // Add classes
-
-        this.mainWrap.classList.add('bartender-main');
-        this.contentWrap.classList.add('bartender-content');
-        this.contentWrap.setAttribute('tabindex', '-1'); // Find bars
+        this.toggleButtons = this.mainWrap.querySelectorAll('[data-bartender-toggle]'); // Find bars
 
         var bars = this.mainWrap.querySelectorAll('[data-bartender-bar]');
 

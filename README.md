@@ -8,6 +8,7 @@ The following accessibility concerns have been taken into account:
 - When bar is open, it's child elements are focusable, and the focus will be initially set on the bar element
 - Optionally trap focus to the open bar
 - After closing the bar the focus will return to the button which was used to open the bar
+- All transitions are disabled if user prefers reduced motion
 
 ## Browser support
 
@@ -69,13 +70,13 @@ Check `/demo/minimal.html` for minimal working example. Note that it's highly re
 #### ...or include CSS manually
 
 ```html
-<link rel="stylesheet" href="dist/bartender.css">
+<link rel="stylesheet" href="dist/bartender.min.css">
 ```
 
 #### ...or include CSS from CDN
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/@fokke-/bartender.js@1.0.7/dist/bartender.min.css">
+<link rel="stylesheet" href="https://unpkg.com/@fokke-/bartender.js@1.0.8/dist/bartender.min.css">
 ```
 
 ### 2. Include JS
@@ -100,10 +101,10 @@ import Bartender from '@fokke-/bartender.js'
 
 ```html
 <!-- Standard build -->
-<script src="https://unpkg.com/@fokke-/bartender.js@1.0.7/dist/bartender.min.js"></script>
+<script src="https://unpkg.com/@fokke-/bartender.js@1.0.8/dist/bartender.min.js"></script>
 
 <!-- Compatibility build with IE11 support -->
-<script src="https://unpkg.com/@fokke-/bartender.js@1.0.7/dist/bartender.compat.js"></script>
+<script src="https://unpkg.com/@fokke-/bartender.js@1.0.8/dist/bartender.compat.js"></script>
 ```
 
 ### 3. Set the required wrapper elements
@@ -168,7 +169,15 @@ If you want to create button (or any other element) to close any open bar, add `
 <button data-bartender-close>Close bar</button>
 ```
 
-### 7. Initialize Bartender
+### 7. Add pushable elements (optional)
+
+If you have elements with fixed positioning (e.g. toolbar) and bar is opened, these elements will stay in place. If you want them to be moved alongside the bar, add `data-bartender-push` attribute to the fixed elements, and **place them as direct children of Bartender main element.**
+
+```html
+<div data-bartender-push></div>
+```
+
+### 8. Initialize Bartender
 
 ```javascript
 // Use default options
@@ -320,6 +329,9 @@ bartender.removeBar('right', false)
 ```
 
 ## Styling
+
+Please note that all transitions are disabled, if user prefers reduced motion. [Read more about reduced motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion).
+
 
 ### Bars
 
