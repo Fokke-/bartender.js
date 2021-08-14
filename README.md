@@ -69,7 +69,7 @@ Check `/demo/minimal.html` for minimal working example. Note that it's highly re
 #### ...or include CSS manually
 
 ```html
-<link rel="stylesheet" href="dist/bartender.css">
+<link rel="stylesheet" href="dist/bartender.min.css">
 ```
 
 #### ...or include CSS from CDN
