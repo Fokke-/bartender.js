@@ -175,4 +175,4 @@ exports.js = js
 exports.jsModule = jsModule
 exports.jsCompat = jsCompat
 exports.dev = dev
-exports.default = dev
+exports.default = gulp.series(css, js, jsModule, jsCompat, dev)
