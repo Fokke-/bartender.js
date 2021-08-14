@@ -169,7 +169,15 @@ If you want to create button (or any other element) to close any open bar, add `
 <button data-bartender-close>Close bar</button>
 ```
 
-### 7. Initialize Bartender
+### 7. Add pushable elements (optional)
+
+If you have elements with fixed positioning (e.g. toolbar) and bar is opened, these elements will stay in place. If you want them to be moved alongside the bar, add `data-bartender-push` attribute to the fixed elements, and **place them as direct children of Bartender main element.**
+
+```html
+<div data-bartender-push></div>
+```
+
+### 8. Initialize Bartender
 
 ```javascript
 // Use default options
