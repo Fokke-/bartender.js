@@ -8,6 +8,7 @@ The following accessibility concerns have been taken into account:
 - When bar is open, it's child elements are focusable, and the focus will be initially set on the bar element
 - Optionally trap focus to the open bar
 - After closing the bar the focus will return to the button which was used to open the bar
+- All transitions are disabled if user prefers reduced motion
 
 ## Browser support
 
@@ -320,6 +321,9 @@ bartender.removeBar('right', false)
 ```
 
 ## Styling
+
+Please note that all transitions are disabled, if user prefers reduced motion. [Read more about reduced motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion).
+
 
 ### Bars
 
