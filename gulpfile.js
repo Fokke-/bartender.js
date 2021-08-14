@@ -1,10 +1,9 @@
 const gulp = require('gulp')
 const sizereport = require('gulp-sizereport')
 const plumber = require('gulp-plumber')
-const beeper = require('beeper')
 const notify = require('gulp-notify')
 const sourcemaps = require('gulp-sourcemaps')
-const sass = require('gulp-sass')
+const sass = require('gulp-sass')(require('sass'));
 const browserSync = require('browser-sync').create()
 const cleanCSS = require('gulp-clean-css')
 const terser = require('gulp-terser')
@@ -59,7 +58,6 @@ function plumbError () {
         title: 'Gulp error in ' + err.plugin,
         message: err.formatted,
       })(err)
-      beeper()
       this.emit('end')
     },
   })
