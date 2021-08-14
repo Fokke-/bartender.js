@@ -166,13 +166,14 @@ const watch = () => {
     gulp.series(browserSyncReload))
 }
 
-// Task: Dev
-const dev = gulp.parallel(browserSyncInit, watch)
+// Task: Dev server
+const devServer = gulp.parallel(browserSyncInit, watch)
 
 // Exports
 exports.css = css
 exports.js = js
 exports.jsModule = jsModule
 exports.jsCompat = jsCompat
-exports.dev = dev
-exports.default = gulp.series(css, js, jsModule, jsCompat, dev)
+exports.devServer = gulp.parallel(browserSyncInit, watch)
+exports.build = gulp.series(css, js, jsModule, jsCompat)
+exports.default = gulp.series(css, js, jsModule, jsCompat, devServer)
