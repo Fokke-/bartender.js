@@ -1,14 +1,18 @@
 {
   "editor.insertSpaces": true,
   "editor.detectIndentation": false,
-  "files.associations": {
-    ".sasslintrc": "json",
-  },
   "search.exclude": {
     "**/node_modules": true,
     "**/dist": true,
-    "**/demo": true
   },
   "search.useIgnoreFiles": false,
-  "files.trimTrailingWhitespace": true
+  "files.trimTrailingWhitespace": true,
+  "eslint.workingDirectories": [
+    "src"
+  ],
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": false,
+    "source.fixAll.eslint": true
+  }
 }

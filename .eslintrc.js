@@ -1,70 +1,62 @@
 module.exports = {
-  extends: 'eslint:recommended',
+  root: true,
+  env: {
+    node: true,
+    browser: true,
+  },
+  parser: '@typescript-eslint/parser',
+  plugins: [
+    '@typescript-eslint',
+  ],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+  ],
   parserOptions: {
-    ecmaVersion: 8,
+    ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  env: {
-    browser: true,
-  },
-  globals: {
-    browser: true,
-  },
-  ignorePatterns: [
-    'dist/**',
-  ],
   rules: {
-    'no-unused-vars': 'off',
+    'no-console': 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-undef': 'off',
     'no-useless-escape': 'off',
+    'no-unused-vars': 'off',
     'eol-last': [
       'error',
       'always',
     ],
-    indent: [
+    'indent': [
       'error',
       2,
       {
         SwitchCase: 1,
       },
     ],
-    quotes: [
+    'quotes': [
       'error',
       'single',
     ],
-    semi: [
+    'semi': [
       'error',
-      'never'
+      'never',
     ],
     'array-bracket-spacing': [
       'error',
       'never',
     ],
-    'array-element-newline': [
-      'error',
-      'always',
-    ],
-    'comma-dangle': [
-      'error',
-      {
-        arrays: 'always',
-        objects: 'always',
-        imports: 'never',
-        exports: 'never',
-        functions: 'never',
-      },
-    ],
+    'array-element-newline': 'off',
     'no-trailing-spaces': [
+      'error',
+    ],
+    'no-multi-spaces': [
       'error',
     ],
     'no-multiple-empty-lines': [
       'error',
       {
         max: 1,
-      }
-    ],
-    'no-multi-spaces': [
-      'error',
+      },
     ],
     'space-before-function-paren': [
       'error',
@@ -73,6 +65,16 @@ module.exports = {
     'space-in-parens': [
       'error',
       'never',
+    ],
+    'comma-dangle': [
+      'error',
+      {
+        arrays: 'always-multiline',
+        objects: 'always-multiline',
+        imports: 'never',
+        exports: 'never',
+        functions: 'never',
+      },
     ],
   },
 }

@@ -1,9 +1,7 @@
-'use strict'
-
 /**
  * Class for creating accessible off-canvas bars.
  */
-class Bartender {
+export class Bartender {
 
   /**
    * @param {object} options - User defined options
@@ -700,6 +698,3 @@ class Bartender {
     this.overlay.classList.remove('bartender-overlay--visible')
   }
 }
-
-export default Bartender
-//# sourceMappingURL=bartender.module.js.map

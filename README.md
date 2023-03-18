@@ -332,7 +332,6 @@ bartender.removeBar('right', false)
 
 Please note that all transitions are disabled, if user prefers reduced motion. [Read more about reduced motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion).
 
-
 ### Bars
 
 ```css
