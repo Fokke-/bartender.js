@@ -1,8 +1,8 @@
-class c {
+class e {
   constructor(o) {
     console.log(o);
   }
 }
 export {
-  c as Bartender
+  e as Bartender
 };

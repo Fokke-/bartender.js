@@ -9,7 +9,6 @@
     "rule-empty-line-before": null,
     "no-descending-specificity": null,
     "number-leading-zero": null,
-    "order/properties-alphabetical-order": null,
     "max-nesting-depth": null,
     "declaration-block-single-line-max-declarations": 1,
     "selector-class-pattern": null,
