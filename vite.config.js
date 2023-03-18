@@ -21,7 +21,7 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: './src/Bartender/scss/bartender.scss',
+          src: './src/Bartender/style.scss',
           dest: './',
         },
       ],
