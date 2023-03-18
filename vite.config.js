@@ -1,5 +1,6 @@
 import eslint from 'vite-plugin-eslint'
 import stylelint from 'vite-plugin-stylelint'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
@@ -16,6 +17,14 @@ export default defineConfig({
       dev: true,
       build: true,
       include: ['src/**/*.{css,scss,sass,less,styl,vue,svelte}'],
+    }),
+    viteStaticCopy({
+      targets: [
+        {
+          src: './src/Bartender/scss/bartender.scss',
+          dest: './',
+        },
+      ],
     }),
   ],
   define: { 'process.env': {} },
