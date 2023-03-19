@@ -18,9 +18,9 @@ export class Bartender {
 
   public debug = false
   public busy = false
-  readonly mainEl?: Element
+  readonly mainEl?: HTMLElement | HTMLBodyElement | null
   readonly mainElSelector?: string
-  readonly contentEl?: Element
+  readonly contentEl?: HTMLElement | null
   readonly contentElSelector?: string
   readonly bars: BartenderBars = <BartenderBars>{}
   public barDefaultOptions = <BartenderBarOptions>{}
@@ -106,6 +106,12 @@ export class Bartender {
     }))
 
     return this
+  }
+
+  getBar (name: string): BartenderBar | null {
+    if (!this.bars[name] || !(this.bars[name] instanceof BartenderBar)) return null
+
+    return this.bars[name]
   }
 
   /**
