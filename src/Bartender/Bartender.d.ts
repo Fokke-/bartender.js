@@ -12,8 +12,13 @@ export type BartenderBars = {
   [key: string]: BartenderBar
 }
 
+export type BartenderBarPosition = 'left' | 'right' | 'top' | 'bottom'
+export type BartenderBarMode = 'float' | 'push' | 'reveal'
+
 export interface BartenderBarOptions {
   el?: Element,
   elSelector?: string,
-  position: 'left' | 'right' | 'top' | 'bottom',
+  position?: BartenderBarPosition,
+  mode?: 'float' | 'push' | 'reveal',
+  switchTimeout?: number,
 }

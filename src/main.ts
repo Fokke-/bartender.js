@@ -1,28 +1,48 @@
 import { Bartender } from './Bartender/Bartender'
 import './Bartender/style.scss'
-
-window.addEventListener('bartender-init', ((e: CustomEvent) => {
-  console.log('Bartender init')
-  console.log(e.detail)
-}) as EventListener)
-
-window.addEventListener('bartender-bar-added', ((e: CustomEvent) => {
-  console.log('Bar init')
-  console.log(e.detail)
-}) as EventListener)
+import './main.scss'
 
 const bartender = new Bartender({
   debug: true,
-})
-
-bartender.addBar('mobileNavBar', {
+}).addBar('left', {
   position: 'left',
-  elSelector: '.mobileNavBar',
+  elSelector: '.leftBar',
+}).addBar('right', {
+  position: 'right',
+  elSelector: '.rightBar',
+}).addBar('rightExtra', {
+  position: 'right',
+  elSelector: '.rightBarExtra',
+}).addBar('top', {
+  position: 'top',
+  elSelector: '.topBar',
+}).addBar('bottom', {
+  position: 'bottom',
+  elSelector: '.bottomBar',
 })
 
-// const bar = bartender.addBar('mobileNavBar', {
-//   position: 'right',
-//   elSelector: '.mobileNavBar',
-// })
+const openLeft = document.querySelector('.openLeft')
+openLeft?.addEventListener('click', () => {
+  bartender.bars.left.toggle()
+})
 
-// console.log(bartender)
+const openRight = document.querySelector('.openRight')
+openRight?.addEventListener('click', () => {
+  bartender.bars.right.toggle()
+})
+
+const openRightExtra = document.querySelector('.openRightExtra')
+openRightExtra?.addEventListener('click', () => {
+  bartender.bars.rightExtra.toggle()
+})
+
+const openTop = document.querySelector('.openTop')
+openTop?.addEventListener('click', () => {
+  bartender.bars.top.toggle()
+})
+
+const openBottom = document.querySelector('.openBottom')
+openBottom?.addEventListener('click', () => {
+  bartender.bars.bottom.toggle()
+})
+

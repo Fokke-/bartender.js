@@ -1,142 +1,229 @@
-$bartender-transition: transform 250ms linear !default;
+$bartender-transition: transform 250ms ease !default;
 
 html,
 body {
   height: 100%;
 }
 
-.bartender-main,
-.bartender-content,
-[data-bartender-bar] {
-  box-sizing: border-box;
+body {
   margin: 0;
+  padding: 0;
 }
 
-// Add transitions
-.bartender-content,
-[data-bartender-bar],
-[data-bartender-push] {
-  transition: $bartender-transition;
+.bartender {
+  &__content {
+    z-index: 2;
+    position: relative;
+    width: 100%;
+    min-height: calc(100vh - calc(100vh - 100%));
+    will-change: transform;
+    background: #fff;
 
-  @media (prefers-reduced-motion) {
-    transition: none;
+    &:focus {
+      outline: 0;
+    }
+  }
+
+  &__bar {
+    z-index: 3;
+    position: fixed;
+    overflow: auto;
+    background-color: #dddddd;
+    will-change: transform;
+    transition: $bartender-transition;
+
+    &--reveal {
+      z-index: 1;
+    }
+
+    &--left,
+    &--right {
+      top: 0;
+      width: 80%;
+      max-width: 400px;
+      // TODO: is this what we are looking for?
+      height: calc(100vh - calc(100vh - 100%));
+
+      &.bartender__bar--open {
+        transform: translateX(0)
+      }
+    }
+
+    &--left {
+      left: 0;
+      transform: translateX(-100%);
+    }
+
+    &--right {
+      right: 0;
+      transform: translateX(100%);
+    }
+
+    &--top,
+    &--bottom {
+      left: 0;
+      width: 100%;
+      height: 50%;
+      max-height: 400px;
+
+      &.bartender__bar--open {
+        transform: translateY(0)
+      }
+    }
+
+    &--top {
+      top: 0;
+      transform: translateY(-100%);
+    }
+
+    &--bottom {
+      bottom: 0;
+      transform: translateY(100%);
+    }
   }
 }
 
-.bartender-main {
-  position: relative;
-  width: 100%;
-  margin: 0;
+// .bartender {
+//   border: solid 1px red;
+// }
 
-  &.bartender-open {
-    overflow: hidden !important;
-  }
-}
+// html,
+// body {
+//   height: 100%;
+// }
 
-.bartender-content {
-  z-index: 30;
-  position: relative;
-  width: 100%;
-  min-height: calc(100vh - calc(100vh - 100%));
-  will-change: transform;
-  background: #fff;
+// .bartender-main,
+// .bartender-content,
+// [data-bartender-bar] {
+//   box-sizing: border-box;
+//   margin: 0;
+// }
 
-  &:focus {
-    outline: 0;
-  }
-}
+// // Add transitions
+// .bartender-content,
+// [data-bartender-bar],
+// [data-bartender-push] {
+//   transition: $bartender-transition;
 
-[data-bartender-bar] {
-  z-index: 50;
-  position: fixed;
-  background: #000;
-  color: #fff;
-  will-change: transform;
-  overflow: auto;
+//   @media (prefers-reduced-motion) {
+//     transition: none;
+//   }
+// }
 
-  &[data-bartender-bar-mode='reveal'] {
-    z-index: 10;
-  }
+// .bartender-main {
+//   position: relative;
+//   width: 100%;
+//   margin: 0;
 
-  &:focus {
-    outline: 0;
-  }
-}
+//   &.bartender-open {
+//     overflow: hidden !important;
+//   }
+// }
 
-[data-bartender-bar='left'],
-[data-bartender-bar='right'] {
-  top: 0;
-  width: 80%;
-  max-width: 400px;
-  height: calc(100vh - calc(100vh - 100%));
+// .bartender-content {
+//   z-index: 30;
+//   position: relative;
+//   width: 100%;
+//   min-height: calc(100vh - calc(100vh - 100%));
+//   will-change: transform;
+//   background: #fff;
 
-  &.bartender-bar--open {
-    transform: translateX(0) !important;
-  }
-}
+//   &:focus {
+//     outline: 0;
+//   }
+// }
 
-[data-bartender-bar='top'],
-[data-bartender-bar='bottom'] {
-  position: fixed;
-  left: 0;
-  width: 100%;
-  height: 50%;
+// [data-bartender-bar] {
+//   z-index: 50;
+//   position: fixed;
+//   background: #000;
+//   color: #fff;
+//   will-change: transform;
+//   overflow: auto;
 
-  &.bartender-bar--open {
-    transform: translateY(0) !important;
-  }
-}
+//   &[data-bartender-bar-mode='reveal'] {
+//     z-index: 10;
+//   }
 
-[data-bartender-bar='left'] {
-  left: 0;
-  transform: translateX(-100%);
+//   &:focus {
+//     outline: 0;
+//   }
+// }
 
-  &[data-bartender-bar-mode='reveal'] {
-    transform: translateX(0);
-  }
-}
+// [data-bartender-bar='left'],
+// [data-bartender-bar='right'] {
+//   top: 0;
+//   width: 80%;
+//   max-width: 400px;
+//   height: calc(100vh - calc(100vh - 100%));
 
-[data-bartender-bar='right'] {
-  right: 0;
-  transform: translateX(100%);
+//   &.bartender-bar--open {
+//     transform: translateX(0) !important;
+//   }
+// }
 
-  &[data-bartender-bar-mode='reveal'] {
-    transform: translateX(0);
-  }
-}
+// [data-bartender-bar='top'],
+// [data-bartender-bar='bottom'] {
+//   position: fixed;
+//   left: 0;
+//   width: 100%;
+//   height: 50%;
 
-[data-bartender-bar='top'] {
-  top: 0;
-  transform: translateY(-100%);
+//   &.bartender-bar--open {
+//     transform: translateY(0) !important;
+//   }
+// }
 
-  &[data-bartender-bar-mode='reveal'] {
-    transform: translateY(0);
-  }
-}
+// [data-bartender-bar='left'] {
+//   left: 0;
+//   transform: translateX(-100%);
 
-[data-bartender-bar='bottom'] {
-  bottom: 0;
-  transform: translateY(100%);
+//   &[data-bartender-bar-mode='reveal'] {
+//     transform: translateX(0);
+//   }
+// }
 
-  &[data-bartender-bar-mode='reveal'] {
-    transform: translateY(0);
-  }
-}
+// [data-bartender-bar='right'] {
+//   right: 0;
+//   transform: translateX(100%);
 
-.bartender-overlay {
-  z-index: 9999;
-  visibility: hidden;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  background: #000;
-  opacity: 0.75;
-  transition: opacity 500ms ease;
-  will-change: opacity;
+//   &[data-bartender-bar-mode='reveal'] {
+//     transform: translateX(0);
+//   }
+// }
 
-  &--visible {
-    visibility: visible;
-  }
-}
+// [data-bartender-bar='top'] {
+//   top: 0;
+//   transform: translateY(-100%);
+
+//   &[data-bartender-bar-mode='reveal'] {
+//     transform: translateY(0);
+//   }
+// }
+
+// [data-bartender-bar='bottom'] {
+//   bottom: 0;
+//   transform: translateY(100%);
+
+//   &[data-bartender-bar-mode='reveal'] {
+//     transform: translateY(0);
+//   }
+// }
+
+// .bartender-overlay {
+//   z-index: 9999;
+//   visibility: hidden;
+//   position: absolute;
+//   left: 0;
+//   right: 0;
+//   top: 0;
+//   bottom: 0;
+//   background: #000;
+//   opacity: 0.75;
+//   transition: opacity 500ms ease;
+//   will-change: opacity;
+
+//   &--visible {
+//     visibility: visible;
+//   }
+// }

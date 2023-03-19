@@ -6,11 +6,37 @@
     <title>Bartender.js</title>
   </head>
   <body class="bartender">
-    <div class="bartender__content">
-      Bar
+    <main class="main bartender__content">
+      <button type="button" class="openLeft">
+        Toggle left
+      </button>
+      <button type="button" class="openRight">
+        Toggle right
+      </button>
+      <button type="button" class="openRightExtra">
+        Toggle right extra
+      </button>
+      <button type="button" class="openTop">
+        Toggle top
+      </button>
+      <button type="button" class="openBottom">
+        Toggle bottom
+      </button>
+    </main>
+    <div class="leftBar">
+      <p>Left bar</p>
     </div>
-    <div class="mobileNavBar">
-      <p>mobileNavBar</p>
+    <div class="rightBar">
+      <p>Right bar</p>
+    </div>
+    <div class="rightBarExtra">
+      <p>Another bar on the right</p>
+    </div>
+    <div class="topBar">
+      <p>Top bar</p>
+    </div>
+    <div class="bottomBar">
+      <p>Bottom bar</p>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

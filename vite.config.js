@@ -43,7 +43,7 @@ export default defineConfig({
     ],
   },
   build: {
-    target: 'esnext',
+    target: 'es2015',
     lib: {
       entry: resolve(__dirname, 'src/main-lib.ts'),
       name: 'Bartender',

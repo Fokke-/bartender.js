@@ -1,14 +1,24 @@
 {
-  "extends": "stylelint-config-sass-guidelines",
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-sass-guidelines"
+  ],
   "ignoreFiles": [
     "node_modules/**/*",
     "dist/**/*"
   ],
   "rules": {
-    "indentation": 2,
+    "declaration-block-no-redundant-longhand-properties": null,
+    "annotation-no-unknown": [
+      true,
+      {
+        "ignoreAnnotations": [
+          "default"
+        ]
+      }
+    ],
     "rule-empty-line-before": null,
     "no-descending-specificity": null,
-    "number-leading-zero": null,
     "max-nesting-depth": null,
     "declaration-block-single-line-max-declarations": 1,
     "selector-class-pattern": null,
@@ -18,8 +28,6 @@
     "selector-max-id": null,
     "property-no-vendor-prefix": null,
     "shorthand-property-no-redundant-values": null,
-    "no-missing-end-of-source-newline": null,
-    "string-quotes": null,
     "color-named": null,
     "color-hex-length": null,
     "scss/at-import-partial-extension-blacklist": null,

@@ -1,4 +1,8 @@
-import type { BartenderOptions, BartenderBars, BartenderBarOptions } from './Bartender.d'
+import type {
+  BartenderOptions,
+  BartenderBars,
+  BartenderBarOptions
+} from './Bartender.d'
 import { resolveElement } from './utils'
 import { BartenderBar } from './BartenderBar'
 
@@ -13,19 +17,23 @@ export class Bartender {
   // TODO: scrollTop should be defined per bar
 
   public debug = false
+  public busy = false
   readonly mainEl?: Element
   readonly mainElSelector?: string
   readonly contentEl?: Element
   readonly contentElSelector?: string
   readonly bars: BartenderBars = <BartenderBars>{}
+  public barDefaultOptions = <BartenderBarOptions>{}
 
   /**
    * Constructor
    *
    * @param options Bartender options
+   * @param barDefaultOptions Default options for new bars
    * @throws Error message
    */
-  constructor (options: BartenderOptions = <BartenderOptions>{}) {
+  constructor (options: BartenderOptions = <BartenderOptions>{}, barDefaultOptions: BartenderBarOptions = <BartenderBarOptions>{}) {
+    // Assign options
     Object.assign(this, <BartenderOptions>{
       ...<BartenderOptions>{
         debug: false,
@@ -35,6 +43,16 @@ export class Bartender {
         contentElSelector: '.bartender__content',
       },
       ...options,
+    })
+
+    // Assing default options for bars
+    Object.assign(this.barDefaultOptions, <BartenderBarOptions>{
+      ...<BartenderBarOptions>{
+        position: 'left',
+        mode: 'float',
+        switchTimeout: 100,
+      },
+      ...barDefaultOptions,
     })
 
     // Get required elements
@@ -62,22 +80,39 @@ export class Bartender {
    * @param name Unique name for the bar
    * @param options Bar options
    * @throws Error message
-   * @returns Added bar element
+   * @returns this
    */
-  addBar (name: string, options: BartenderBarOptions = <BartenderBarOptions>{}): BartenderBar {
+  addBar (name: string, options: BartenderBarOptions = <BartenderBarOptions>{}): this {
     if (!name || typeof name !== 'string') throw 'Name is required'
     if (this.bars[name]) throw `Bar with name '${name}' is already defined`
+
+    options = Object.assign(<BartenderBarOptions>{}, <BartenderBarOptions>{
+      ...this.barDefaultOptions,
+      ...options,
+    })
 
     this.bars[name] = new BartenderBar(name, options, this)
 
     this.mainEl?.dispatchEvent(new CustomEvent('bartender-bar-added', {
       bubbles: true,
       detail: {
-        bartender: this,
         bar: this.bars[name],
       },
     }))
 
-    return this.bars[name]
+    return this
+  }
+
+  /**
+   * Get currently open bar
+   *
+   * @returns Bar object
+   */
+  getOpenBar () : BartenderBar | null {
+    const name = Object.keys(this.bars).find(key => {
+      return this.bars[key].isOpen === true
+    })
+
+    return (name) ? this.bars[name] : null
   }
 }
