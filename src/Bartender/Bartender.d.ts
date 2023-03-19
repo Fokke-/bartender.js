@@ -2,8 +2,10 @@ import { BartenderBar } from './BartenderBar'
 
 export interface BartenderOptions {
   debug?: boolean,
-  mainEl?: string | Element | null,
-  contentEl?: string | Element | null,
+  mainEl?: Element,
+  mainElSelector?: string,
+  contentEl?: Element,
+  contentElSelector?: string,
 }
 
 export type BartenderBars = {
@@ -11,6 +13,7 @@ export type BartenderBars = {
 }
 
 export interface BartenderBarOptions {
-  position?: string,
-  el?: string | Element | null,
+  el?: Element,
+  elSelector?: string,
+  position: 'left' | 'right' | 'top' | 'bottom',
 }

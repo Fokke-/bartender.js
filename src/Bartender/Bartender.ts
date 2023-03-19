@@ -1,11 +1,6 @@
 import type { BartenderOptions, BartenderBars, BartenderBarOptions } from './Bartender.d'
+import { resolveElement } from './utils'
 import { BartenderBar } from './BartenderBar'
-
-const defaultOptions = <BartenderOptions>{
-  debug: false,
-  mainEl: '.bartender',
-  contentEl: '.bartender__content',
-}
 
 /**
  * Class for creating accessible off-canvas bars.
@@ -18,8 +13,10 @@ export class Bartender {
   // TODO: scrollTop should be defined per bar
 
   public debug = false
-  readonly mainEl: string | Element | null = null
-  readonly contentEl: string | Element | null = null
+  readonly mainEl?: Element
+  readonly mainElSelector?: string
+  readonly contentEl?: Element
+  readonly contentElSelector?: string
   readonly bars: BartenderBars = <BartenderBars>{}
 
   /**
@@ -30,50 +27,57 @@ export class Bartender {
    */
   constructor (options: BartenderOptions = <BartenderOptions>{}) {
     Object.assign(this, <BartenderOptions>{
-      ...defaultOptions,
+      ...<BartenderOptions>{
+        debug: false,
+        mainEl: undefined,
+        mainElSelector: '.bartender',
+        contentEl: undefined,
+        contentElSelector: '.bartender__content',
+      },
       ...options,
     })
 
-    // Get main element
-    this.mainEl = (() : Element => {
-      if (this.mainEl instanceof HTMLElement) return this.mainEl
+    // Get required elements
+    this.mainEl = resolveElement(this.mainEl, this.mainElSelector)
+    if (!this.mainEl) throw 'Main element is required'
 
-      if (typeof this.mainEl === 'string') {
-        const mainEl = document.querySelector(this.mainEl)
-        if (!mainEl) throw `Cannot find main element with selector: ${this.mainEl}`
-
-        return mainEl
-      }
-
-      throw 'Main element is required'
-    })()
-
-    // Get content element
-    this.contentEl = (() : Element => {
-      if (this.contentEl instanceof HTMLElement) return this.contentEl
-
-      if (typeof this.contentEl === 'string') {
-        const contentEl = document.querySelector(this.contentEl)
-        if (!contentEl) throw `Cannot find content element with selector: ${this.contentEl}`
-
-        return contentEl
-      }
-
-      throw 'Content element is required'
-    })()
+    this.contentEl = resolveElement(this.contentEl, this.contentElSelector)
+    if (!this.contentEl) throw 'Content element is required'
 
     // Check that content element is a direct child of the main element
     if (this.contentEl.parentElement !== this.mainEl) throw 'Content element must be a direct child of the main element'
+
+    this.mainEl.classList.add('bartender--ready')
+    this.mainEl.dispatchEvent(new CustomEvent('bartender-init', {
+      bubbles: true,
+      detail: {
+        bartender: this,
+      },
+    }))
   }
 
-  addBar (name: string, options: BartenderBarOptions = <BartenderBarOptions>{}) {
+  /**
+   * Add a new bar
+   *
+   * @param name Unique name for the bar
+   * @param options Bar options
+   * @throws Error message
+   * @returns Added bar element
+   */
+  addBar (name: string, options: BartenderBarOptions = <BartenderBarOptions>{}): BartenderBar {
     if (!name || typeof name !== 'string') throw 'Name is required'
     if (this.bars[name]) throw `Bar with name '${name}' is already defined`
 
-    const bar = new BartenderBar(name, options)
-    bar.bartender = this
-    bar.init()
+    this.bars[name] = new BartenderBar(name, options, this)
 
-    this.bars[name] = bar
+    this.mainEl?.dispatchEvent(new CustomEvent('bartender-bar-added', {
+      bubbles: true,
+      detail: {
+        bartender: this,
+        bar: this.bars[name],
+      },
+    }))
+
+    return this.bars[name]
   }
 }
