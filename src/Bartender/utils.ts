@@ -5,9 +5,12 @@
  * @param selector Selector
  * @returns Resolved element or undefined if none found
  */
-export const resolveElement = (element?: Element, selector?: string): Element | undefined => {
+export const resolveElement = (
+  element?: HTMLElement | HTMLBodyElement | null,
+  selector?: string
+): HTMLElement | HTMLBodyElement | undefined => {
   if (element instanceof HTMLElement) return element
-  if (typeof selector === 'string') return document.querySelector(selector) || undefined
+  if (typeof selector === 'string') return <HTMLElement>document.querySelector(selector) || undefined
 
   return undefined
 }
