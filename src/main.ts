@@ -45,4 +45,3 @@ const openBottom = document.querySelector('.openBottom')
 openBottom?.addEventListener('click', () => {
   bartender.getBar('bottom')?.toggle()
 })
-

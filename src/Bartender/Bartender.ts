@@ -79,6 +79,13 @@ export class Bartender {
     }))
   }
 
+  // TODO: make sure this is updated
+  destroy () : void {
+    this.mainEl?.classList.remove('bartender--ready')
+
+    // TODO: Tear down event listeners
+  }
+
   /**
    * Add a new bar
    *
