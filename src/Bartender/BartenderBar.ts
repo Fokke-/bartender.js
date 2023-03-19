@@ -9,7 +9,7 @@ import { resolveElement, sleep } from './utils'
 export class BartenderBar {
   readonly bartender: Bartender
   readonly name?: string
-  readonly el?: Element
+  readonly el?: HTMLElement | null
   readonly elSelector?: string
   private position?: BartenderBarPosition
   private mode?: BartenderBarMode
@@ -34,10 +34,23 @@ export class BartenderBar {
     // Check that element is a direct child of the main element
     if (this.el.parentElement !== this.bartender.mainEl) throw `Element of bar '${this.name}' must be a direct child of the Bartender main element`
 
+    // Temporarily disable transition
+    this.el.style.transition = 'none'
     this.el.classList.add('bartender__bar')
 
-    this.setPosition(<BartenderBarPosition>this.position)
-    this.setMode(<BartenderBarMode>this.mode)
+    this.setPosition(this.position)
+    this.setMode(this.mode)
+
+    // Return transition
+    setTimeout(() => {
+      if (this.el) this.el.style.transition = ''
+    })
+  }
+
+  hasTransition () : boolean {
+    if (!this.el) return false
+
+    return window.getComputedStyle(this.el).getPropertyValue('transition-duration') != '0s'
   }
 
   /**
@@ -111,22 +124,7 @@ export class BartenderBar {
       await sleep(this.switchTimeout)
     }
 
-    // Resolve after transition is finished
     return new Promise(resolve => {
-      this.el?.addEventListener('transitionend', () => {
-        this.el?.dispatchEvent(new CustomEvent('bartender-bar-after-open', {
-          bubbles: true,
-          detail: {
-            bar: this,
-          },
-        }))
-
-        this.bartender.busy = false
-        return resolve(this)
-      }, {
-        once: true,
-      })
-
       this.el?.dispatchEvent(new CustomEvent('bartender-bar-before-open', {
         bubbles: true,
         detail: {
@@ -134,14 +132,39 @@ export class BartenderBar {
         },
       }))
 
+      // Resolve after transition is finished
+      this.el?.addEventListener('transitionend', () => {
+        this.bartender.busy = false
+        this.el?.dispatchEvent(new CustomEvent('bartender-bar-after-open', {
+          bubbles: true,
+          detail: {
+            bar: this,
+          },
+        }))
+
+        return resolve(this)
+      }, {
+        once: true,
+      })
+
       this.el?.classList.add('bartender__bar--open')
       this.isOpen = true
+
+      // If transition is disabled, dispatch event manually
+      if (this.hasTransition() === false) this.el?.dispatchEvent(new Event('transitionend'))
     })
   }
 
   close () : Promise<this> {
-    // Resolve after transition is finished
     return new Promise(resolve => {
+      this.el?.dispatchEvent(new CustomEvent('bartender-bar-before-close', {
+        bubbles: true,
+        detail: {
+          bar: this,
+        },
+      }))
+
+      // Resolve after transition is finished
       this.el?.addEventListener('transitionend', () => {
         this.el?.dispatchEvent(new CustomEvent('bartender-bar-after-close', {
           bubbles: true,
@@ -155,15 +178,11 @@ export class BartenderBar {
         once: true,
       })
 
-      this.el?.dispatchEvent(new CustomEvent('bartender-bar-before-close', {
-        bubbles: true,
-        detail: {
-          bar: this,
-        },
-      }))
-
       this.el?.classList.remove('bartender__bar--open')
       this.isOpen = false
+
+      // If transition is disabled, dispatch event manually
+      if (this.hasTransition() === false) this.el?.dispatchEvent(new Event('transitionend'))
     })
   }
 
