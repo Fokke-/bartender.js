@@ -32,6 +32,10 @@ body {
     will-change: transform;
     transition: $bartender-transition;
 
+    @media (prefers-reduced-motion) {
+      transition: none;
+    }
+
     &--reveal {
       z-index: 1;
     }
