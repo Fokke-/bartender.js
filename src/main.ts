@@ -7,7 +7,6 @@ const bartender = new Bartender({
 }).addBar('left', {
   position: 'left',
   elSelector: '.leftBar',
-  permanent: true,
 }).addBar('right', {
   position: 'right',
   elSelector: '.rightBar',

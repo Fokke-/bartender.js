@@ -38,8 +38,6 @@ export class BartenderBar {
 
     this.setPosition(<BartenderBarPosition>this.position)
     this.setMode(<BartenderBarMode>this.mode)
-
-    console.log(this)
   }
 
   /**
