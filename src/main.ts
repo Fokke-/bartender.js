@@ -23,26 +23,26 @@ const bartender = new Bartender({
 
 const openLeft = document.querySelector('.openLeft')
 openLeft?.addEventListener('click', () => {
-  bartender.bars.left.toggle()
+  bartender.getBar('left')?.toggle()
 })
 
 const openRight = document.querySelector('.openRight')
 openRight?.addEventListener('click', () => {
-  bartender.bars.right.toggle()
+  bartender.getBar('right')?.toggle()
 })
 
 const openRightExtra = document.querySelector('.openRightExtra')
 openRightExtra?.addEventListener('click', () => {
-  bartender.bars.rightExtra.toggle()
+  bartender.getBar('rightExtra')?.toggle()
 })
 
 const openTop = document.querySelector('.openTop')
 openTop?.addEventListener('click', () => {
-  bartender.bars.top.toggle()
+  bartender.getBar('top')?.toggle()
 })
 
 const openBottom = document.querySelector('.openBottom')
 openBottom?.addEventListener('click', () => {
-  bartender.bars.bottom.toggle()
+  bartender.getBar('bottom')?.toggle()
 })
 
