@@ -50,6 +50,7 @@ export class Bartender {
       ...<BartenderBarOptions>{
         position: 'left',
         mode: 'float',
+        permanent: false,
         switchTimeout: 100,
       },
       ...barDefaultOptions,
@@ -64,6 +65,10 @@ export class Bartender {
 
     // Check that content element is a direct child of the main element
     if (this.contentEl.parentElement !== this.mainEl) throw 'Content element must be a direct child of the main element'
+
+    // Start listening keys
+    // TODO: add destroy method
+    window.addEventListener('keydown', this.handleKeydown.bind(this))
 
     this.mainEl.classList.add('bartender--ready')
     this.mainEl.dispatchEvent(new CustomEvent('bartender-init', {
@@ -108,11 +113,20 @@ export class Bartender {
    *
    * @returns Bar object
    */
-  getOpenBar () : BartenderBar | null {
+  getOpenBar (): BartenderBar | null {
     const name = Object.keys(this.bars).find(key => {
       return this.bars[key].isOpen === true
     })
 
     return (name) ? this.bars[name] : null
+  }
+
+  handleKeydown (event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      const openBar = this.getOpenBar()
+      if (!openBar || openBar.permanent === true) return
+
+      openBar.close()
+    }
   }
 }

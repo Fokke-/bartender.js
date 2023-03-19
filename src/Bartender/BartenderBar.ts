@@ -13,6 +13,7 @@ export class BartenderBar {
   readonly elSelector?: string
   private position?: BartenderBarPosition
   private mode?: BartenderBarMode
+  public permanent = false
   public isOpen = false
   public switchTimeout?: number
 
@@ -37,6 +38,8 @@ export class BartenderBar {
 
     this.setPosition(<BartenderBarPosition>this.position)
     this.setMode(<BartenderBarMode>this.mode)
+
+    console.log(this)
   }
 
   /**
