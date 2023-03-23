@@ -20,3 +20,16 @@ export interface BartenderBarOptions {
   mode?: 'float' | 'push' | 'reveal',
   permanent?: boolean,
 }
+
+export interface BartenderPushElementOptions {
+  el?: HTMLElement | HTMLBodyElement | null,
+  elSelector?: string,
+}
+
+export interface BartenderPushStyles {
+  transform: string,
+  transitionDuration: string,
+  transitionTimingFunction: string,
+}
+
+export type BartenderPushableElements = Array<HTMLElement>

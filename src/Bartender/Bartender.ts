@@ -1,7 +1,10 @@
 import type {
   BartenderOptions,
   BartenderBars,
-  BartenderBarOptions
+  BartenderBarOptions,
+  BartenderPushElementOptions,
+  BartenderPushStyles,
+  BartenderPushableElements
 } from './Bartender.d'
 import { resolveElement, sleep } from './utils'
 import { BartenderBar } from './BartenderBar'
@@ -24,6 +27,7 @@ export class Bartender {
   readonly contentElSelector?: string
   readonly switchTimeout?: number
   private bars: BartenderBars = []
+  private pushableElements: BartenderPushableElements = []
   public barOptions = {}
 
   /**
@@ -64,12 +68,18 @@ export class Bartender {
       ...userBarOptions,
     }
 
-    // Get required elements
+    // Get main element
     this.mainEl = resolveElement(this.mainEl, this.mainElSelector)
     if (!this.mainEl) throw 'Main element is required'
 
+    // Get content element
     this.contentEl = resolveElement(this.contentEl, this.contentElSelector)
     if (!this.contentEl) throw 'Content element is required'
+
+    // Register content element as pushable element
+    this.addPushElement({
+      el: this.contentEl,
+    })
 
     // Check that content element is a direct child of the main element
     if (this.contentEl.parentElement !== this.mainEl) throw 'Content element must be a direct child of the main element'
@@ -152,6 +162,11 @@ export class Bartender {
       await sleep(this.switchTimeout)
     }
 
+    this.mainEl?.classList.add('bartender--open')
+
+    // Push elements if needed
+    if (bar.isPushing === true) this.pushElements(bar.getPushStyles())
+
     await bar.open()
     this.busy = false
 
@@ -162,7 +177,10 @@ export class Bartender {
     const bar = this.getOpenBar()
     if (!bar) return Promise.resolve(null)
 
+    this.pullElements()
     await bar.close()
+
+    this.mainEl?.classList.remove('bartender--open')
 
     return Promise.resolve(bar)
   }
@@ -174,12 +192,41 @@ export class Bartender {
     return (bar.isOpen === true) ? this.close() : this.open(name)
   }
 
+  // TODO: support push elements per bar
+  addPushElement (options: BartenderPushElementOptions = {}): Promise<HTMLElement | HTMLBodyElement> {
+    const el = resolveElement(options.el, options.elSelector)
+    if (!el) return Promise.reject(new Error('Unknown push element'))
+
+    this.pushableElements.push(el)
+
+    return Promise.resolve(el)
+  }
+
+  pushElements (pushStyles: BartenderPushStyles | null) : BartenderPushableElements | null {
+    if (!pushStyles || !this.pushableElements.length) return null
+
+    for (const el of this.pushableElements) {
+      el.style.transform = pushStyles.transform
+      el.style.transitionDuration = pushStyles.transitionDuration
+      el.style.transitionTimingFunction = pushStyles.transitionTimingFunction
+    }
+
+    return this.pushableElements
+  }
+
+  pullElements () : BartenderPushableElements | null {
+    if (!this.pushableElements.length) return null
+
+    for (const el of this.pushableElements) {
+      el.style.transform = 'translateX(0) translateY(0)'
+    }
+
+    return this.pushableElements
+  }
+
   handleKeydown (event: KeyboardEvent): void {
     if (event.key === 'Escape') {
-      const openBar = this.getOpenBar()
-      if (!openBar || openBar.permanent === true) return
-
-      openBar.close()
+      this.close()
     }
   }
 }
