@@ -6,12 +6,10 @@ export interface BartenderOptions {
   mainElSelector?: string,
   contentEl?: HTMLElement | null,
   contentElSelector?: string,
+  switchTimeout?: number,
 }
 
-export type BartenderBars = {
-  [key: string]: BartenderBar
-}
-
+export type BartenderBars = Array<BartenderBar>
 export type BartenderBarPosition = 'left' | 'right' | 'top' | 'bottom'
 export type BartenderBarMode = 'float' | 'push' | 'reveal'
 
@@ -21,5 +19,4 @@ export interface BartenderBarOptions {
   position?: BartenderBarPosition,
   mode?: 'float' | 'push' | 'reveal',
   permanent?: boolean,
-  switchTimeout?: number,
 }

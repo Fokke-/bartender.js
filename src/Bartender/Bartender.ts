@@ -3,7 +3,7 @@ import type {
   BartenderBars,
   BartenderBarOptions
 } from './Bartender.d'
-import { resolveElement } from './utils'
+import { resolveElement, sleep } from './utils'
 import { BartenderBar } from './BartenderBar'
 
 /**
@@ -22,39 +22,47 @@ export class Bartender {
   readonly mainElSelector?: string
   readonly contentEl?: HTMLElement | null
   readonly contentElSelector?: string
-  readonly bars: BartenderBars = <BartenderBars>{}
-  public barDefaultOptions = <BartenderBarOptions>{}
+  readonly switchTimeout?: number
+  readonly bars: BartenderBars = []
+  public barOptions = {}
 
   /**
    * Constructor
    *
-   * @param options Bartender options
-   * @param barDefaultOptions Default options for new bars
+   * @param userOptions Bartender options
+   * @param barOptions Default options for new bars
    * @throws Error message
    */
-  constructor (options: BartenderOptions = <BartenderOptions>{}, barDefaultOptions: BartenderBarOptions = <BartenderBarOptions>{}) {
-    // Assign options
-    Object.assign(this, <BartenderOptions>{
-      ...<BartenderOptions>{
-        debug: false,
-        mainEl: undefined,
-        mainElSelector: '.bartender',
-        contentEl: undefined,
-        contentElSelector: '.bartender__content',
-      },
-      ...options,
+  constructor (
+    userOptions: BartenderOptions = {},
+    userBarOptions: BartenderBarOptions = {}
+  ) {
+    // Set options
+    const defaultOptions: BartenderOptions = {
+      debug: false,
+      mainEl: undefined,
+      mainElSelector: '.bartender',
+      contentEl: undefined,
+      contentElSelector: '.bartender__content',
+      switchTimeout: 100,
+    }
+
+    Object.assign(this, {
+      ...defaultOptions,
+      ...userOptions,
     })
 
-    // Assing default options for bars
-    Object.assign(this.barDefaultOptions, <BartenderBarOptions>{
-      ...<BartenderBarOptions>{
-        position: 'left',
-        mode: 'float',
-        permanent: false,
-        switchTimeout: 100,
-      },
-      ...barDefaultOptions,
-    })
+    // Set default options for new bars
+    const defaultBarOptions: BartenderBarOptions = {
+      position: 'left',
+      mode: 'float',
+      permanent: false,
+    }
+
+    this.barOptions = {
+      ...defaultBarOptions,
+      ...userBarOptions,
+    }
 
     // Get required elements
     this.mainEl = resolveElement(this.mainEl, this.mainElSelector)
@@ -90,25 +98,26 @@ export class Bartender {
    * Add a new bar
    *
    * @param name Unique name for the bar
-   * @param options Bar options
+   * @param userOptions Bar options
    * @throws Error message
    * @returns this
    */
-  addBar (name: string, options: BartenderBarOptions = <BartenderBarOptions>{}): this {
+  addBar (name: string, userOptions: BartenderBarOptions = {}): this {
     if (!name || typeof name !== 'string') throw 'Name is required'
-    if (this.bars[name]) throw `Bar with name '${name}' is already defined`
+    if (this.getBar(name)) throw `Bar with name '${name}' is already defined`
 
-    options = Object.assign(<BartenderBarOptions>{}, <BartenderBarOptions>{
-      ...this.barDefaultOptions,
-      ...options,
-    })
+    const options: BartenderBarOptions = {
+      ...this.barOptions,
+      ...userOptions,
+    }
 
-    this.bars[name] = new BartenderBar(name, options, this)
+    const bar = new BartenderBar(name, options, this)
+    this.bars.push(bar)
 
     this.mainEl?.dispatchEvent(new CustomEvent('bartender-bar-added', {
       bubbles: true,
       detail: {
-        bar: this.bars[name],
+        bar,
       },
     }))
 
@@ -116,9 +125,7 @@ export class Bartender {
   }
 
   getBar (name: string): BartenderBar | null {
-    if (!this.bars[name] || !(this.bars[name] instanceof BartenderBar)) return null
-
-    return this.bars[name]
+    return this.bars.find(item => item.name === name) || null
   }
 
   /**
@@ -127,11 +134,42 @@ export class Bartender {
    * @returns Bar object
    */
   getOpenBar (): BartenderBar | null {
-    const name = Object.keys(this.bars).find(key => {
-      return this.bars[key].isOpen === true
-    })
+    return this.bars.find(item => item.isOpen === true) || null
+  }
 
-    return (name) ? this.bars[name] : null
+  async open (name: string): Promise<BartenderBar | null> {
+    const bar = this.getBar(name)
+    if (!bar) throw `Unknown bar '${name}'`
+
+    if (bar.isOpen === true) return Promise.resolve(null)
+    if (this.busy === true) return Promise.resolve(null)
+
+    // Close any open bar
+    const openBar = this.getOpenBar()
+    if (openBar) {
+      await this.close()
+      await sleep(this.switchTimeout)
+    }
+
+    await bar.open()
+
+    return Promise.resolve(bar)
+  }
+
+  async close (): Promise<BartenderBar | null> {
+    const bar = this.getOpenBar()
+    if (!bar) return Promise.resolve(null)
+
+    await bar.close()
+
+    return Promise.resolve(bar)
+  }
+
+  async toggle (name: string): Promise<BartenderBar | null> {
+    const bar = this.getBar(name)
+    if (!bar) throw `Unknown bar '${name}'`
+
+    return (bar.isOpen === true) ? this.close() : this.open(name)
   }
 
   handleKeydown (event: KeyboardEvent): void {

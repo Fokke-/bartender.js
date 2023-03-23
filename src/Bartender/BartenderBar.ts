@@ -4,7 +4,7 @@ import type {
   BartenderBarMode
 } from './Bartender.d'
 import { Bartender } from './Bartender'
-import { resolveElement, sleep } from './utils'
+import { resolveElement } from './utils'
 
 export class BartenderBar {
   readonly bartender: Bartender
@@ -13,16 +13,17 @@ export class BartenderBar {
   readonly elSelector?: string
   private position?: BartenderBarPosition
   private mode?: BartenderBarMode
+  private isPushing = false
   public permanent = false
   public isOpen = false
   public switchTimeout?: number
 
-  constructor (name: string, options: BartenderBarOptions = <BartenderBarOptions>{}, bartender: Bartender) {
+  constructor (name: string, userOptions: BartenderBarOptions = {}, bartender: Bartender) {
     if (!name) throw 'Bar name is required'
     if (!bartender) throw `You must pass Bartender instance for bar '${this.name}'`
 
     // Assign options
-    Object.assign(this, options)
+    Object.assign(this, userOptions)
 
     this.name = name
     this.bartender = bartender
@@ -101,6 +102,9 @@ export class BartenderBar {
 
     if (!validModes.includes(mode)) throw `Invalid mode '${mode}' for bar '${this.name}'. Use one of the following: ${validModes.join(', ')}.`
 
+    this.isPushing = ['push', 'reveal'].includes(mode)
+    console.log(this.isPushing)
+
     // Remove old mode class
     if (this.mode) this.el?.classList.remove(`bartender__bar--${this.mode}`)
 
@@ -111,28 +115,15 @@ export class BartenderBar {
   }
 
   async open () : Promise<this> {
-    // Bail out if this bar is already open
-    const openBar = this.bartender?.getOpenBar()
-    if (openBar?.name === this.name) return Promise.resolve(this)
-
-    if (this.bartender?.busy === true) return Promise.resolve(this)
-    this.bartender.busy = true
-
-    // Close any open bar
-    if (openBar) {
-      await openBar.close()
-      await sleep(this.switchTimeout)
-    }
+    this.el?.dispatchEvent(new CustomEvent('bartender-bar-before-open', {
+      bubbles: true,
+      detail: {
+        bar: this,
+      },
+    }))
 
     return new Promise(resolve => {
-      this.el?.dispatchEvent(new CustomEvent('bartender-bar-before-open', {
-        bubbles: true,
-        detail: {
-          bar: this,
-        },
-      }))
-
-      // Resolve after transition is finished
+      // Resolve after transition has finished
       this.el?.addEventListener('transitionend', () => {
         this.bartender.busy = false
         this.el?.dispatchEvent(new CustomEvent('bartender-bar-after-open', {
@@ -156,15 +147,15 @@ export class BartenderBar {
   }
 
   close () : Promise<this> {
-    return new Promise(resolve => {
-      this.el?.dispatchEvent(new CustomEvent('bartender-bar-before-close', {
-        bubbles: true,
-        detail: {
-          bar: this,
-        },
-      }))
+    this.el?.dispatchEvent(new CustomEvent('bartender-bar-before-close', {
+      bubbles: true,
+      detail: {
+        bar: this,
+      },
+    }))
 
-      // Resolve after transition is finished
+    return new Promise(resolve => {
+      // Resolve after transition has finished
       this.el?.addEventListener('transitionend', () => {
         this.el?.dispatchEvent(new CustomEvent('bartender-bar-after-close', {
           bubbles: true,
@@ -184,9 +175,5 @@ export class BartenderBar {
       // If transition is disabled, dispatch event manually
       if (this.hasTransition() === false) this.el?.dispatchEvent(new Event('transitionend'))
     })
-  }
-
-  toggle () : Promise<this> {
-    return (this.isOpen === true) ? this.close() : this.open()
   }
 }
