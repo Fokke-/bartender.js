@@ -23,7 +23,7 @@ export class Bartender {
   readonly contentEl?: HTMLElement | null
   readonly contentElSelector?: string
   readonly switchTimeout?: number
-  readonly bars: BartenderBars = []
+  private bars: BartenderBars = []
   public barOptions = {}
 
   /**
@@ -74,8 +74,7 @@ export class Bartender {
     // Check that content element is a direct child of the main element
     if (this.contentEl.parentElement !== this.mainEl) throw 'Content element must be a direct child of the main element'
 
-    // Start listening keys
-    // TODO: add destroy method
+    // Add event listeners
     window.addEventListener('keydown', this.handleKeydown.bind(this))
 
     this.mainEl.classList.add('bartender--ready')
@@ -94,6 +93,19 @@ export class Bartender {
     // TODO: Tear down event listeners
   }
 
+  private getBar (name: string): BartenderBar | null {
+    return this.bars.find(item => item.name === name) || null
+  }
+
+  /**
+   * Get currently open bar
+   *
+   * @returns Bar object
+   */
+  private getOpenBar (): BartenderBar | null {
+    return this.bars.find(item => item.isOpen === true) || null
+  }
+
   /**
    * Add a new bar
    *
@@ -102,16 +114,16 @@ export class Bartender {
    * @throws Error message
    * @returns this
    */
-  addBar (name: string, userOptions: BartenderBarOptions = {}): this {
-    if (!name || typeof name !== 'string') throw 'Name is required'
-    if (this.getBar(name)) throw `Bar with name '${name}' is already defined`
+  addBar (name: string, userOptions: BartenderBarOptions = {}): Promise<BartenderBar | Error> {
+    if (!name || typeof name !== 'string') return Promise.reject(new Error('Name is required'))
+    if (this.getBar(name)) return Promise.reject(new Error(`Bar with name '${name}' is already defined`))
 
     const options: BartenderBarOptions = {
       ...this.barOptions,
       ...userOptions,
     }
 
-    const bar = new BartenderBar(name, options, this)
+    const bar = new BartenderBar(name, options)
     this.bars.push(bar)
 
     this.mainEl?.dispatchEvent(new CustomEvent('bartender-bar-added', {
@@ -121,28 +133,17 @@ export class Bartender {
       },
     }))
 
-    return this
+    return Promise.resolve(bar)
   }
 
-  getBar (name: string): BartenderBar | null {
-    return this.bars.find(item => item.name === name) || null
-  }
-
-  /**
-   * Get currently open bar
-   *
-   * @returns Bar object
-   */
-  getOpenBar (): BartenderBar | null {
-    return this.bars.find(item => item.isOpen === true) || null
-  }
-
-  async open (name: string): Promise<BartenderBar | null> {
+  async open (name: string): Promise<BartenderBar | Error> {
     const bar = this.getBar(name)
-    if (!bar) throw `Unknown bar '${name}'`
+    if (!bar) return Promise.reject(new Error(`Unknown bar '${name}'`))
 
-    if (bar.isOpen === true) return Promise.resolve(null)
-    if (this.busy === true) return Promise.resolve(null)
+    if (bar.isOpen === true) return Promise.reject(new Error(`Bar '${bar.name}' is already open`))
+    if (this.busy === true) return Promise.reject(new Error('Bartender is busy'))
+
+    this.busy = true
 
     // Close any open bar
     const openBar = this.getOpenBar()
@@ -152,6 +153,7 @@ export class Bartender {
     }
 
     await bar.open()
+    this.busy = false
 
     return Promise.resolve(bar)
   }
@@ -165,9 +167,9 @@ export class Bartender {
     return Promise.resolve(bar)
   }
 
-  async toggle (name: string): Promise<BartenderBar | null> {
+  async toggle (name: string): Promise<BartenderBar | Error | null> {
     const bar = this.getBar(name)
-    if (!bar) throw `Unknown bar '${name}'`
+    if (!bar) return Promise.reject(new Error(`Unknown bar '${name}'`))
 
     return (bar.isOpen === true) ? this.close() : this.open(name)
   }

@@ -3,11 +3,9 @@ import type {
   BartenderBarPosition,
   BartenderBarMode
 } from './Bartender.d'
-import { Bartender } from './Bartender'
 import { resolveElement } from './utils'
 
 export class BartenderBar {
-  readonly bartender: Bartender
   readonly name?: string
   readonly el?: HTMLElement | null
   readonly elSelector?: string
@@ -16,24 +14,22 @@ export class BartenderBar {
   private isPushing = false
   public permanent = false
   public isOpen = false
-  public switchTimeout?: number
 
-  constructor (name: string, userOptions: BartenderBarOptions = {}, bartender: Bartender) {
+  constructor (name: string, userOptions: BartenderBarOptions = {}) {
     if (!name) throw 'Bar name is required'
-    if (!bartender) throw `You must pass Bartender instance for bar '${this.name}'`
 
     // Assign options
     Object.assign(this, userOptions)
 
     this.name = name
-    this.bartender = bartender
 
     // Get element
     this.el = resolveElement(this.el, this.elSelector)
     if (!this.el) throw `Content element for bar '${this.name}' is required`
 
     // Check that element is a direct child of the main element
-    if (this.el.parentElement !== this.bartender.mainEl) throw `Element of bar '${this.name}' must be a direct child of the Bartender main element`
+    // TODO: do this elsewhere
+    //if (this.el.parentElement !== this.bartender.mainEl) throw `Element of bar '${this.name}' must be a direct child of the Bartender main element`
 
     // Temporarily disable transition
     this.el.style.transition = 'none'
@@ -48,7 +44,7 @@ export class BartenderBar {
     })
   }
 
-  hasTransition () : boolean {
+  private hasTransition () : boolean {
     if (!this.el) return false
 
     return window.getComputedStyle(this.el).getPropertyValue('transition-duration') != '0s'
@@ -125,7 +121,6 @@ export class BartenderBar {
     return new Promise(resolve => {
       // Resolve after transition has finished
       this.el?.addEventListener('transitionend', () => {
-        this.bartender.busy = false
         this.el?.dispatchEvent(new CustomEvent('bartender-bar-after-open', {
           bubbles: true,
           detail: {

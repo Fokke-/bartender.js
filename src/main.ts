@@ -4,23 +4,33 @@ import './main.scss'
 
 const bartender = new Bartender({
   debug: true,
-}).addBar('left', {
+})
+
+bartender.addBar('left', {
   position: 'left',
   mode: 'push',
   elSelector: '.leftBar',
-}).addBar('right', {
+})
+
+bartender.addBar('right', {
   position: 'right',
   mode: 'float',
   elSelector: '.rightBar',
-}).addBar('rightExtra', {
+})
+
+bartender.addBar('rightExtra', {
   position: 'right',
   mode: 'reveal',
   elSelector: '.rightBarExtra',
-}).addBar('top', {
+})
+
+bartender.addBar('top', {
   position: 'top',
   mode: 'push',
   elSelector: '.topBar',
-}).addBar('bottom', {
+})
+
+bartender.addBar('bottom', {
   position: 'bottom',
   mode: 'float',
   elSelector: '.bottomBar',
