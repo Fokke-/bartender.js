@@ -1,9 +1,10 @@
 import type {
   BartenderBarOptions,
   BartenderBarPosition,
-  BartenderBarMode
+  BartenderBarMode,
+  BartenderPushStyles
 } from './Bartender.d'
-import { resolveElement } from './utils'
+import { resolveElement, sleep } from './utils'
 
 export class BartenderBar {
   readonly name?: string
@@ -11,7 +12,7 @@ export class BartenderBar {
   readonly elSelector?: string
   private position?: BartenderBarPosition
   private mode?: BartenderBarMode
-  private isPushing = false
+  public isPushing = false
   public permanent = false
   public isOpen = false
 
@@ -44,11 +45,36 @@ export class BartenderBar {
     })
   }
 
-  private hasTransition () : boolean {
-    if (!this.el) return false
+  private getTransitionDuration (): number {
+    if (!this.el) return 0
 
-    return window.getComputedStyle(this.el).getPropertyValue('transition-duration') != '0s'
+    const duration = window.getComputedStyle(this.el).getPropertyValue('transition-duration') || '0s'
+    return parseFloat(duration) * 1000
   }
+
+  // TODO: fix this. Matrix values are incorrect when closing
+  // private hasTransition () : boolean {
+  //   if (
+  //     !this.el ||
+  //     !window.getComputedStyle(this.el).getPropertyValue('transition-duration') ||
+  //     window.getComputedStyle(this.el).getPropertyValue('transition-duration') == '0s' ||
+  //     !window.getComputedStyle(this.el).getPropertyValue('transition-timing-function')
+  //   ) return false
+
+  //   const matrix = window.getComputedStyle(this.el).getPropertyValue('transform')
+  //   if (!matrix) return false
+
+  //   const parsedMatrix = matrix.match(/matrix.*\((.+)\)/)
+  //   if (!parsedMatrix || !parsedMatrix.length) return false
+
+  //   const matrixValues = parsedMatrix[1].split(', ')
+  //   if (!matrixValues.length) return false
+
+  //   console.log(matrixValues)
+  //   if (matrixValues[4] === '0' && matrixValues[5] === '0') return false
+
+  //   return true
+  // }
 
   /**
    * Set position
@@ -118,30 +144,22 @@ export class BartenderBar {
       },
     }))
 
-    return new Promise(resolve => {
-      // Resolve after transition has finished
-      this.el?.addEventListener('transitionend', () => {
-        this.el?.dispatchEvent(new CustomEvent('bartender-bar-after-open', {
-          bubbles: true,
-          detail: {
-            bar: this,
-          },
-        }))
+    this.el?.classList.add('bartender__bar--open')
+    this.isOpen = true
 
-        return resolve(this)
-      }, {
-        once: true,
-      })
+    await sleep(this.getTransitionDuration())
 
-      this.el?.classList.add('bartender__bar--open')
-      this.isOpen = true
+    this.el?.dispatchEvent(new CustomEvent('bartender-bar-after-open', {
+      bubbles: true,
+      detail: {
+        bar: this,
+      },
+    }))
 
-      // If transition is disabled, dispatch event manually
-      if (this.hasTransition() === false) this.el?.dispatchEvent(new Event('transitionend'))
-    })
+    return Promise.resolve(this)
   }
 
-  close () : Promise<this> {
+  async close () : Promise<this> {
     this.el?.dispatchEvent(new CustomEvent('bartender-bar-before-close', {
       bubbles: true,
       detail: {
@@ -149,26 +167,50 @@ export class BartenderBar {
       },
     }))
 
-    return new Promise(resolve => {
-      // Resolve after transition has finished
-      this.el?.addEventListener('transitionend', () => {
-        this.el?.dispatchEvent(new CustomEvent('bartender-bar-after-close', {
-          bubbles: true,
-          detail: {
-            bar: this,
-          },
-        }))
+    this.el?.classList.remove('bartender__bar--open')
+    this.isOpen = false
 
-        return resolve(this)
-      }, {
-        once: true,
-      })
+    await sleep(this.getTransitionDuration())
 
-      this.el?.classList.remove('bartender__bar--open')
-      this.isOpen = false
+    this.el?.dispatchEvent(new CustomEvent('bartender-bar-after-close', {
+      bubbles: true,
+      detail: {
+        bar: this,
+      },
+    }))
 
-      // If transition is disabled, dispatch event manually
-      if (this.hasTransition() === false) this.el?.dispatchEvent(new Event('transitionend'))
-    })
+    return Promise.resolve(this)
+  }
+
+  getPushStyles (): BartenderPushStyles | null {
+    if (!this.position || !this.el) return null
+
+    return {
+      transform: (() => {
+        switch (this.position) {
+          case 'left': {
+            return `translateX(${this.el?.offsetWidth}px)`
+          }
+
+          case 'right': {
+            return `translateX(-${this.el?.offsetWidth}px)`
+          }
+
+          case 'top': {
+            return `translateY(${this.el?.offsetHeight}px)`
+          }
+
+          case 'bottom': {
+            return `translateY(-${this.el?.offsetHeight}px)`
+          }
+
+          default: {
+            return ''
+          }
+        }
+      })(),
+      transitionDuration: window.getComputedStyle(this.el).getPropertyValue('transition-duration') || '',
+      transitionTimingFunction: window.getComputedStyle(this.el).getPropertyValue('transition-timing-function') || '',
+    }
   }
 }
