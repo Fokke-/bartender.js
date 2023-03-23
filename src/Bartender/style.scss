@@ -11,13 +11,19 @@ body {
 }
 
 .bartender {
+  background: #000;
+
+  &--open {
+    overflow: hidden !important;
+  }
+
   &__content {
     z-index: 2;
     position: relative;
     width: 100%;
     min-height: calc(100vh - calc(100vh - 100%));
     will-change: transform;
-    background: #fff;
+    background: #c1c1c1;
 
     &:focus {
       outline: 0;
@@ -56,11 +62,19 @@ body {
     &--left {
       left: 0;
       transform: translateX(-100%);
+
+      &.bartender__bar--reveal {
+        transform: translateX(0);
+      }
     }
 
     &--right {
       right: 0;
       transform: translateX(100%);
+
+      &.bartender__bar--reveal {
+        transform: translateX(0);
+      }
     }
 
     &--top,
@@ -78,11 +92,19 @@ body {
     &--top {
       top: 0;
       transform: translateY(-100%);
+
+      &.bartender__bar--reveal {
+        transform: translateX(0);
+      }
     }
 
     &--bottom {
       bottom: 0;
       transform: translateY(100%);
+
+      &.bartender__bar--reveal {
+        transform: translateX(0);
+      }
     }
   }
 }
