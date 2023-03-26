@@ -30,6 +30,8 @@
     "shorthand-property-no-redundant-values": null,
     "color-named": null,
     "color-hex-length": null,
+    "color-function-notation": null,
+    "alpha-value-notation": null,
     "scss/at-import-partial-extension-blacklist": null,
     "scss/at-rule-no-unknown": [
       true,
