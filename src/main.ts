@@ -60,3 +60,17 @@ const openBottom = document.querySelector('.openBottom')
 openBottom?.addEventListener('click', () => {
   bartender.toggle('bottom')
 })
+
+const spamToggle = document.querySelector('.spamToggle')
+spamToggle?.addEventListener('click', async () => {
+  // Get array of bars in random order
+  const barStack = Array.from({ length: 20 }, () => {
+    return bartender.bars[Math.floor(Math.random() * bartender.bars.length)]
+  })
+
+  console.table(barStack)
+
+  for (const bar of barStack) {
+    bartender.toggle(bar.name)
+  }
+})

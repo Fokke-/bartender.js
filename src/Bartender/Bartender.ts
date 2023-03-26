@@ -8,35 +8,30 @@ import type {
 } from './Bartender.d'
 import { resolveElement, sleep } from './utils'
 import { BartenderBar } from './BartenderBar'
+import { Queue } from 'async-await-queue'
 
 /**
  * Class for creating accessible off-canvas bars.
  */
 export class Bartender {
+  // TODO: refresh pushable elements when resizing
   // TODO: overlay should be defined per bar
   // TODO: closeOnOverlayClick should be defined per bar
   // TODO: closeOnEsc should be defined per bar
   // TODO: trapFocus should be defined per bar
   // TODO: scrollTop should be defined per bar
 
+  private queue: Queue
   public debug = false
-  public busy = false
   readonly mainEl?: HTMLElement | HTMLBodyElement | null
   readonly mainElSelector?: string
   readonly contentEl?: HTMLElement | null
   readonly contentElSelector?: string
   readonly switchTimeout?: number
-  private bars: BartenderBars = []
+  readonly bars: BartenderBars = []
   private pushableElements: BartenderPushableElements = []
   public barOptions = {}
 
-  /**
-   * Constructor
-   *
-   * @param userOptions Bartender options
-   * @param barOptions Default options for new bars
-   * @throws Error message
-   */
   constructor (
     userOptions: BartenderOptions = {},
     userBarOptions: BartenderBarOptions = {}
@@ -48,7 +43,7 @@ export class Bartender {
       mainElSelector: '.bartender',
       contentEl: undefined,
       contentElSelector: '.bartender__content',
-      switchTimeout: 100,
+      switchTimeout: 150,
     }
 
     Object.assign(this, {
@@ -84,6 +79,9 @@ export class Bartender {
     // Check that content element is a direct child of the main element
     if (this.contentEl.parentElement !== this.mainEl) throw 'Content element must be a direct child of the main element'
 
+    // Initialize queue
+    this.queue = new Queue(1)
+
     // Add event listeners
     window.addEventListener('keydown', this.handleKeydown.bind(this))
 
@@ -97,34 +95,21 @@ export class Bartender {
   }
 
   // TODO: make sure this is updated
-  destroy () : void {
+  public destroy () : void {
     this.mainEl?.classList.remove('bartender--ready')
 
     // TODO: Tear down event listeners
   }
 
-  private getBar (name: string): BartenderBar | null {
+  public getBar (name: string): BartenderBar | null {
     return this.bars.find(item => item.name === name) || null
   }
 
-  /**
-   * Get currently open bar
-   *
-   * @returns Bar object
-   */
   private getOpenBar (): BartenderBar | null {
     return this.bars.find(item => item.isOpen === true) || null
   }
 
-  /**
-   * Add a new bar
-   *
-   * @param name Unique name for the bar
-   * @param userOptions Bar options
-   * @throws Error message
-   * @returns this
-   */
-  addBar (name: string, userOptions: BartenderBarOptions = {}): Promise<BartenderBar | Error> {
+  public addBar (name: string, userOptions: BartenderBarOptions = {}): Promise<BartenderBar | Error> {
     if (!name || typeof name !== 'string') return Promise.reject(new Error('Name is required'))
     if (this.getBar(name)) return Promise.reject(new Error(`Bar with name '${name}' is already defined`))
 
@@ -146,46 +131,55 @@ export class Bartender {
     return Promise.resolve(bar)
   }
 
-  async open (name: string): Promise<BartenderBar | Error> {
+  private async openBar (name: string): Promise<BartenderBar | Error> {
     const bar = this.getBar(name)
     if (!bar) return Promise.reject(new Error(`Unknown bar '${name}'`))
-
-    if (bar.isOpen === true) return Promise.reject(new Error(`Bar '${bar.name}' is already open`))
-    if (this.busy === true) return Promise.reject(new Error('Bartender is busy'))
-
-    this.busy = true
+    if (bar.isOpen === true) return Promise.resolve(bar)
 
     // Close any open bar
-    const openBar = this.getOpenBar()
-    if (openBar) {
-      await this.close()
+    if (this.getOpenBar()) {
+      await this.closeBar(false)
       await sleep(this.switchTimeout)
     }
 
     this.mainEl?.classList.add('bartender--open')
 
-    // Push elements if needed
-    if (bar.isPushing === true) this.pushElements(bar.getPushStyles())
+    if (bar.isPushing === true) await this.pushElements(bar.getPushStyles())
 
-    await bar.open()
-    this.busy = false
-
-    return Promise.resolve(bar)
+    return bar.open()
   }
 
-  async close (): Promise<BartenderBar | null> {
+  public async open (name: string): Promise<BartenderBar | Error> {
+    const id = Symbol()
+    await this.queue.wait(id)
+
+    return this.openBar(name).finally(() => {
+      this.queue.end(id)
+    })
+  }
+
+  private async closeBar (removeOpenClass = true): Promise<BartenderBar | null> {
     const bar = this.getOpenBar()
     if (!bar) return Promise.resolve(null)
 
     this.pullElements()
     await bar.close()
 
-    this.mainEl?.classList.remove('bartender--open')
+    if (removeOpenClass === true) this.mainEl?.classList.remove('bartender--open')
 
     return Promise.resolve(bar)
   }
 
-  async toggle (name: string): Promise<BartenderBar | Error | null> {
+  public async close (): Promise<BartenderBar | null> {
+    const id = Symbol()
+    await this.queue.wait(id)
+
+    return this.closeBar().finally(() => {
+      this.queue.end(id)
+    })
+  }
+
+  public async toggle (name: string): Promise<BartenderBar | Error | null> {
     const bar = this.getBar(name)
     if (!bar) return Promise.reject(new Error(`Unknown bar '${name}'`))
 
@@ -193,7 +187,7 @@ export class Bartender {
   }
 
   // TODO: support push elements per bar
-  addPushElement (options: BartenderPushElementOptions = {}): Promise<HTMLElement | HTMLBodyElement> {
+  public addPushElement (options: BartenderPushElementOptions = {}): Promise<HTMLElement | HTMLBodyElement> {
     const el = resolveElement(options.el, options.elSelector)
     if (!el) return Promise.reject(new Error('Unknown push element'))
 
@@ -202,29 +196,33 @@ export class Bartender {
     return Promise.resolve(el)
   }
 
-  pushElements (pushStyles: BartenderPushStyles | null) : BartenderPushableElements | null {
-    if (!pushStyles || !this.pushableElements.length) return null
+  private pushElements (pushStyles: BartenderPushStyles | null): Promise<BartenderPushableElements> {
+    return new Promise(resolve => {
+      if (!pushStyles || !this.pushableElements.length) return resolve(this.pushableElements)
 
-    for (const el of this.pushableElements) {
-      el.style.transform = pushStyles.transform
-      el.style.transitionDuration = pushStyles.transitionDuration
-      el.style.transitionTimingFunction = pushStyles.transitionTimingFunction
-    }
+      for (const el of this.pushableElements) {
+        el.style.transform = pushStyles.transform
+        el.style.transitionDuration = pushStyles.transitionDuration
+        el.style.transitionTimingFunction = pushStyles.transitionTimingFunction
+      }
 
-    return this.pushableElements
+      return resolve(this.pushableElements)
+    })
   }
 
-  pullElements () : BartenderPushableElements | null {
-    if (!this.pushableElements.length) return null
+  private pullElements (): Promise<BartenderPushableElements> {
+    return new Promise(resolve => {
+      if (!this.pushableElements.length) return Promise.resolve(this.pushableElements)
 
-    for (const el of this.pushableElements) {
-      el.style.transform = 'translateX(0) translateY(0)'
-    }
+      for (const el of this.pushableElements) {
+        el.style.transform = 'translateX(0) translateY(0)'
+      }
 
-    return this.pushableElements
+      return resolve(this.pushableElements)
+    })
   }
 
-  handleKeydown (event: KeyboardEvent): void {
+  private handleKeydown (event: KeyboardEvent): void {
     if (event.key === 'Escape') {
       this.close()
     }

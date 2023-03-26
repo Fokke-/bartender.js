@@ -1,16 +1,24 @@
 $bartender-transition: transform 250ms ease !default;
 
-html,
-body {
-  height: 100%;
-}
+// html,
+// body {
+//   height: 100%;
+// }
 
-body {
+// body {
+//   margin: 0;
+//   padding: 0;
+// }
+
+.bartender,
+.bartender__content,
+.bartender__bar {
+  box-sizing: border-box;
   margin: 0;
-  padding: 0;
 }
 
 .bartender {
+  min-height: 100vh;
   background: #000;
 
   &--open {
@@ -21,7 +29,7 @@ body {
     z-index: 2;
     position: relative;
     width: 100%;
-    min-height: calc(100vh - calc(100vh - 100%));
+    min-height: 100vh;
     will-change: transform;
     background: #c1c1c1;
 

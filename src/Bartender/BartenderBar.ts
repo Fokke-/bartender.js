@@ -7,7 +7,7 @@ import type {
 import { resolveElement, sleep } from './utils'
 
 export class BartenderBar {
-  readonly name?: string
+  readonly name: string
   readonly el?: HTMLElement | null
   readonly elSelector?: string
   private position?: BartenderBarPosition
@@ -52,38 +52,7 @@ export class BartenderBar {
     return parseFloat(duration) * 1000
   }
 
-  // TODO: fix this. Matrix values are incorrect when closing
-  // private hasTransition () : boolean {
-  //   if (
-  //     !this.el ||
-  //     !window.getComputedStyle(this.el).getPropertyValue('transition-duration') ||
-  //     window.getComputedStyle(this.el).getPropertyValue('transition-duration') == '0s' ||
-  //     !window.getComputedStyle(this.el).getPropertyValue('transition-timing-function')
-  //   ) return false
-
-  //   const matrix = window.getComputedStyle(this.el).getPropertyValue('transform')
-  //   if (!matrix) return false
-
-  //   const parsedMatrix = matrix.match(/matrix.*\((.+)\)/)
-  //   if (!parsedMatrix || !parsedMatrix.length) return false
-
-  //   const matrixValues = parsedMatrix[1].split(', ')
-  //   if (!matrixValues.length) return false
-
-  //   console.log(matrixValues)
-  //   if (matrixValues[4] === '0' && matrixValues[5] === '0') return false
-
-  //   return true
-  // }
-
-  /**
-   * Set position
-   *
-   * @param position
-   * @throws Error message
-   * @returns this
-   */
-  setPosition (position?: BartenderBarPosition) : this {
+  public setPosition (position?: BartenderBarPosition) : this {
     // Validate position
     if (!position) throw `Position is required for bar '${this.name}'`
 
@@ -105,14 +74,7 @@ export class BartenderBar {
     return this
   }
 
-  /**
-   * Set mode
-   *
-   * @param mode
-   * @throws Error message
-   * @returns this
-   */
-  setMode (mode?: BartenderBarMode) : this {
+  public setMode (mode?: BartenderBarMode) : this {
     // Validate mode
     if (!mode) throw `Mode is required for bar '${this.name}'`
 
@@ -125,7 +87,6 @@ export class BartenderBar {
     if (!validModes.includes(mode)) throw `Invalid mode '${mode}' for bar '${this.name}'. Use one of the following: ${validModes.join(', ')}.`
 
     this.isPushing = ['push', 'reveal'].includes(mode)
-    console.log(this.isPushing)
 
     // Remove old mode class
     if (this.mode) this.el?.classList.remove(`bartender__bar--${this.mode}`)
@@ -137,6 +98,7 @@ export class BartenderBar {
   }
 
   async open () : Promise<this> {
+    // Dispatch 'before open' event
     this.el?.dispatchEvent(new CustomEvent('bartender-bar-before-open', {
       bubbles: true,
       detail: {
@@ -149,6 +111,7 @@ export class BartenderBar {
 
     await sleep(this.getTransitionDuration())
 
+    // Dispatch 'after open' event
     this.el?.dispatchEvent(new CustomEvent('bartender-bar-after-open', {
       bubbles: true,
       detail: {
@@ -186,29 +149,12 @@ export class BartenderBar {
     if (!this.position || !this.el) return null
 
     return {
-      transform: (() => {
-        switch (this.position) {
-          case 'left': {
-            return `translateX(${this.el?.offsetWidth}px)`
-          }
-
-          case 'right': {
-            return `translateX(-${this.el?.offsetWidth}px)`
-          }
-
-          case 'top': {
-            return `translateY(${this.el?.offsetHeight}px)`
-          }
-
-          case 'bottom': {
-            return `translateY(-${this.el?.offsetHeight}px)`
-          }
-
-          default: {
-            return ''
-          }
-        }
-      })(),
+      transform: {
+        left: `translateX(${this.el.offsetWidth}px)`,
+        right: `translateX(-${this.el.offsetWidth}px)`,
+        top: `translateY(${this.el.offsetHeight}px)`,
+        bottom: `translateY(-${this.el.offsetHeight}px)`,
+      }[this.position] || '',
       transitionDuration: window.getComputedStyle(this.el).getPropertyValue('transition-duration') || '',
       transitionTimingFunction: window.getComputedStyle(this.el).getPropertyValue('transition-timing-function') || '',
     }
