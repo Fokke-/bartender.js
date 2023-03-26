@@ -27,9 +27,9 @@ export class Overlay {
 
   public set enabled (val: boolean) {
     if (val === true) {
-      this.el.classList.remove('bartender__overlay--disabled')
+      this.el.classList.remove('bartender__overlay--transparent')
     } else {
-      this.el.classList.add('bartender__overlay--disabled')
+      this.el.classList.add('bartender__overlay--transparent')
     }
 
     this._enabled = val

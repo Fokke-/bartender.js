@@ -130,11 +130,13 @@ $bartender-overlay-transition: opacity 250ms ease !default;
     will-change: opacity;
     transition: $bartender-overlay-transition;
 
+    &--transparent {
+      background: transparent;
+    }
+
     &--visible {
-      &:not(.bartender__overlay--disabled) {
-        pointer-events: all;
-        opacity: 1;
-      }
+      pointer-events: all;
+      opacity: 1;
     }
   }
 }
