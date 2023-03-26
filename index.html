@@ -7,21 +7,38 @@
   </head>
   <body class="bartender">
     <main class="main bartender__content">
-      <button type="button" class="openLeft">
-        Toggle left
-      </button>
-      <button type="button" class="openRight">
-        Toggle right
-      </button>
-      <button type="button" class="openRightExtra">
-        Toggle right extra
-      </button>
-      <button type="button" class="openTop">
-        Toggle top
-      </button>
-      <button type="button" class="openBottom">
-        Toggle bottom
-      </button>
+      <h1>Bartender.js</h1>
+      <section class="section">
+        <h2>Toggles</h2>
+        <div class="buttonList">
+          <button type="button" class="button toggleButton" data-bar="left">
+            Toggle left
+          </button>
+          <button type="button" class="button toggleButton" data-bar="right">
+            Toggle right
+          </button>
+          <button type="button" class="button toggleButton" data-bar="rightExtra">
+            Toggle right extra
+          </button>
+          <button type="button" class="button toggleButton" data-bar="top">
+            Toggle top
+          </button>
+          <button type="button" class="button toggleButton" data-bar="bottom">
+            Toggle bottom
+          </button>
+        </div>
+      </section>
+      <section class="section">
+        <h2>Extreme tests</h2>
+        <div class="buttonList">
+          <button type="button" class="button spamOpen">
+            Spam open
+          </button>
+          <button type="button" class="button spamToggle">
+            Spam toggle
+          </button>
+        </div>
+      </section>
     </main>
     <div class="leftBar">
       <p>Left bar</p>
