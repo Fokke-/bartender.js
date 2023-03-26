@@ -18,6 +18,7 @@ export interface BartenderBarOptions {
   elSelector?: string,
   position?: BartenderBarPosition,
   mode?: 'float' | 'push' | 'reveal',
+  overlay?: boolean,
   permanent?: boolean,
 }
 

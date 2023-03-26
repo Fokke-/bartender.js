@@ -4,55 +4,57 @@ import type {
   BartenderBarMode,
   BartenderPushStyles
 } from './Bartender.d'
+import { BartenderError } from './BartenderError'
+import { Overlay } from './Overlay'
 import { resolveElement, sleep } from './utils'
 
-export class BartenderBar {
-  readonly name: string
+export class Bar {
+  // TODO: when mode changes, update pushable elements
+  // TODO: when position changes, update pushable elements
+  readonly overlayObj: Overlay
+  private _name = ''
   readonly el?: HTMLElement | null
-  readonly elSelector?: string
-  private position?: BartenderBarPosition
-  private mode?: BartenderBarMode
-  public isPushing = false
+  private _position: BartenderBarPosition = 'left'
+  private _mode: BartenderBarMode = 'float'
+  private _overlay = true
   public permanent = false
-  public isOpen = false
+  private isOpened = false
 
-  constructor (name: string, userOptions: BartenderBarOptions = {}) {
+  constructor (name: string, options: BartenderBarOptions = {}) {
     if (!name) throw 'Bar name is required'
 
-    // Assign options
-    Object.assign(this, userOptions)
-
+    this.overlayObj = new Overlay(name, this.overlay)
     this.name = name
 
     // Get element
-    this.el = resolveElement(this.el, this.elSelector)
-    if (!this.el) throw `Content element for bar '${this.name}' is required`
+    this.el = resolveElement(options.el, options.elSelector)
+    if (!this.el) throw new BartenderError(`Content element for bar '${this.name}' is required`)
+    this.el.classList.add('bartender__bar')
+
+    this.mode = options.mode ?? this._mode
+    this.position = options.position ?? this.position
+    this.overlay = options.overlay ?? this._overlay
+    this.permanent = options.permanent ?? this.permanent
 
     // Check that element is a direct child of the main element
     // TODO: do this elsewhere
     //if (this.el.parentElement !== this.bartender.mainEl) throw `Element of bar '${this.name}' must be a direct child of the Bartender main element`
-
-    // Temporarily disable transition
-    this.el.style.transition = 'none'
-    this.el.classList.add('bartender__bar')
-
-    this.setPosition(this.position)
-    this.setMode(this.mode)
-
-    // Return transition
-    setTimeout(() => {
-      if (this.el) this.el.style.transition = ''
-    })
   }
 
-  private getTransitionDuration (): number {
-    if (!this.el) return 0
-
-    const duration = window.getComputedStyle(this.el).getPropertyValue('transition-duration') || '0s'
-    return parseFloat(duration) * 1000
+  get name () {
+    return this._name
   }
 
-  public setPosition (position?: BartenderBarPosition) : this {
+  set name (name: string) {
+    this._name = name
+    this.overlayObj.name = name
+  }
+
+  get position () {
+    return this._position
+  }
+
+  set position (position: BartenderBarPosition) {
     // Validate position
     if (!position) throw `Position is required for bar '${this.name}'`
 
@@ -65,16 +67,26 @@ export class BartenderBar {
 
     if (!validPositions.includes(position)) throw `Invalid position '${position}' for bar '${this.name}'. Use one of the following: ${validPositions.join(', ')}.`
 
-    // Remove old position class
-    if (this.position) this.el?.classList.remove(`bartender__bar--${this.position}`)
+    // Temporarily disable transition
+    if (this.el) this.el.style.transition = 'none'
 
-    this.position = position
-    this.el?.classList.add(`bartender__bar--${this.position}`)
+    // Update element classes
+    this.el?.classList.remove(`bartender__bar--${this.position}`)
+    this.el?.classList.add(`bartender__bar--${position}`)
 
-    return this
+    this._position = position
+
+    // Return transition
+    setTimeout(() => {
+      if (this.el) this.el.style.transition = ''
+    })
   }
 
-  public setMode (mode?: BartenderBarMode) : this {
+  get mode () {
+    return this._mode
+  }
+
+  set mode (mode: BartenderBarMode) {
     // Validate mode
     if (!mode) throw `Mode is required for bar '${this.name}'`
 
@@ -86,15 +98,35 @@ export class BartenderBar {
 
     if (!validModes.includes(mode)) throw `Invalid mode '${mode}' for bar '${this.name}'. Use one of the following: ${validModes.join(', ')}.`
 
-    this.isPushing = ['push', 'reveal'].includes(mode)
+    // Update element classes
+    this.el?.classList.remove(`bartender__bar--${this.mode}`)
+    this.el?.classList.add(`bartender__bar--${mode}`)
 
-    // Remove old mode class
-    if (this.mode) this.el?.classList.remove(`bartender__bar--${this.mode}`)
+    this._mode = mode
+  }
 
-    this.mode = mode
-    this.el?.classList.add(`bartender__bar--${this.mode}`)
+  get overlay () {
+    return this._overlay
+  }
 
-    return this
+  set overlay (val) {
+    this.overlayObj.enabled = val
+    this._overlay = val
+  }
+
+  public isOpen (): boolean {
+    return this.isOpened
+  }
+
+  public isPushing (): boolean {
+    return ['push', 'reveal'].includes(this.mode)
+  }
+
+  private getTransitionDuration (): number {
+    if (!this.el) return 0
+
+    const duration = window.getComputedStyle(this.el).getPropertyValue('transition-duration') || '0s'
+    return parseFloat(duration) * 1000
   }
 
   async open () : Promise<this> {
@@ -107,7 +139,7 @@ export class BartenderBar {
     }))
 
     this.el?.classList.add('bartender__bar--open')
-    this.isOpen = true
+    this.isOpened = true
 
     await sleep(this.getTransitionDuration())
 
@@ -131,7 +163,7 @@ export class BartenderBar {
     }))
 
     this.el?.classList.remove('bartender__bar--open')
-    this.isOpen = false
+    this.isOpened = false
 
     await sleep(this.getTransitionDuration())
 
