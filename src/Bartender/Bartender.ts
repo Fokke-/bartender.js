@@ -92,9 +92,9 @@ export class Bartender {
     return this.bars.find(item => item.isOpen() === true) || null
   }
 
-  public addBar (name: string, userOptions: BartenderBarOptions = {}): Promise<Bar | Error> {
-    if (!name || typeof name !== 'string') return Promise.reject(new Error('Name is required'))
-    if (this.getBar(name)) return Promise.reject(new Error(`Bar with name '${name}' is already defined`))
+  public addBar (name: string, userOptions: BartenderBarOptions = {}): Promise<Bar | BartenderError> {
+    if (!name || typeof name !== 'string') return Promise.reject(new BartenderError('Name is required'))
+    if (this.getBar(name)) return Promise.reject(new BartenderError(`Bar with name '${name}' is already defined`))
 
     const options: BartenderBarOptions = {
       ...this.barOptions,
@@ -125,9 +125,9 @@ export class Bartender {
   }
 
   // TODO: add removeBar
-  private async openBar (name: string): Promise<Bar | Error> {
+  private async openBar (name: string): Promise<Bar | BartenderError> {
     const bar = this.getBar(name)
-    if (!bar) return Promise.reject(new Error(`Unknown bar '${name}'`))
+    if (!bar) return Promise.reject(new BartenderError(`Unknown bar '${name}'`))
     if (bar.isOpen() === true) return Promise.resolve(bar)
 
     // Close any open bar
@@ -176,17 +176,17 @@ export class Bartender {
     })
   }
 
-  public async toggle (name: string): Promise<Bar | Error | null> {
+  public async toggle (name: string): Promise<Bar | BartenderError | null> {
     const bar = this.getBar(name)
-    if (!bar) return Promise.reject(new Error(`Unknown bar '${name}'`))
+    if (!bar) return Promise.reject(new BartenderError(`Unknown bar '${name}'`))
 
     return (bar.isOpen() === true) ? this.close() : this.open(name)
   }
 
   // TODO: support push elements per bar
-  public addPushElement (options: BartenderPushElementOptions = {}): Promise<HTMLElement | HTMLBodyElement> {
+  public addPushElement (options: BartenderPushElementOptions = {}): Promise<HTMLElement | HTMLBodyElement | BartenderError > {
     const el = resolveElement(options.el, options.elSelector)
-    if (!el) return Promise.reject(new Error('Unknown push element'))
+    if (!el) return Promise.reject(new BartenderError('Unknown push element'))
 
     this.pushableElements.push(el)
 

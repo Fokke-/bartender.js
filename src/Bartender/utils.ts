@@ -10,7 +10,7 @@ export const resolveElement = (
   selector?: string
 ): HTMLElement | HTMLBodyElement | undefined => {
   if (element instanceof HTMLElement) return element
-  if (typeof selector === 'string') return <HTMLElement>document.querySelector(selector) || undefined
+  if (typeof selector === 'string') return document.querySelector(selector) as HTMLElement || undefined
 
   return undefined
 }
