@@ -28,8 +28,7 @@ export class Bartender {
   readonly switchTimeout: number = 150
   readonly bars: BartenderBars = []
   private pushableElements: BartenderPushableElements = []
-  // TODO: Rename to barDefaultOptions
-  private barOptions: BartenderBarOptions = {
+  private barDefaultOptions: BartenderBarOptions = {
     el: null,
     position: 'left',
     mode: 'float',
@@ -42,7 +41,7 @@ export class Bartender {
   ) {
     this.debug = options.debug ?? this.debug
     this.switchTimeout = options.switchTimeout ?? this.switchTimeout
-    this.barOptions = Object.assign(this.barOptions, barOptions)
+    this.barDefaultOptions = Object.assign(this.barDefaultOptions, barOptions)
 
     // Get main element
     const el = resolveElement(options.el || '.bartender')
@@ -97,7 +96,7 @@ export class Bartender {
 
     // Create a new bar
     const bar = new Bar(name, {
-      ...this.barOptions,
+      ...this.barDefaultOptions,
       ...userOptions,
     })
 
