@@ -137,7 +137,7 @@ export class Bar {
       },
     }))
 
-    this.el.scrollTo(0, 0)
+    if (this.scrollTop === true) this.el.scrollTo(0, 0)
     this.el.classList.add('bartender__bar--open')
     this.overlayObj.show()
     this.isOpened = true
