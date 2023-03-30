@@ -16,10 +16,8 @@ import { PushElement } from './PushElement'
  */
 export class Bartender {
   // TODO: refresh pushable elements when resizing
-  // TODO: overlay should be defined per bar
   // TODO: trapFocus should be defined per bar
   // TODO: scrollTop should be defined per bar
-  // TODO: create custom error class with 'Bartender:' prefix
 
   private queue: Queue
   public debug = false
