@@ -1,4 +1,4 @@
-import { BartenderBar } from './Bartender/lib/Bar'
+import { BartenderBar } from './lib/Bar'
 
 export type BartenderElementQuery = string | Element | null
 export type BartenderBarPosition = 'left' | 'right' | 'top' | 'bottom'
@@ -32,7 +32,7 @@ export interface BartenderPushStyles {
   transitionTimingFunction: string,
 }
 
-: string): Promise<Bar | Error>;
+ open(name: string): Promise<Bar | Error>;
     private closeBar;
     close(): Promise<Bar | null>;
     toggle(name: string): Promise<Bar | BartenderError | null>;
