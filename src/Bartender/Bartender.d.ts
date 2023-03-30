@@ -16,6 +16,7 @@ export interface BartenderBarOptions {
   mode?: 'float' | 'push' | 'reveal',
   overlay?: boolean,
   permanent?: boolean,
+  scrollTop?: boolean,
 }
 
 export interface BartenderPushElementOptions {
