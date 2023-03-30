@@ -50,7 +50,15 @@ export default defineConfig({
       fileName: 'Bartender',
     },
     rollupOptions: {
+      external: [
+        'async-await-queue',
+        'ts-debounce',
+      ],
       output: {
+        globals: {
+          'async-await-queue': 'asyncAwaitQueue',
+          'ts-debounce': 'tsDebounce',
+        },
         assetFileNames: (chunkInfo) => {
           if (chunkInfo.name === 'style.css') return 'styles.css'
         },
