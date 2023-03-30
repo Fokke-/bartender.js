@@ -5,6 +5,7 @@
  * @param selector Selector
  * @returns Resolved element or undefined if none found
  */
+// TODO: Just use one argument for this function
 export const resolveElement = (
   element?: HTMLElement | HTMLBodyElement | null,
   selector?: string

@@ -12,36 +12,43 @@ window.bartender = new Bartender({
   debug: true,
 })
 
-window.bartender.addBar('left', {
+const leftBar = window.bartender.addBar('left', {
   position: 'left',
   mode: 'push',
   elSelector: '.leftBar',
 })
 
-window.bartender.addBar('right', {
+const rightBar = window.bartender.addBar('right', {
   position: 'right',
   mode: 'float',
   elSelector: '.rightBar',
 })
 
-window.bartender.addBar('rightExtra', {
+const rightExtraBar = window.bartender.addBar('rightExtra', {
   position: 'right',
   mode: 'reveal',
   elSelector: '.rightBarExtra',
 })
 
-window.bartender.addBar('top', {
+const topBar = window.bartender.addBar('top', {
   position: 'top',
   mode: 'push',
   elSelector: '.topBar',
 })
 
-window.bartender.addBar('bottom', {
+const bottomBar = window.bartender.addBar('bottom', {
   position: 'bottom',
   mode: 'float',
   elSelector: '.bottomBar',
   overlay: false,
 })
+
+const fixedBarBottom = document.querySelector('.toolBar--fixed.toolBar--bottom') as HTMLElement
+if (fixedBarBottom) {
+  window.bartender.addPushElement({
+    el: fixedBarBottom,
+  })
+}
 
 const toggleButtons = document.querySelectorAll('.toggleButton')
 for (const button of Array.from(toggleButtons)) {
@@ -49,31 +56,6 @@ for (const button of Array.from(toggleButtons)) {
     window.bartender.toggle(button.getAttribute('data-bar') || '')
   })
 }
-
-const openLeft = document.querySelector('.openLeft')
-openLeft?.addEventListener('click', () => {
-  window.bartender.toggle('left')
-})
-
-const openRight = document.querySelector('.openRight')
-openRight?.addEventListener('click', () => {
-  window.bartender.toggle('right')
-})
-
-const openRightExtra = document.querySelector('.openRightExtra')
-openRightExtra?.addEventListener('click', () => {
-  window.bartender.toggle('rightExtra')
-})
-
-const openTop = document.querySelector('.openTop')
-openTop?.addEventListener('click', () => {
-  window.bartender.toggle('top')
-})
-
-const openBottom = document.querySelector('.openBottom')
-openBottom?.addEventListener('click', () => {
-  window.bartender.toggle('bottom')
-})
 
 const spamToggle = document.querySelector('.spamToggle')
 spamToggle?.addEventListener('click', async () => {

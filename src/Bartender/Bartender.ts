@@ -6,10 +6,11 @@ import type {
   BartenderPushStyles,
   BartenderPushableElements
 } from './Bartender.d'
+import { Queue } from 'async-await-queue'
 import { resolveElement, sleep } from './utils'
 import { BartenderError } from './BartenderError'
 import { Bar } from './Bar'
-import { Queue } from 'async-await-queue'
+import { PushElement } from './PushElement'
 
 /**
  * Class for creating accessible off-canvas bars.
@@ -139,7 +140,7 @@ export class Bartender {
     this.mainEl?.classList.add('bartender--open')
     // TODO: do this elsewhere?
     bar.overlayObj.show()
-    if (bar.isPushing() === true) await this.pushElements(bar.getPushStyles())
+    this.pushElements(bar)
 
     return bar.open()
   }
@@ -183,24 +184,21 @@ export class Bartender {
     return (bar.isOpen() === true) ? this.close() : this.open(name)
   }
 
-  // TODO: support push elements per bar
-  public addPushElement (options: BartenderPushElementOptions = {}): Promise<HTMLElement | HTMLBodyElement | BartenderError > {
-    const el = resolveElement(options.el, options.elSelector)
-    if (!el) return Promise.reject(new BartenderError('Unknown push element'))
+  public addPushElement (options: BartenderPushElementOptions = {}): PushElement {
+    const pushElement = new PushElement(options)
+    this.pushableElements.push(pushElement)
 
-    this.pushableElements.push(el)
-
-    return Promise.resolve(el)
+    return pushElement
   }
 
-  private pushElements (pushStyles: BartenderPushStyles | null): Promise<BartenderPushableElements> {
+  private pushElements (bar: Bar): Promise<BartenderPushableElements> {
     return new Promise(resolve => {
-      if (!pushStyles || !this.pushableElements.length) return resolve(this.pushableElements)
+      if (!bar || !this.pushableElements.length) return resolve(this.pushableElements)
 
-      for (const el of this.pushableElements) {
-        el.style.transform = pushStyles.transform
-        el.style.transitionDuration = pushStyles.transitionDuration
-        el.style.transitionTimingFunction = pushStyles.transitionTimingFunction
+      const pushStyles = bar.getPushStyles()
+
+      for (const item of this.pushableElements) {
+        item.push(bar, pushStyles)
       }
 
       return resolve(this.pushableElements)
@@ -211,8 +209,8 @@ export class Bartender {
     return new Promise(resolve => {
       if (!this.pushableElements.length) return Promise.resolve(this.pushableElements)
 
-      for (const el of this.pushableElements) {
-        el.style.transform = 'translateX(0) translateY(0)'
+      for (const item of this.pushableElements) {
+        item.pull()
       }
 
       return resolve(this.pushableElements)

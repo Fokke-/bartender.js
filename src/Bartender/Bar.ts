@@ -118,10 +118,6 @@ export class Bar {
     return this.isOpened
   }
 
-  public isPushing (): boolean {
-    return ['push', 'reveal'].includes(this.mode)
-  }
-
   private getTransitionDuration (): number {
     if (!this.el) return 0
 

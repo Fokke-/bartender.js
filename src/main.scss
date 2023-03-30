@@ -1,4 +1,14 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+}
+
 .main {
+  // min-height: 100vh;
+  padding: 5rem 0;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -21,4 +31,31 @@
 
 .button {
   margin: .5rem;
+}
+
+
+.toolBar {
+  position: relative;
+  width: 100%;
+  padding: 1em;
+  z-index: 9999;
+  background: #fff;
+
+  &--sticky {
+    position: sticky;
+  }
+
+  &--fixed {
+    position: fixed;
+  }
+
+  &--top {
+    top: 0;
+    border-bottom: solid 1px rgba(0, 0, 0, .35);
+  }
+
+  &--bottom {
+    bottom: 0;
+    border-top: solid 1px rgba(0, 0, 0, .35);
+  }
 }
