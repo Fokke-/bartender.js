@@ -1,9 +1,7 @@
 import type {
   BartenderOptions,
-  BartenderBars,
   BartenderBarOptions,
-  BartenderPushElementOptions,
-  BartenderPushableElements
+  BartenderPushElementOptions
 } from './Bartender.d'
 import { Queue } from 'async-await-queue'
 import { debounce } from 'ts-debounce'
@@ -24,8 +22,8 @@ export class Bartender {
   readonly el: HTMLElement
   readonly contentEl: HTMLElement
   readonly switchTimeout: number = 150
-  readonly bars: BartenderBars = []
-  private pushableElements: BartenderPushableElements = []
+  readonly bars: Bar[] = []
+  private pushableElements: PushElement[] = []
   private barDefaultOptions: BartenderBarOptions = {
     el: null,
     position: 'left',
@@ -65,7 +63,7 @@ export class Bartender {
 
     // Debouncer for resizing
     this.resizeDebounce = debounce(() => {
-      this.pushElements(this.getOpenBar(), true)
+      this.pushElements(this.getOpenBar())
     }, 100)
 
     // Add event listeners
@@ -187,30 +185,26 @@ export class Bartender {
     return pushElement
   }
 
-  private pushElements (bar: Bar | null, noTransition = false): Promise<BartenderPushableElements> {
-    return new Promise(resolve => {
-      if (!bar || !this.pushableElements.length) return resolve(this.pushableElements)
+  private pushElements (bar: Bar | null): PushElement[] {
+    if (!bar || !this.pushableElements.length) return this.pushableElements
 
-      const pushStyles = bar.getPushStyles()
+    const pushStyles = bar.getPushStyles()
 
-      for (const item of this.pushableElements) {
-        item.push(bar, pushStyles, noTransition)
-      }
+    for (const item of this.pushableElements) {
+      item.push(bar, pushStyles)
+    }
 
-      return resolve(this.pushableElements)
-    })
+    return this.pushableElements
   }
 
-  private pullElements (): Promise<BartenderPushableElements> {
-    return new Promise(resolve => {
-      if (!this.pushableElements.length) return Promise.resolve(this.pushableElements)
+  private pullElements (): PushElement[] {
+    if (!this.pushableElements.length) this.pushableElements
 
-      for (const item of this.pushableElements) {
-        item.pull()
-      }
+    for (const item of this.pushableElements) {
+      item.pull()
+    }
 
-      return resolve(this.pushableElements)
-    })
+    return this.pushableElements
   }
 
   private onKeydown (event: KeyboardEvent): void {

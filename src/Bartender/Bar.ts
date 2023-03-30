@@ -179,8 +179,14 @@ export class Bar {
     return Promise.resolve(this)
   }
 
-  getPushStyles (): BartenderPushStyles | null {
-    if (!this.position || !this.el) return null
+  getPushStyles (): BartenderPushStyles {
+    if (!this.position || !this.el) {
+      return {
+        transform: '',
+        transitionDuration: '',
+        transitionTimingFunction: '',
+      }
+    }
 
     return {
       transform: {
