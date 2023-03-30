@@ -1,6 +1,8 @@
-import { BartenderBar } from './BartenderBar'
+import { BartenderBar } from './lib/Bar'
 
 export type BartenderElementQuery = string | Element | null
+export type BartenderBarPosition = 'left' | 'right' | 'top' | 'bottom'
+export type BartenderBarMode = 'float' | 'push' | 'reveal'
 
 export interface BartenderOptions {
   debug?: boolean,
@@ -30,5 +32,3 @@ export interface BartenderPushStyles {
   transitionTimingFunction: string,
 }
 
-export type BartenderBarPosition = 'left' | 'right' | 'top' | 'bottom'
-export type BartenderBarMode = 'float' | 'push' | 'reveal'

@@ -1,5 +1,5 @@
 import { Bartender } from './Bartender/Bartender'
-import './Bartender/style.scss'
+import './Bartender/styles.scss'
 import './main.scss'
 
 declare global {

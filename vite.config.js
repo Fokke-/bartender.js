@@ -21,7 +21,7 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: './src/Bartender/style.scss',
+          src: './src/Bartender/styles.scss',
           dest: './',
         },
       ],
@@ -48,6 +48,13 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/main-lib.ts'),
       name: 'Bartender',
       fileName: 'Bartender',
+    },
+    rollupOptions: {
+      output: {
+        assetFileNames: (chunkInfo) => {
+          if (chunkInfo.name === 'style.css') return 'styles.css'
+        },
+      },
     },
   },
 })

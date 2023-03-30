@@ -2,7 +2,7 @@ import type {
   BartenderPushElementOptions,
   BartenderBarMode,
   BartenderPushStyles
-} from './Bartender.d'
+} from '../Bartender.d'
 import { BartenderError } from './BartenderError'
 import { Bar } from './Bar'
 import { resolveElement } from './utils'
