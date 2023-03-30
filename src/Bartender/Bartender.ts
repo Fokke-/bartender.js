@@ -3,7 +3,6 @@ import type {
   BartenderBars,
   BartenderBarOptions,
   BartenderPushElementOptions,
-  BartenderPushStyles,
   BartenderPushableElements
 } from './Bartender.d'
 import { Queue } from 'async-await-queue'
@@ -24,14 +23,14 @@ export class Bartender {
 
   private queue: Queue
   public debug = false
-  readonly mainEl?: HTMLElement | HTMLBodyElement | null
-  readonly mainElSelector: string = '.bartender'
-  readonly contentEl?: HTMLElement | null
-  readonly contentElSelector: string = '.bartender__content'
+  readonly el: HTMLElement
+  readonly contentEl: HTMLElement
   readonly switchTimeout: number = 150
   readonly bars: BartenderBars = []
   private pushableElements: BartenderPushableElements = []
+  // TODO: Rename to barDefaultOptions
   private barOptions: BartenderBarOptions = {
+    el: null,
     position: 'left',
     mode: 'float',
     permanent: false,
@@ -42,26 +41,24 @@ export class Bartender {
     barOptions: BartenderBarOptions = {}
   ) {
     this.debug = options.debug ?? this.debug
-    this.mainElSelector = options.mainElSelector ?? this.mainElSelector
-    this.contentElSelector = options.contentElSelector ?? this.contentElSelector
     this.switchTimeout = options.switchTimeout ?? this.switchTimeout
     this.barOptions = Object.assign(this.barOptions, barOptions)
 
     // Get main element
-    this.mainEl = resolveElement(options.mainEl, this.mainElSelector)
-    if (!this.mainEl) throw new BartenderError('Main element is required')
+    const el = resolveElement(options.el || '.bartender')
+    if (!el) throw new BartenderError('Main element is required')
+    this.el = el
 
     // Get content element
-    this.contentEl = resolveElement(options.contentEl, this.contentElSelector)
-    if (!this.contentEl) throw new BartenderError('Content element is required')
+    const contentEl = resolveElement(options.contentEl || '.bartender__content')
+    if (!contentEl) throw new BartenderError('Content element is required')
+    if (contentEl.parentElement !== this.el) throw new BartenderError('Content element must be a direct child of the main element')
+    this.contentEl = contentEl
 
     // Register content element as pushable element
     this.addPushElement({
       el: this.contentEl,
     })
-
-    // Check that content element is a direct child of the main element
-    if (this.contentEl.parentElement !== this.mainEl) throw new BartenderError('Content element must be a direct child of the main element')
 
     // Initialize queue
     this.queue = new Queue(1)
@@ -69,8 +66,8 @@ export class Bartender {
     // Add event listeners
     window.addEventListener('keydown', this.handleKeydown.bind(this))
 
-    this.mainEl.classList.add('bartender--ready')
-    this.mainEl.dispatchEvent(new CustomEvent('bartender-init', {
+    this.el.classList.add('bartender--ready')
+    this.el.dispatchEvent(new CustomEvent('bartender-init', {
       bubbles: true,
       detail: {
         bartender: this,
@@ -80,7 +77,7 @@ export class Bartender {
 
   // TODO: finish this
   public destroy () : void {
-    this.mainEl?.classList.remove('bartender--ready')
+    this.el.classList.remove('bartender--ready')
 
     // TODO: Tear down event listeners
   }
@@ -97,13 +94,11 @@ export class Bartender {
     if (!name || typeof name !== 'string') throw new BartenderError('Name is required')
     if (this.getBar(name)) throw new BartenderError(`Bar with name '${name}' is already defined`)
 
-    const options: BartenderBarOptions = {
+    // Create a new bar
+    const bar = new Bar(name, {
       ...this.barOptions,
       ...userOptions,
-    }
-
-    // Create a new bar
-    const bar = new Bar(name, options)
+    })
 
     // Insert overlay element
     this.contentEl?.appendChild(bar.overlayObj.el)
@@ -115,7 +110,7 @@ export class Bartender {
 
     this.bars.push(bar)
 
-    this.mainEl?.dispatchEvent(new CustomEvent('bartender-bar-added', {
+    this.el.dispatchEvent(new CustomEvent('bartender-bar-added', {
       bubbles: true,
       detail: {
         bar,
@@ -137,7 +132,7 @@ export class Bartender {
       await sleep(this.switchTimeout)
     }
 
-    this.mainEl?.classList.add('bartender--open')
+    this.el.classList.add('bartender--open')
     // TODO: do this elsewhere?
     bar.overlayObj.show()
     this.pushElements(bar)
@@ -163,7 +158,7 @@ export class Bartender {
     bar.overlayObj.hide()
     await bar.close()
 
-    if (removeOpenClass === true) this.mainEl?.classList.remove('bartender--open')
+    if (removeOpenClass === true) this.el.classList.remove('bartender--open')
 
     return Promise.resolve(bar)
   }

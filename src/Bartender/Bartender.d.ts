@@ -1,22 +1,17 @@
 import { BartenderBar } from './BartenderBar'
 import { BartenderPushElement } from './BartenderPushElement'
 
+export type BartenderElementQuery = string | Element | null
+
 export interface BartenderOptions {
   debug?: boolean,
-  mainEl?: HTMLElement | HTMLBodyElement | null,
-  mainElSelector?: string,
-  contentEl?: HTMLElement | null,
-  contentElSelector?: string,
+  el?: BartenderElementQuery,
+  contentEl?: BartenderElementQuery,
   switchTimeout?: number,
 }
 
-export type BartenderBars = Array<BartenderBar>
-export type BartenderBarPosition = 'left' | 'right' | 'top' | 'bottom'
-export type BartenderBarMode = 'float' | 'push' | 'reveal'
-
 export interface BartenderBarOptions {
-  el?: HTMLElement | null,
-  elSelector?: string,
+  el?: BartenderElementQuery,
   position?: BartenderBarPosition,
   mode?: 'float' | 'push' | 'reveal',
   overlay?: boolean,
@@ -24,8 +19,7 @@ export interface BartenderBarOptions {
 }
 
 export interface BartenderPushElementOptions {
-  el?: HTMLElement | HTMLBodyElement | null,
-  elSelector?: string,
+  el?: BartenderElementQuery,
   bars?: Array<BartenderBar>,
   modes?: Array<BartenderBarMode>
 }
@@ -36,4 +30,7 @@ export interface BartenderPushStyles {
   transitionTimingFunction: string,
 }
 
+export type BartenderBars = Array<BartenderBar>
+export type BartenderBarPosition = 'left' | 'right' | 'top' | 'bottom'
+export type BartenderBarMode = 'float' | 'push' | 'reveal'
 export type BartenderPushableElements = Array<BartenderPushElement>

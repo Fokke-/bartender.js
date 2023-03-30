@@ -13,7 +13,7 @@ export class Bar {
   // TODO: when position changes, update pushable elements
   readonly overlayObj: Overlay
   private _name = ''
-  readonly el?: HTMLElement | null
+  readonly el: HTMLElement
   private _position: BartenderBarPosition = 'left'
   private _mode: BartenderBarMode = 'float'
   private _overlay = true
@@ -27,8 +27,9 @@ export class Bar {
     this.name = name
 
     // Get element
-    this.el = resolveElement(options.el, options.elSelector)
-    if (!this.el) throw new BartenderError(`Content element for bar '${this.name}' is required`)
+    const el = resolveElement(options.el || null)
+    if (!el) throw new BartenderError(`Content element for bar '${this.name}' is required`)
+    this.el = el
     this.el.classList.add('bartender__bar')
 
     this.mode = options.mode ?? this._mode
@@ -71,8 +72,8 @@ export class Bar {
     if (this.el) this.el.style.transition = 'none'
 
     // Update element classes
-    this.el?.classList.remove(`bartender__bar--${this.position}`)
-    this.el?.classList.add(`bartender__bar--${position}`)
+    this.el.classList.remove(`bartender__bar--${this.position}`)
+    this.el.classList.add(`bartender__bar--${position}`)
 
     this._position = position
 
@@ -99,8 +100,8 @@ export class Bar {
     if (!validModes.includes(mode)) throw `Invalid mode '${mode}' for bar '${this.name}'. Use one of the following: ${validModes.join(', ')}.`
 
     // Update element classes
-    this.el?.classList.remove(`bartender__bar--${this.mode}`)
-    this.el?.classList.add(`bartender__bar--${mode}`)
+    this.el.classList.remove(`bartender__bar--${this.mode}`)
+    this.el.classList.add(`bartender__bar--${mode}`)
 
     this._mode = mode
   }
@@ -127,20 +128,20 @@ export class Bar {
 
   async open () : Promise<this> {
     // Dispatch 'before open' event
-    this.el?.dispatchEvent(new CustomEvent('bartender-bar-before-open', {
+    this.el.dispatchEvent(new CustomEvent('bartender-bar-before-open', {
       bubbles: true,
       detail: {
         bar: this,
       },
     }))
 
-    this.el?.classList.add('bartender__bar--open')
+    this.el.classList.add('bartender__bar--open')
     this.isOpened = true
 
     await sleep(this.getTransitionDuration())
 
     // Dispatch 'after open' event
-    this.el?.dispatchEvent(new CustomEvent('bartender-bar-after-open', {
+    this.el.dispatchEvent(new CustomEvent('bartender-bar-after-open', {
       bubbles: true,
       detail: {
         bar: this,
@@ -151,19 +152,19 @@ export class Bar {
   }
 
   async close () : Promise<this> {
-    this.el?.dispatchEvent(new CustomEvent('bartender-bar-before-close', {
+    this.el.dispatchEvent(new CustomEvent('bartender-bar-before-close', {
       bubbles: true,
       detail: {
         bar: this,
       },
     }))
 
-    this.el?.classList.remove('bartender__bar--open')
+    this.el.classList.remove('bartender__bar--open')
     this.isOpened = false
 
     await sleep(this.getTransitionDuration())
 
-    this.el?.dispatchEvent(new CustomEvent('bartender-bar-after-close', {
+    this.el.dispatchEvent(new CustomEvent('bartender-bar-after-close', {
       bubbles: true,
       detail: {
         bar: this,

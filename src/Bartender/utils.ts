@@ -1,19 +1,17 @@
+import { BartenderElementQuery } from './Bartender.d'
+
 /**
  * Resolve HTML element
  *
- * @param element HTML element
- * @param selector Selector
- * @returns Resolved element or undefined if none found
+ * @param query
+ * @returns Resolved element or null if none found
  */
-// TODO: Just use one argument for this function
-export const resolveElement = (
-  element?: HTMLElement | HTMLBodyElement | null,
-  selector?: string
-): HTMLElement | HTMLBodyElement | undefined => {
-  if (element instanceof HTMLElement) return element
-  if (typeof selector === 'string') return document.querySelector(selector) as HTMLElement || undefined
+export const resolveElement = (query: BartenderElementQuery): HTMLElement | null => {
+  if (!query) return null
+  if (typeof query === 'string') return document.querySelector(query) as HTMLElement
+  if (query instanceof Element) return query as HTMLElement
 
-  return undefined
+  return null
 }
 
 export const sleep = (duration = 100): Promise<void> => {
