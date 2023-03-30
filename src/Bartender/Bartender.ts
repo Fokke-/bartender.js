@@ -58,6 +58,7 @@ export class Bartender {
     // Register content element as pushable element
     this.addPushElement({
       el: this.contentEl,
+      modes: ['push', 'reveal'],
     })
 
     // Initialize queue
