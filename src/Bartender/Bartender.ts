@@ -16,7 +16,7 @@ import { PushElement } from './PushElement'
  */
 export class Bartender {
   // TODO: refresh pushable elements when resizing
-  // TODO: trapFocus should be defined per bar
+  // TODO: add support for focus traps
 
   private queue: Queue
   public debug = false
@@ -74,11 +74,10 @@ export class Bartender {
     }))
   }
 
-  // TODO: finish this
+  // TODO: Finish this
+  // TODO: Tear down event listeners
   public destroy () : void {
     this.el.classList.remove('bartender--ready')
-
-    // TODO: Tear down event listeners
   }
 
   public getBar (name: string): Bar | null {
