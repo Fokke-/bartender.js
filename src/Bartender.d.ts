@@ -1,4 +1,4 @@
-import { BartenderBar } from './lib/Bar'
+import { BartenderBar } from './Bartender/lib/Bar'
 
 export type BartenderElementQuery = string | Element | null
 export type BartenderBarPosition = 'left' | 'right' | 'top' | 'bottom'

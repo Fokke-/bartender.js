@@ -1,6 +1,6 @@
-import { Bartender } from './Bartender/Bartender'
-import './Bartender/styles.scss'
-import './main.scss'
+import { Bartender } from './Bartender'
+import './assets/bartender.scss'
+import './assets/styles.scss'
 
 declare global {
   interface Window {

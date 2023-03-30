@@ -1,4 +1,4 @@
-import { BartenderElementQuery } from '../Bartender.d'
+import type { BartenderElementQuery } from '../Bartender.d'
 
 /**
  * Resolve HTML element

@@ -40,7 +40,6 @@ export class Bar {
     this.scrollTop = options.scrollTop ?? this.scrollTop
 
     // Check that element is a direct child of the main element
-    // TODO: do this elsewhere
     //if (this.el.parentElement !== this.bartender.mainEl) throw `Element of bar '${this.name}' must be a direct child of the Bartender main element`
   }
 

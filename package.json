@@ -42,6 +42,7 @@
     "stylelint-config-standard": "^31.0.0",
     "typescript": "^5.0.2",
     "vite": "^4.1.4",
+    "vite-plugin-dts": "^2.1.0",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-static-copy": "^0.13.1",
     "vite-plugin-stylelint": "^4.2.0"

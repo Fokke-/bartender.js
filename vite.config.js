@@ -1,6 +1,7 @@
 import eslint from 'vite-plugin-eslint'
 import stylelint from 'vite-plugin-stylelint'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
+import dts from 'vite-plugin-dts'
 
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
@@ -21,10 +22,15 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: './src/Bartender/styles.scss',
+          src: './src/assets/styles.scss',
           dest: './',
         },
       ],
+    }),
+    // TODO: types are broken
+    dts({
+      skipDiagnostics: false,
+      outputDir: './dist/types',
     }),
   ],
   define: { 'process.env': {} },
@@ -44,11 +50,6 @@ export default defineConfig({
   },
   build: {
     target: 'es2015',
-    lib: {
-      entry: resolve(__dirname, 'src/main-lib.ts'),
-      name: 'Bartender',
-      fileName: 'Bartender',
-    },
     rollupOptions: {
       external: [
         'async-await-queue',
@@ -63,6 +64,11 @@ export default defineConfig({
           if (chunkInfo.name === 'style.css') return 'styles.css'
         },
       },
+    },
+    lib: {
+      entry: resolve(__dirname, 'src/Bartender.ts'),
+      name: 'Bartender',
+      fileName: 'Bartender',
     },
   },
 })
