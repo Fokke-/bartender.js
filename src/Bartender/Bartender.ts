@@ -92,9 +92,9 @@ export class Bartender {
     return this.bars.find(item => item.isOpen() === true) || null
   }
 
-  public addBar (name: string, userOptions: BartenderBarOptions = {}): Promise<Bar | BartenderError> {
-    if (!name || typeof name !== 'string') return Promise.reject(new BartenderError('Name is required'))
-    if (this.getBar(name)) return Promise.reject(new BartenderError(`Bar with name '${name}' is already defined`))
+  public addBar (name: string, userOptions: BartenderBarOptions = {}): Bar | BartenderError {
+    if (!name || typeof name !== 'string') throw new BartenderError('Name is required')
+    if (this.getBar(name)) throw new BartenderError(`Bar with name '${name}' is already defined`)
 
     const options: BartenderBarOptions = {
       ...this.barOptions,
@@ -121,7 +121,7 @@ export class Bartender {
       },
     }))
 
-    return Promise.resolve(bar)
+    return bar
   }
 
   // TODO: add removeBar
