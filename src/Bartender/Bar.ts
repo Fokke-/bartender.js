@@ -18,6 +18,7 @@ export class Bar {
   private _mode: BartenderBarMode = 'float'
   private _overlay = true
   public permanent = false
+  public scrollTop = true
   private isOpened = false
 
   constructor (name: string, options: BartenderBarOptions = {}) {
@@ -32,10 +33,11 @@ export class Bar {
     this.el = el
     this.el.classList.add('bartender__bar')
 
-    this.mode = options.mode ?? this._mode
     this.position = options.position ?? this.position
+    this.mode = options.mode ?? this._mode
     this.overlay = options.overlay ?? this._overlay
     this.permanent = options.permanent ?? this.permanent
+    this.scrollTop = options.scrollTop ?? this.scrollTop
 
     // Check that element is a direct child of the main element
     // TODO: do this elsewhere
@@ -135,6 +137,7 @@ export class Bar {
       },
     }))
 
+    this.el.scrollTo(0, 0)
     this.el.classList.add('bartender__bar--open')
     this.overlayObj.show()
     this.isOpened = true

@@ -30,7 +30,9 @@ export class Bartender {
     el: null,
     position: 'left',
     mode: 'float',
+    overlay: true,
     permanent: false,
+    scrollTop: true,
   }
 
   constructor (
