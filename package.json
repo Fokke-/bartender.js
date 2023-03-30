@@ -47,6 +47,7 @@
     "vite-plugin-stylelint": "^4.2.0"
   },
   "dependencies": {
-    "async-await-queue": "^2.1.4"
+    "async-await-queue": "^2.1.4",
+    "ts-debounce": "^4.0.0"
   }
 }

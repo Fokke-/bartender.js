@@ -121,7 +121,7 @@ export class Bar {
     return this.isOpened
   }
 
-  private getTransitionDuration (): number {
+  public getTransitionDuration (): number {
     if (!this.el) return 0
 
     const duration = window.getComputedStyle(this.el).getPropertyValue('transition-duration') || '0s'

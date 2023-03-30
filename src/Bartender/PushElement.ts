@@ -28,9 +28,8 @@ export class PushElement {
     if (this.modes.length && !this.modes.includes(bar.mode)) return this
 
     this.el.style.transform = pushStyles.transform
-    this.el.style.transitionDuration = pushStyles.transitionDuration
     this.el.style.transitionTimingFunction = pushStyles.transitionTimingFunction
-
+    this.el.style.transitionDuration = pushStyles.transitionDuration
     this.isPushed = true
 
     return this

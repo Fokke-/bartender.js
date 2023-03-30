@@ -6,6 +6,7 @@ import type {
   BartenderPushableElements
 } from './Bartender.d'
 import { Queue } from 'async-await-queue'
+import { debounce } from 'ts-debounce'
 import { resolveElement, sleep } from './utils'
 import { BartenderError } from './BartenderError'
 import { Bar } from './Bar'
@@ -15,10 +16,10 @@ import { PushElement } from './PushElement'
  * Class for creating accessible off-canvas bars.
  */
 export class Bartender {
-  // TODO: refresh pushable elements when resizing
   // TODO: add support for focus traps
 
   private queue: Queue
+  private resizeDebounce
   public debug = false
   readonly el: HTMLElement
   readonly contentEl: HTMLElement
@@ -62,8 +63,14 @@ export class Bartender {
     // Initialize queue
     this.queue = new Queue(1)
 
+    // Debouncer for resizing
+    this.resizeDebounce = debounce(() => {
+      this.pushElements(this.getOpenBar(), true)
+    }, 100)
+
     // Add event listeners
-    window.addEventListener('keydown', this.handleKeydown.bind(this))
+    window.addEventListener('keydown', this.onKeydown.bind(this))
+    window.addEventListener('resize', this.onResize.bind(this))
 
     this.el.classList.add('bartender--ready')
     this.el.dispatchEvent(new CustomEvent('bartender-init', {
@@ -180,14 +187,14 @@ export class Bartender {
     return pushElement
   }
 
-  private pushElements (bar: Bar): Promise<BartenderPushableElements> {
+  private pushElements (bar: Bar | null, noTransition = false): Promise<BartenderPushableElements> {
     return new Promise(resolve => {
       if (!bar || !this.pushableElements.length) return resolve(this.pushableElements)
 
       const pushStyles = bar.getPushStyles()
 
       for (const item of this.pushableElements) {
-        item.push(bar, pushStyles)
+        item.push(bar, pushStyles, noTransition)
       }
 
       return resolve(this.pushableElements)
@@ -206,12 +213,16 @@ export class Bartender {
     })
   }
 
-  private handleKeydown (event: KeyboardEvent): void {
+  private onKeydown (event: KeyboardEvent): void {
     if (event.key === 'Escape') {
       const openBar = this.getOpenBar()
       if (!openBar || openBar.permanent === true) return
 
       this.close()
     }
+  }
+
+  private onResize (): void {
+    this.resizeDebounce()
   }
 }
