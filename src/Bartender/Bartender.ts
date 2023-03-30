@@ -134,8 +134,6 @@ export class Bartender {
     }
 
     this.el.classList.add('bartender--open')
-    // TODO: do this elsewhere?
-    bar.overlayObj.show()
     this.pushElements(bar)
 
     return bar.open()
@@ -155,8 +153,6 @@ export class Bartender {
     if (!bar) return Promise.resolve(null)
 
     this.pullElements()
-    // TODO: do this elsewhere?
-    bar.overlayObj.hide()
     await bar.close()
 
     if (removeOpenClass === true) this.el.classList.remove('bartender--open')

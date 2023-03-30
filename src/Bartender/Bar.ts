@@ -136,6 +136,7 @@ export class Bar {
     }))
 
     this.el.classList.add('bartender__bar--open')
+    this.overlayObj.show()
     this.isOpened = true
 
     await sleep(this.getTransitionDuration())
@@ -160,6 +161,7 @@ export class Bar {
     }))
 
     this.el.classList.remove('bartender__bar--open')
+    this.overlayObj.hide()
     this.isOpened = false
 
     await sleep(this.getTransitionDuration())
