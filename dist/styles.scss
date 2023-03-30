@@ -1,4 +1,4 @@
-$bartender-transition: transform 250ms ease !default;
+$bartender-bar-transition: transform 250ms ease !default;
 $bartender-overlay-transition: opacity 250ms ease !default;
 
 // html,
@@ -33,6 +33,7 @@ $bartender-overlay-transition: opacity 250ms ease !default;
     min-height: 100vh;
     will-change: transform;
     background: #c1c1c1;
+    transition-property: transform;
 
     &:focus {
       outline: 0;
@@ -40,12 +41,12 @@ $bartender-overlay-transition: opacity 250ms ease !default;
   }
 
   &__bar {
-    z-index: 3;
+    z-index: 9999;
     position: fixed;
     overflow: auto;
     background-color: #dddddd;
     will-change: transform;
-    transition: $bartender-transition;
+    transition: $bartender-bar-transition;
 
     @media (prefers-reduced-motion) {
       transition: none;
@@ -130,11 +131,13 @@ $bartender-overlay-transition: opacity 250ms ease !default;
     will-change: opacity;
     transition: $bartender-overlay-transition;
 
+    &--transparent {
+      background: transparent;
+    }
+
     &--visible {
-      &:not(.bartender__overlay--disabled) {
-        pointer-events: all;
-        opacity: 1;
-      }
+      pointer-events: all;
+      opacity: 1;
     }
   }
 }
