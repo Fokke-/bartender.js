@@ -20,7 +20,7 @@ export class PushElement {
     this.el = el
 
     this.bars = options.bars || []
-    this.modes = options.modes || ['push', 'reveal']
+    this.modes = options.modes || []
   }
 
   public push (bar: Bar, pushStyles: BartenderPushStyles): this {
