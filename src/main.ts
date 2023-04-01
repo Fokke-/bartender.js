@@ -10,35 +10,36 @@ declare global {
 
 window.bartender = new Bartender({
   debug: true,
-  el: '.bartender',
+  el: 'body',
+  contentEl: '.content',
 })
 
 const leftBar = window.bartender.addBar('left', {
-  el: '.leftBar',
+  el: '.bar--left',
   position: 'left',
   mode: 'push',
 })
 
 const rightBar = window.bartender.addBar('right', {
-  el: '.rightBar',
+  el: '.bar--right',
   position: 'right',
   mode: 'float',
 })
 
 const rightExtraBar = window.bartender.addBar('rightExtra', {
-  el: '.rightBarExtra',
+  el: '.bar--rightExtra',
   position: 'right',
   mode: 'reveal',
 })
 
 const topBar = window.bartender.addBar('top', {
-  el: '.topBar',
+  el: '.bar--top',
   position: 'top',
   mode: 'push',
 })
 
 const bottomBar = window.bartender.addBar('bottom', {
-  el: '.bottomBar',
+  el: '.bar--bottom',
   position: 'bottom',
   mode: 'float',
   overlay: false,
