@@ -5,15 +5,15 @@ import dts from 'vite-plugin-dts'
 
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
-import { fileURLToPath, URL } from 'node:url'
+import {
+  fileURLToPath, URL
+} from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   define: { 'process.env': {} },
   resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },
+    alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
     extensions: [
       '.js',
       '.json',
@@ -37,7 +37,7 @@ export default defineConfig({
           'ts-debounce': 'tsDebounce',
         },
         assetFileNames: (chunkInfo) => {
-          if (chunkInfo.name === 'style.css') return 'styles.css'
+          if (chunkInfo.name === 'style.css') return 'bartender.css'
         },
       },
     },
@@ -48,14 +48,14 @@ export default defineConfig({
     },
   },
   plugins: [
-    eslint({
-      fix: false,
-    }),
+    eslint({ fix: false }),
     stylelint({
       fix: false,
       dev: true,
       build: true,
-      include: ['src/**/*.{css,scss,sass,less,styl,vue,svelte}'],
+      include: [
+        'src/**/*.{css,scss,sass,less,styl,vue,svelte}',
+      ],
     }),
     dts({
       skipDiagnostics: false,
@@ -65,7 +65,7 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: './src/assets/styles.scss',
+          src: './src/assets/bartender.scss',
           dest: './',
         },
       ],

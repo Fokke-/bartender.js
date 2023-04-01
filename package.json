@@ -32,6 +32,14 @@
       "types": "./dist/types/index.d.ts",
       "import": "./dist/Bartender.mjs",
       "require": "./dist/Bartender.umd.js"
+    },
+    "./dist/bartender.scss": {
+      "import": "./dist/bartender.scss",
+      "require": "./dist/bartender.scss"
+    },
+    "./dist/bartender.css": {
+      "import": "./dist/bartender.css",
+      "require": "./dist/bartender.css"
     }
   },
   "devDependencies": {

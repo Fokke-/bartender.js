@@ -1,0 +1,146 @@
+$bartender-bar-transition: transform 250ms ease !default;
+$bartender-overlay-transition: opacity 250ms ease !default;
+
+// html,
+// body {
+//   height: 100%;
+// }
+
+// body {
+//   margin: 0;
+//   padding: 0;
+// }
+
+.bartender,
+.bartender__content,
+.bartender__bar {
+  box-sizing: border-box !important;
+  margin: 0 !important;
+}
+
+.bartender {
+  min-height: 100vh;
+
+  &--open {
+    overflow: hidden !important;
+  }
+
+  &__content {
+    z-index: 2;
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background: #fff;
+    will-change: transform;
+    transition-property: transform;
+
+    &:focus {
+      outline: 0;
+    }
+  }
+
+  &__bar {
+    z-index: 9999;
+    position: fixed;
+    overflow: auto;
+    background-color: #fff;
+    will-change: transform;
+    transition: $bartender-bar-transition;
+
+    @media (prefers-reduced-motion) {
+      transition: none !important;
+    }
+
+    &--reveal {
+      z-index: 1;
+    }
+
+    &--left,
+    &--right {
+      top: 0;
+      width: 80%;
+      max-width: 400px;
+      // TODO: is this what we are looking for?
+      height: calc(100vh - calc(100vh - 100%));
+
+      &.bartender__bar--open {
+        transform: translateX(0)
+      }
+    }
+
+    &--left {
+      left: 0;
+      transform: translateX(-100%);
+
+      &.bartender__bar--reveal {
+        transform: translateX(0);
+      }
+    }
+
+    &--right {
+      right: 0;
+      transform: translateX(100%);
+
+      &.bartender__bar--reveal {
+        transform: translateX(0);
+      }
+    }
+
+    &--top,
+    &--bottom {
+      left: 0;
+      width: 100%;
+      height: 50%;
+      max-height: 400px;
+
+      &.bartender__bar--open {
+        transform: translateY(0)
+      }
+    }
+
+    &--top {
+      top: 0;
+      transform: translateY(-100%);
+
+      &.bartender__bar--reveal {
+        transform: translateX(0);
+      }
+    }
+
+    &--bottom {
+      bottom: 0;
+      transform: translateY(100%);
+
+      &.bartender__bar--reveal {
+        transform: translateX(0);
+      }
+    }
+  }
+
+  &__overlay {
+    z-index: 9999;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    opacity: 0;
+    will-change: opacity;
+    transition: $bartender-overlay-transition;
+
+    @media (prefers-reduced-motion) {
+      transition: none !important;
+    }
+
+    &--transparent {
+      background: transparent;
+    }
+
+    &--visible {
+      pointer-events: all;
+      opacity: 1;
+    }
+  }
+}
