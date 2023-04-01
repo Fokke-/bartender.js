@@ -12,8 +12,7 @@ import {
 } from './utils'
 
 export class Bar {
-  // TODO: when mode changes, update pushable elements
-  // TODO: when position changes, update pushable elements
+  private ready = false
   readonly overlayObj: Overlay
   private _name = ''
   readonly el: HTMLElement
@@ -41,6 +40,8 @@ export class Bar {
     this.overlay = options.overlay ?? this._overlay
     this.permanent = options.permanent ?? this.permanent
     this.scrollTop = options.scrollTop ?? this.scrollTop
+
+    this.ready = true
   }
 
   destroy (removeElement = false): this {
@@ -83,12 +84,17 @@ export class Bar {
     this.el.classList.remove(`bartender__bar--${this.position}`)
     this.el.classList.add(`bartender__bar--${position}`)
 
+    // Set new position
     this._position = position
 
     // Return transition
     setTimeout(() => {
       if (this.el) this.el.style.transition = ''
     })
+
+    // If position was changed after bar was created,
+    // dispatch resize event to update pushable elements
+    if (this.ready === true) window.dispatchEvent(new Event('resize'))
   }
 
   get mode () {
@@ -111,7 +117,12 @@ export class Bar {
     this.el.classList.remove(`bartender__bar--${this.mode}`)
     this.el.classList.add(`bartender__bar--${mode}`)
 
+    // Set new mode
     this._mode = mode
+
+    // If mode was changed after bar was created,
+    // dispatch resize event to update pushable elements
+    if (this.ready === true) window.dispatchEvent(new Event('resize'))
   }
 
   get overlay () {

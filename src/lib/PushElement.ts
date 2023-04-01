@@ -24,8 +24,19 @@ export class PushElement {
   }
 
   public push (bar: Bar, pushStyles: BartenderPushStyles): this {
-    if (this.bars.length && !this.bars.includes(bar)) return this
-    if (this.modes.length && !this.modes.includes(bar.mode)) return this
+    // If this element is not supposed to be pushed,
+    // clear transition styles
+    if (
+      (this.bars.length && !this.bars.includes(bar)) ||
+      (this.modes.length && !this.modes.includes(bar.mode))
+    ) {
+      this.el.style.transform = ''
+      this.el.style.transitionTimingFunction = ''
+      this.el.style.transitionDuration = ''
+      this.isPushed = false
+
+      return this
+    }
 
     this.el.style.transform = pushStyles.transform
     this.el.style.transitionTimingFunction = pushStyles.transitionTimingFunction

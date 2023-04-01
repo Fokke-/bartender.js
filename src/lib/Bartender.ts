@@ -236,6 +236,7 @@ export class Bartender {
     return pushElement
   }
 
+  // TODO: support pushing elements without transition
   private pushElements (bar: Bar | null): PushElement[] {
     if (!bar || !this.pushableElements.length) return this.pushableElements
 
