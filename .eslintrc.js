@@ -32,9 +32,7 @@ module.exports = {
     'indent': [
       'error',
       2,
-      {
-        SwitchCase: 1,
-      },
+      { SwitchCase: 1 },
     ],
     'quotes': [
       'error',
@@ -44,11 +42,48 @@ module.exports = {
       'error',
       'never',
     ],
+    'array-bracket-newline': [
+      'error',
+      {
+        multiline: true,
+        minItems: 1,
+      },
+    ],
     'array-bracket-spacing': [
       'error',
       'never',
     ],
-    'array-element-newline': 'off',
+    'array-element-newline': [
+      'error',
+      'always',
+    ],
+    'object-curly-newline': [
+      'error',
+      {
+        'ObjectExpression': {
+          multiline: true,
+          minProperties: 2,
+        },
+        'ImportDeclaration': {
+          multiline: true,
+          minProperties: 2,
+        },
+        'ExportDeclaration': 'always',
+      },
+    ],
+    'object-curly-spacing': [
+      'error',
+      'always',
+    ],
+    'key-spacing': [
+      'error',
+      {
+        beforeColon: false,
+        afterColon: true,
+        mode: 'strict',
+      },
+    ],
+    'object-property-newline': 'error',
     'no-trailing-spaces': [
       'error',
     ],
@@ -57,9 +92,7 @@ module.exports = {
     ],
     'no-multiple-empty-lines': [
       'error',
-      {
-        max: 1,
-      },
+      { max: 1 },
     ],
     'space-before-function-paren': [
       'error',
