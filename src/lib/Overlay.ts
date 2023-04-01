@@ -11,6 +11,12 @@ export class Overlay {
     this.enabled = enabled
   }
 
+  public destroy (): this {
+    this.el.remove()
+
+    return this
+  }
+
   public get name () {
     return this._name
   }

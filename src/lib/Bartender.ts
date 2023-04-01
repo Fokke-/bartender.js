@@ -5,7 +5,10 @@ import type {
 } from './types'
 import { Queue } from 'async-await-queue'
 import { debounce } from 'ts-debounce'
-import { resolveElement, sleep } from './utils'
+import {
+  resolveElement,
+  sleep
+} from './utils'
 import { BartenderError } from './BartenderError'
 import { Bar } from './Bar'
 import { PushElement } from './PushElement'
@@ -55,7 +58,10 @@ export class Bartender {
     // Register content element as pushable element
     this.addPushElement({
       el: this.contentEl,
-      modes: ['push', 'reveal'],
+      modes: [
+        'push',
+        'reveal',
+      ],
     })
 
     // Initialize queue
@@ -73,16 +79,16 @@ export class Bartender {
     this.el.classList.add('bartender--ready')
     this.el.dispatchEvent(new CustomEvent('bartender-init', {
       bubbles: true,
-      detail: {
-        bartender: this,
-      },
+      detail: { bartender: this },
     }))
   }
 
   // TODO: Finish this
   // TODO: Tear down event listeners
-  public destroy () : void {
+  public destroy (): this {
     this.el.classList.remove('bartender--ready')
+
+    return this
   }
 
   public getBar (name: string): Bar | null {
@@ -94,7 +100,7 @@ export class Bartender {
   }
 
   public addBar (name: string, userOptions: BartenderBarOptions = {}): Bar | BartenderError {
-    if (!name || typeof name !== 'string') throw new BartenderError('Name is required')
+    if (!name || typeof name !== 'string') throw new BartenderError('Bar name is required')
     if (this.getBar(name)) throw new BartenderError(`Bar with name '${name}' is already defined`)
 
     // Create a new bar
@@ -118,15 +124,33 @@ export class Bartender {
 
     this.el.dispatchEvent(new CustomEvent('bartender-bar-added', {
       bubbles: true,
-      detail: {
-        bar,
-      },
+      detail: { bar },
     }))
 
     return bar
   }
 
-  // TODO: add removeBar
+  public async removeBar (name: string, removeElement = false): Promise<this> {
+    if (!name || typeof name !== 'string') throw new BartenderError('Bar name is required')
+
+    const bar = this.getBar(name)
+    if (!bar) throw new BartenderError(`Bar with name '${name}' was not found`)
+
+    if (this.getOpenBar() === bar) await this.close()
+
+    bar.destroy(removeElement)
+
+    const barIndex = this.bars.findIndex(item => item.name === name)
+    delete this.bars[barIndex]
+
+    this.el.dispatchEvent(new CustomEvent('bartender-bar-removed', {
+      bubbles: true,
+      detail: { name },
+    }))
+
+    return Promise.resolve(this)
+  }
+
   private async openBar (name: string): Promise<Bar | BartenderError> {
     const bar = this.getBar(name)
     if (!bar) return Promise.reject(new BartenderError(`Unknown bar '${name}'`))

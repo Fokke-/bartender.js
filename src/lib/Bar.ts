@@ -6,7 +6,10 @@ import type {
 } from './types'
 import { BartenderError } from './BartenderError'
 import { Overlay } from './Overlay'
-import { resolveElement, sleep } from './utils'
+import {
+  resolveElement,
+  sleep
+} from './utils'
 
 export class Bar {
   // TODO: when mode changes, update pushable elements
@@ -38,6 +41,13 @@ export class Bar {
     this.overlay = options.overlay ?? this._overlay
     this.permanent = options.permanent ?? this.permanent
     this.scrollTop = options.scrollTop ?? this.scrollTop
+  }
+
+  destroy (removeElement = false): this {
+    if (removeElement === true) this.el.remove()
+    this.overlayObj.destroy()
+
+    return this
   }
 
   get name () {
@@ -124,13 +134,11 @@ export class Bar {
     return parseFloat(duration) * 1000
   }
 
-  async open () : Promise<this> {
+  async open (): Promise<this> {
     // Dispatch 'before open' event
     this.el.dispatchEvent(new CustomEvent('bartender-bar-before-open', {
       bubbles: true,
-      detail: {
-        bar: this,
-      },
+      detail: { bar: this },
     }))
 
     if (this.scrollTop === true) this.el.scrollTo(0, 0)
@@ -143,20 +151,16 @@ export class Bar {
     // Dispatch 'after open' event
     this.el.dispatchEvent(new CustomEvent('bartender-bar-after-open', {
       bubbles: true,
-      detail: {
-        bar: this,
-      },
+      detail: { bar: this },
     }))
 
     return Promise.resolve(this)
   }
 
-  async close () : Promise<this> {
+  async close (): Promise<this> {
     this.el.dispatchEvent(new CustomEvent('bartender-bar-before-close', {
       bubbles: true,
-      detail: {
-        bar: this,
-      },
+      detail: { bar: this },
     }))
 
     this.el.classList.remove('bartender__bar--open')
@@ -167,9 +171,7 @@ export class Bar {
 
     this.el.dispatchEvent(new CustomEvent('bartender-bar-after-close', {
       bubbles: true,
-      detail: {
-        bar: this,
-      },
+      detail: { bar: this },
     }))
 
     return Promise.resolve(this)
