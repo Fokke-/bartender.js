@@ -46,9 +46,7 @@ const bottomBar = window.bartender.addBar('bottom', {
 
 const fixedBarBottom = document.querySelector('.toolBar--fixed.toolBar--bottom') as HTMLElement
 if (fixedBarBottom) {
-  window.bartender.addPushElement({
-    el: fixedBarBottom,
-  })
+  window.bartender.addPushElement({ el: fixedBarBottom })
 }
 
 const toggleButtons = document.querySelectorAll('.toggleButton')
