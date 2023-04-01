@@ -9,30 +9,6 @@ import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    eslint({
-      fix: false,
-    }),
-    stylelint({
-      fix: false,
-      dev: true,
-      build: true,
-      include: ['src/**/*.{css,scss,sass,less,styl,vue,svelte}'],
-    }),
-    viteStaticCopy({
-      targets: [
-        {
-          src: './src/assets/styles.scss',
-          dest: './',
-        },
-      ],
-    }),
-    // TODO: types are broken
-    dts({
-      skipDiagnostics: false,
-      outputDir: './dist/types',
-    }),
-  ],
   define: { 'process.env': {} },
   resolve: {
     alias: {
@@ -66,9 +42,33 @@ export default defineConfig({
       },
     },
     lib: {
-      entry: resolve(__dirname, 'src/Bartender.ts'),
+      entry: resolve(__dirname, 'src/index.ts'),
       name: 'Bartender',
       fileName: 'Bartender',
     },
   },
+  plugins: [
+    eslint({
+      fix: false,
+    }),
+    stylelint({
+      fix: false,
+      dev: true,
+      build: true,
+      include: ['src/**/*.{css,scss,sass,less,styl,vue,svelte}'],
+    }),
+    dts({
+      skipDiagnostics: false,
+      copyDtsFiles: true,
+      outputDir: './dist/types',
+    }),
+    viteStaticCopy({
+      targets: [
+        {
+          src: './src/assets/styles.scss',
+          dest: './',
+        },
+      ],
+    }),
+  ],
 })

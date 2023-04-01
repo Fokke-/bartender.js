@@ -2,15 +2,15 @@ import type {
   BartenderPushElementOptions,
   BartenderBarMode,
   BartenderPushStyles
-} from '../Bartender.d'
+} from './types'
 import { BartenderError } from './BartenderError'
 import { Bar } from './Bar'
 import { resolveElement } from './utils'
 
 export class PushElement {
   private el: HTMLElement
-  readonly bars: Array<Bar>
-  readonly modes: Array<BartenderBarMode>
+  readonly bars: Bar[]
+  readonly modes: BartenderBarMode[]
   private isPushed = false
 
   constructor (options: BartenderPushElementOptions = {}) {

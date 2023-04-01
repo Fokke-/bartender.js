@@ -1,4 +1,4 @@
-import { Bartender } from './Bartender'
+import { Bartender } from './lib/Bartender'
 import './assets/bartender.scss'
 import './assets/styles.scss'
 

@@ -16,36 +16,40 @@
   ],
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build"
+    "build": "vite build",
+    "lint": "eslint ./src"
   },
   "files": [
     "LICENSE",
     "README.md",
     "dist"
   ],
+  "types": "./dist/types/index.d.ts",
   "main": "./dist/Bartender.umd.js",
   "module": "./dist/Bartender.mjs",
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/Bartender.mjs",
       "require": "./dist/Bartender.umd.js"
     }
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.55.0",
-    "@typescript-eslint/parser": "^5.55.0",
-    "autoprefixer": "^10.4.13",
-    "eslint": "^8.35.0",
-    "sass": "^1.58.3",
-    "stylelint": "^15.3.0",
+    "@types/node": "^18.15.11",
+    "@typescript-eslint/eslint-plugin": "^5.57.0",
+    "@typescript-eslint/parser": "^5.57.0",
+    "autoprefixer": "^10.4.14",
+    "eslint": "^8.37.0",
+    "sass": "^1.60.0",
+    "stylelint": "^15.4.0",
     "stylelint-config-sass-guidelines": "^10.0.0",
-    "stylelint-config-standard": "^31.0.0",
-    "typescript": "^5.0.2",
-    "vite": "^4.1.4",
+    "stylelint-config-standard": "^32.0.0",
+    "typescript": "^5.0.3",
+    "vite": "^4.2.1",
     "vite-plugin-dts": "^2.1.0",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-static-copy": "^0.13.1",
-    "vite-plugin-stylelint": "^4.2.0"
+    "vite-plugin-stylelint": "^4.3.0"
   },
   "dependencies": {
     "async-await-queue": "^2.1.4",

@@ -2,13 +2,13 @@ import type {
   BartenderOptions,
   BartenderBarOptions,
   BartenderPushElementOptions
-} from './Bartender.d'
+} from './types'
 import { Queue } from 'async-await-queue'
 import { debounce } from 'ts-debounce'
-import { resolveElement, sleep } from './lib/utils'
-import { BartenderError } from './lib/BartenderError'
-import { Bar } from './lib/Bar'
-import { PushElement } from './lib/PushElement'
+import { resolveElement, sleep } from './utils'
+import { BartenderError } from './BartenderError'
+import { Bar } from './Bar'
+import { PushElement } from './PushElement'
 
 /**
  * Class for creating accessible off-canvas bars.

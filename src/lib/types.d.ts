@@ -1,4 +1,4 @@
-import { BartenderBar } from './lib/Bar'
+import { Bar } from './Bar'
 
 export type BartenderElementQuery = string | Element | null
 export type BartenderBarPosition = 'left' | 'right' | 'top' | 'bottom'
@@ -22,7 +22,7 @@ export interface BartenderBarOptions {
 
 export interface BartenderPushElementOptions {
   el?: BartenderElementQuery,
-  bars?: BartenderBar[],
+  bars?: Bar[],
   modes?: BartenderBarMode[]
 }
 

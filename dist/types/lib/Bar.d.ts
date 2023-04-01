@@ -1,4 +1,4 @@
-import type { BartenderBarOptions, BartenderBarPosition, BartenderBarMode, BartenderPushStyles } from '../Bartender.d';
+import type { BartenderBarOptions, BartenderBarPosition, BartenderBarMode, BartenderPushStyles } from './types';
 import { Overlay } from './Overlay';
 export declare class Bar {
     readonly overlayObj: Overlay;

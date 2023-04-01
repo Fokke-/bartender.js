@@ -3,7 +3,7 @@ import type {
   BartenderBarPosition,
   BartenderBarMode,
   BartenderPushStyles
-} from '../Bartender.d'
+} from './types'
 import { BartenderError } from './BartenderError'
 import { Overlay } from './Overlay'
 import { resolveElement, sleep } from './utils'
