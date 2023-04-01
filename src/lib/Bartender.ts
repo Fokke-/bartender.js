@@ -141,7 +141,7 @@ export class Bartender {
     bar.destroy(removeElement)
 
     const barIndex = this.bars.findIndex(item => item.name === name)
-    delete this.bars[barIndex]
+    this.bars.splice(barIndex, 1)
 
     this.el.dispatchEvent(new CustomEvent('bartender-bar-removed', {
       bubbles: true,
