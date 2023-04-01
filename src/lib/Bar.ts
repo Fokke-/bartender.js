@@ -38,9 +38,6 @@ export class Bar {
     this.overlay = options.overlay ?? this._overlay
     this.permanent = options.permanent ?? this.permanent
     this.scrollTop = options.scrollTop ?? this.scrollTop
-
-    // Check that element is a direct child of the main element
-    //if (this.el.parentElement !== this.bartender.mainEl) throw `Element of bar '${this.name}' must be a direct child of the Bartender main element`
   }
 
   get name () {

@@ -103,6 +103,9 @@ export class Bartender {
       ...userOptions,
     })
 
+    // Check that bar element is a direct child on main element
+    if (bar.el.parentElement !== this.el) throw new BartenderError(`Element of bar '${bar.name}' must be a direct child of the Bartender main element`)
+
     // Insert overlay element
     this.contentEl?.appendChild(bar.overlayObj.el)
     bar.overlayObj.el.addEventListener('click', () => {
