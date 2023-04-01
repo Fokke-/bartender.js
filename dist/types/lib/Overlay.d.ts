@@ -3,6 +3,7 @@ export declare class Overlay {
     private _enabled;
     readonly el: HTMLElement;
     constructor(name: string, enabled?: boolean);
+    destroy(): this;
     get name(): string;
     set name(name: string);
     get enabled(): boolean;

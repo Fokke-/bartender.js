@@ -2,9 +2,6 @@ import type { BartenderOptions, BartenderBarOptions, BartenderPushElementOptions
 import { BartenderError } from './BartenderError';
 import { Bar } from './Bar';
 import { PushElement } from './PushElement';
-/**
- * Class for creating accessible off-canvas bars.
- */
 export declare class Bartender {
     private queue;
     private resizeDebounce;
@@ -15,11 +12,14 @@ export declare class Bartender {
     readonly bars: Bar[];
     private pushableElements;
     private barDefaultOptions;
+    private onKeydownHandler;
+    private onResizeHandler;
     constructor(options?: BartenderOptions, barOptions?: BartenderBarOptions);
-    destroy(): void;
+    destroy(removeBarElements?: boolean): Promise<this>;
     getBar(name: string): Bar | null;
     private getOpenBar;
     addBar(name: string, userOptions?: BartenderBarOptions): Bar | BartenderError;
+    removeBar(name: string, removeElement?: boolean): Promise<this>;
     private openBar;
     open(name: string): Promise<Bar | Error>;
     private closeBar;
