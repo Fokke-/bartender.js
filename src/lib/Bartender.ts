@@ -35,7 +35,10 @@ export class Bartender {
     permanent: false,
     scrollTop: true,
   }
+  private onKeydownHandler
+  private onResizeHandler
 
+  // TODO: add classes to main element and content element
   constructor (
     options: BartenderOptions = {},
     barOptions: BartenderBarOptions = {}
@@ -73,8 +76,11 @@ export class Bartender {
     }, 100)
 
     // Add event listeners
-    window.addEventListener('keydown', this.onKeydown.bind(this))
-    window.addEventListener('resize', this.onResize.bind(this))
+    this.onKeydownHandler = this.onKeydown.bind(this)
+    window.addEventListener('keydown', this.onKeydownHandler)
+
+    this.onResizeHandler = this.onResize.bind(this)
+    window.addEventListener('resize', this.onResizeHandler)
 
     this.el.classList.add('bartender--ready')
     this.el.dispatchEvent(new CustomEvent('bartender-init', {
@@ -83,12 +89,32 @@ export class Bartender {
     }))
   }
 
-  // TODO: Finish this
-  // TODO: Tear down event listeners
-  public destroy (): this {
-    this.el.classList.remove('bartender--ready')
+  public async destroy (removeBarElements = false): Promise<this> {
+    // Get all bar names
+    const barNames = this.bars.reduce((acc: string[], bar) => {
+      acc.push(bar.name)
+      return acc
+    }, [])
 
-    return this
+    // Remove bars
+    for (const name of barNames) {
+      await this.removeBar(name, removeBarElements)
+    }
+
+    // Remove classes
+    this.el.classList.remove('bartender', 'bartender--ready')
+    this.contentEl.classList.remove('bartender__content')
+
+    // Remove event listeners
+    window.removeEventListener('keydown', this.onKeydownHandler)
+    window.removeEventListener('resize', this.onResizeHandler)
+
+    this.el.dispatchEvent(new CustomEvent('bartender-destroyed', {
+      bubbles: true,
+      detail: { bartender: this },
+    }))
+
+    return Promise.resolve(this)
   }
 
   public getBar (name: string): Bar | null {
