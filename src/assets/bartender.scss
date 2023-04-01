@@ -30,8 +30,8 @@ $bartender-overlay-transition: opacity 250ms ease !default;
     position: relative;
     width: 100%;
     min-height: 100vh;
-    will-change: transform;
     background: #fff;
+    will-change: transform;
     transition-property: transform;
 
     &:focus {
@@ -129,6 +129,10 @@ $bartender-overlay-transition: opacity 250ms ease !default;
     opacity: 0;
     will-change: opacity;
     transition: $bartender-overlay-transition;
+
+    @media (prefers-reduced-motion) {
+      transition: none !important;
+    }
 
     &--transparent {
       background: transparent;
