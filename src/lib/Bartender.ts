@@ -13,9 +13,6 @@ import { BartenderError } from './BartenderError'
 import { Bar } from './Bar'
 import { PushElement } from './PushElement'
 
-/**
- * Class for creating accessible off-canvas bars.
- */
 export class Bartender {
   // TODO: add support for focus traps
 
@@ -38,7 +35,6 @@ export class Bartender {
   private onKeydownHandler
   private onResizeHandler
 
-  // TODO: add classes to main element and content element
   constructor (
     options: BartenderOptions = {},
     barOptions: BartenderBarOptions = {}
@@ -51,12 +47,14 @@ export class Bartender {
     const el = resolveElement(options.el || '.bartender')
     if (!el) throw new BartenderError('Main element is required')
     this.el = el
+    this.el.classList.add('bartender')
 
     // Get content element
     const contentEl = resolveElement(options.contentEl || '.bartender__content')
     if (!contentEl) throw new BartenderError('Content element is required')
     if (contentEl.parentElement !== this.el) throw new BartenderError('Content element must be a direct child of the main element')
     this.contentEl = contentEl
+    this.contentEl.classList.add('bartender__content')
 
     // Register content element as pushable element
     this.addPushElement({
