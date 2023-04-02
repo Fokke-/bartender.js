@@ -96,6 +96,8 @@ export class Bartender {
 
     // Remove bars
     for (const name of barNames) {
+      if (!this.getBar(name)) continue
+
       await this.removeBar(name, removeBarElements)
     }
 
