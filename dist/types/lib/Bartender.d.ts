@@ -23,7 +23,7 @@ export declare class Bartender {
     private openBar;
     open(name: string): Promise<Bar | Error>;
     private closeBar;
-    close(): Promise<Bar | null>;
+    close(name?: string): Promise<Bar | null>;
     toggle(name: string): Promise<Bar | BartenderError | null>;
     addPushElement(options?: BartenderPushElementOptions): PushElement;
     private pushElements;

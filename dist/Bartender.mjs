@@ -9,8 +9,8 @@ var m = (i, e, t) => e in i ? v(i, e, { enumerable: !0, configurable: !0, writab
       E.call(e, t) && m(i, t, e[t]);
   return i;
 };
-var s = (i, e, t) => (m(i, typeof e != "symbol" ? e + "" : e, t), t);
-var l = (i, e, t) => new Promise((r, n) => {
+var r = (i, e, t) => (m(i, typeof e != "symbol" ? e + "" : e, t), t);
+var l = (i, e, t) => new Promise((s, n) => {
   var h = (o) => {
     try {
       u(t.next(o));
@@ -23,11 +23,11 @@ var l = (i, e, t) => new Promise((r, n) => {
     } catch (c) {
       n(c);
     }
-  }, u = (o) => o.done ? r(o.value) : Promise.resolve(o.value).then(h, d);
+  }, u = (o) => o.done ? s(o.value) : Promise.resolve(o.value).then(h, d);
   u((t = t.apply(i, e)).next());
 });
-import { Queue as _ } from "async-await-queue";
-import { debounce as g } from "ts-debounce";
+import { Queue as g } from "async-await-queue";
+import { debounce as _ } from "ts-debounce";
 const b = (i) => i ? typeof i == "string" ? document.querySelector(i) : i instanceof Element ? i : null : null, p = (i = 100) => new Promise((e) => i ? setTimeout(e, i) : e());
 class a extends Error {
   constructor(e) {
@@ -36,9 +36,9 @@ class a extends Error {
 }
 class B {
   constructor(e, t = !0) {
-    s(this, "_name", "");
-    s(this, "_enabled", !0);
-    s(this, "el");
+    r(this, "_name", "");
+    r(this, "_enabled", !0);
+    r(this, "el");
     this.el = document.createElement("div"), this.el.classList.add("bartender__overlay"), this.name = e, this.enabled = t;
   }
   destroy() {
@@ -65,24 +65,24 @@ class B {
 }
 class O {
   constructor(e, t = {}) {
-    s(this, "ready", !1);
-    s(this, "overlayObj");
-    s(this, "_name", "");
-    s(this, "el");
-    s(this, "_position", "left");
-    s(this, "_mode", "float");
-    s(this, "_overlay", !0);
-    s(this, "permanent", !1);
-    s(this, "scrollTop", !0);
-    s(this, "isOpened", !1);
+    r(this, "ready", !1);
+    r(this, "overlayObj");
+    r(this, "_name", "");
+    r(this, "el");
+    r(this, "_position", "left");
+    r(this, "_mode", "float");
+    r(this, "_overlay", !0);
+    r(this, "permanent", !1);
+    r(this, "scrollTop", !0);
+    r(this, "isOpened", !1);
     var n, h, d, u, o;
     if (!e)
       throw "Bar name is required";
     this.overlayObj = new B(e, this.overlay), this.name = e;
-    const r = b(t.el || null);
-    if (!r)
+    const s = b(t.el || null);
+    if (!s)
       throw new a(`Content element for bar '${this.name}' is required`);
-    this.el = r, this.el.classList.add("bartender__bar"), this.position = (n = t.position) != null ? n : this.position, this.mode = (h = t.mode) != null ? h : this._mode, this.overlay = (d = t.overlay) != null ? d : this._overlay, this.permanent = (u = t.permanent) != null ? u : this.permanent, this.scrollTop = (o = t.scrollTop) != null ? o : this.scrollTop, this.ready = !0;
+    this.el = s, this.el.classList.add("bartender__bar"), this.position = (n = t.position) != null ? n : this.position, this.mode = (h = t.mode) != null ? h : this._mode, this.overlay = (d = t.overlay) != null ? d : this._overlay, this.permanent = (u = t.permanent) != null ? u : this.permanent, this.scrollTop = (o = t.scrollTop) != null ? o : this.scrollTop, this.ready = !0;
   }
   destroy(e = !1) {
     return e === !0 && this.el.remove(), this.overlayObj.destroy(), this;
@@ -182,10 +182,10 @@ class O {
 }
 class L {
   constructor(e = {}) {
-    s(this, "el");
-    s(this, "bars");
-    s(this, "modes");
-    s(this, "isPushed", !1);
+    r(this, "el");
+    r(this, "bars");
+    r(this, "modes");
+    r(this, "isPushed", !1);
     const t = b(e.el || null);
     if (!t)
       throw new a("Element is required for push element");
@@ -201,15 +201,15 @@ class L {
 class C {
   constructor(e = {}, t = {}) {
     // TODO: add support for focus traps
-    s(this, "queue");
-    s(this, "resizeDebounce");
-    s(this, "debug", !1);
-    s(this, "el");
-    s(this, "contentEl");
-    s(this, "switchTimeout", 150);
-    s(this, "bars", []);
-    s(this, "pushableElements", []);
-    s(this, "barDefaultOptions", {
+    r(this, "queue");
+    r(this, "resizeDebounce");
+    r(this, "debug", !1);
+    r(this, "el");
+    r(this, "contentEl");
+    r(this, "switchTimeout", 150);
+    r(this, "bars", []);
+    r(this, "pushableElements", []);
+    r(this, "barDefaultOptions", {
       el: null,
       position: "left",
       mode: "float",
@@ -217,14 +217,14 @@ class C {
       permanent: !1,
       scrollTop: !0
     });
-    s(this, "onKeydownHandler");
-    s(this, "onResizeHandler");
+    r(this, "onKeydownHandler");
+    r(this, "onResizeHandler");
     var h, d;
     this.debug = (h = e.debug) != null ? h : this.debug, this.switchTimeout = (d = e.switchTimeout) != null ? d : this.switchTimeout, this.barDefaultOptions = Object.assign(this.barDefaultOptions, t);
-    const r = b(e.el || ".bartender");
-    if (!r)
+    const s = b(e.el || ".bartender");
+    if (!s)
       throw new a("Main element is required");
-    this.el = r, this.el.classList.add("bartender");
+    this.el = s, this.el.classList.add("bartender");
     const n = b(e.contentEl || ".bartender__content");
     if (!n)
       throw new a("Content element is required");
@@ -236,7 +236,7 @@ class C {
         "push",
         "reveal"
       ]
-    }), this.queue = new _(1), this.resizeDebounce = g(() => {
+    }), this.queue = new g(1), this.resizeDebounce = _(() => {
       this.pushElements(this.getOpenBar());
     }, 100), this.onKeydownHandler = this.onKeydown.bind(this), window.addEventListener("keydown", this.onKeydownHandler), this.onResizeHandler = this.onResize.bind(this), window.addEventListener("resize", this.onResizeHandler), this.el.classList.add("bartender--ready"), this.el.dispatchEvent(new CustomEvent("bartender-init", {
       bubbles: !0,
@@ -245,9 +245,9 @@ class C {
   }
   destroy(e = !1) {
     return l(this, null, function* () {
-      const t = this.bars.reduce((r, n) => (r.push(n.name), r), []);
-      for (const r of t)
-        yield this.removeBar(r, e);
+      const t = this.bars.reduce((s, n) => (s.push(n.name), s), []);
+      for (const s of t)
+        this.getBar(s) && (yield this.removeBar(s, e));
       return this.el.classList.remove("bartender", "bartender--ready"), this.contentEl.classList.remove("bartender__content"), window.removeEventListener("keydown", this.onKeydownHandler), window.removeEventListener("resize", this.onResizeHandler), this.el.dispatchEvent(new CustomEvent("bartender-destroyed", {
         bubbles: !0,
         detail: { bartender: this }
@@ -260,30 +260,31 @@ class C {
   getOpenBar() {
     return this.bars.find((e) => e.isOpen() === !0) || null;
   }
+  // TODO: sanitize name
   addBar(e, t = {}) {
     var n;
     if (!e || typeof e != "string")
       throw new a("Bar name is required");
     if (this.getBar(e))
       throw new a(`Bar with name '${e}' is already defined`);
-    const r = new O(e, f(f({}, this.barDefaultOptions), t));
-    if (r.el.parentElement !== this.el)
-      throw new a(`Element of bar '${r.name}' must be a direct child of the Bartender main element`);
-    return (n = this.contentEl) == null || n.appendChild(r.overlayObj.el), r.overlayObj.el.addEventListener("click", () => {
-      r.permanent !== !0 && this.close();
-    }), this.bars.push(r), this.el.dispatchEvent(new CustomEvent("bartender-bar-added", {
+    const s = new O(e, f(f({}, this.barDefaultOptions), t));
+    if (s.el.parentElement !== this.el)
+      throw new a(`Element of bar '${s.name}' must be a direct child of the Bartender main element`);
+    return (n = this.contentEl) == null || n.appendChild(s.overlayObj.el), s.overlayObj.el.addEventListener("click", () => {
+      s.permanent !== !0 && this.close();
+    }), this.bars.push(s), this.el.dispatchEvent(new CustomEvent("bartender-bar-added", {
       bubbles: !0,
-      detail: { bar: r }
-    })), r;
+      detail: { bar: s }
+    })), s;
   }
   removeBar(e, t = !1) {
     return l(this, null, function* () {
       if (!e || typeof e != "string")
         throw new a("Bar name is required");
-      const r = this.getBar(e);
-      if (!r)
+      const s = this.getBar(e);
+      if (!s)
         throw new a(`Bar with name '${e}' was not found`);
-      this.getOpenBar() === r && (yield this.close()), r.destroy(t);
+      this.getOpenBar() === s && (yield this.close()), s.destroy(t);
       const n = this.bars.findIndex((h) => h.name === e);
       return this.bars.splice(n, 1), this.el.dispatchEvent(new CustomEvent("bartender-bar-removed", {
         bubbles: !0,
@@ -294,7 +295,12 @@ class C {
   openBar(e) {
     return l(this, null, function* () {
       const t = this.getBar(e);
-      return t ? t.isOpen() === !0 ? Promise.resolve(t) : (this.getOpenBar() && (yield this.closeBar(!1), yield p(this.switchTimeout)), this.el.classList.add("bartender--open"), this.pushElements(t), t.open()) : Promise.reject(new a(`Unknown bar '${e}'`));
+      if (!t)
+        return Promise.reject(new a(`Unknown bar '${e}'`));
+      if (t.isOpen() === !0)
+        return Promise.resolve(t);
+      const s = this.getOpenBar();
+      return s && (yield this.closeBar(s.name, !1), yield p(this.switchTimeout)), this.el.classList.add("bartender--open"), this.pushElements(t), t.open();
     });
   }
   open(e) {
@@ -305,17 +311,17 @@ class C {
       });
     });
   }
-  closeBar(e = !0) {
+  closeBar(e, t = !0) {
     return l(this, null, function* () {
-      const t = this.getOpenBar();
-      return t ? (this.pullElements(), yield t.close(), e === !0 && this.el.classList.remove("bartender--open"), Promise.resolve(t)) : Promise.resolve(null);
+      const s = e ? this.getBar(e) : this.getOpenBar();
+      return !s || !s.isOpen() ? Promise.resolve(null) : (this.pullElements(), yield s.close(), t === !0 && this.el.classList.remove("bartender--open"), Promise.resolve(s));
     });
   }
-  close() {
+  close(e) {
     return l(this, null, function* () {
-      const e = Symbol();
-      return yield this.queue.wait(e), this.closeBar().finally(() => {
-        this.queue.end(e);
+      const t = Symbol();
+      return yield this.queue.wait(t), this.closeBar(e).finally(() => {
+        this.queue.end(t);
       });
     });
   }
@@ -334,8 +340,8 @@ class C {
     if (!e || !this.pushableElements.length)
       return this.pushableElements;
     const t = e.getPushStyles();
-    for (const r of this.pushableElements)
-      r.push(e, t);
+    for (const s of this.pushableElements)
+      s.push(e, t);
     return this.pushableElements;
   }
   pullElements() {

@@ -1,5 +1,5 @@
 $bartender-bar-transition: transform 250ms ease !default;
-$bartender-overlay-transition: opacity 250ms ease !default;
+$bartender-overlay-transition: opacity 250ms ease, background-color 250ms ease !default;
 
 // html,
 // body {
@@ -124,10 +124,10 @@ $bartender-overlay-transition: opacity 250ms ease !default;
     right: 0;
     top: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     pointer-events: none;
     opacity: 0;
-    will-change: opacity;
+    will-change: opacity, background-color;
     transition: $bartender-overlay-transition;
 
     @media (prefers-reduced-motion) {
@@ -135,7 +135,7 @@ $bartender-overlay-transition: opacity 250ms ease !default;
     }
 
     &--transparent {
-      background: transparent;
+      background-color: transparent;
     }
 
     &--visible {
