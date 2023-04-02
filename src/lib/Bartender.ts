@@ -125,6 +125,7 @@ export class Bartender {
     return this.bars.find(item => item.isOpen() === true) || null
   }
 
+  // TODO: sanitize name
   public addBar (name: string, userOptions: BartenderBarOptions = {}): Bar | BartenderError {
     if (!name || typeof name !== 'string') throw new BartenderError('Bar name is required')
     if (this.getBar(name)) throw new BartenderError(`Bar with name '${name}' is already defined`)
@@ -183,8 +184,10 @@ export class Bartender {
     if (bar.isOpen() === true) return Promise.resolve(bar)
 
     // Close any open bar
-    if (this.getOpenBar()) {
-      await this.closeBar(false)
+    const openBar = this.getOpenBar()
+
+    if (openBar) {
+      await this.closeBar(openBar.name, false)
       await sleep(this.switchTimeout)
     }
 
@@ -203,9 +206,9 @@ export class Bartender {
     })
   }
 
-  private async closeBar (removeOpenClass = true): Promise<Bar | null> {
-    const bar = this.getOpenBar()
-    if (!bar) return Promise.resolve(null)
+  private async closeBar (name?: string, removeOpenClass = true): Promise<Bar | null> {
+    const bar = name ? this.getBar(name) : this.getOpenBar()
+    if (!bar || !bar.isOpen()) return Promise.resolve(null)
 
     this.pullElements()
     await bar.close()
@@ -215,11 +218,11 @@ export class Bartender {
     return Promise.resolve(bar)
   }
 
-  public async close (): Promise<Bar | null> {
+  public async close (name?: string): Promise<Bar | null> {
     const id = Symbol()
     await this.queue.wait(id)
 
-    return this.closeBar().finally(() => {
+    return this.closeBar(name).finally(() => {
       this.queue.end(id)
     })
   }
