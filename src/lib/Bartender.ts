@@ -32,6 +32,7 @@ export class Bartender {
     permanent: false,
     scrollTop: true,
   }
+  private onBarUpdateHandler
   private onKeydownHandler
   private onResizeHandler
 
@@ -74,6 +75,9 @@ export class Bartender {
     }, 100)
 
     // Add event listeners
+    this.onBarUpdateHandler = this.onBarUpdate.bind(this)
+    window.addEventListener('barUpdate', this.onBarUpdateHandler)
+
     this.onKeydownHandler = this.onKeydown.bind(this)
     window.addEventListener('keydown', this.onKeydownHandler)
 
@@ -106,6 +110,7 @@ export class Bartender {
     this.contentEl.classList.remove('bartender__content')
 
     // Remove event listeners
+    window.removeEventListener('barUpdate', this.onBarUpdateHandler)
     window.removeEventListener('keydown', this.onKeydownHandler)
     window.removeEventListener('resize', this.onResizeHandler)
 
@@ -126,7 +131,7 @@ export class Bartender {
   }
 
   // TODO: sanitize name
-  public addBar (name: string, userOptions: BartenderBarOptions = {}): Bar | BartenderError {
+  public addBar (name: string, userOptions: BartenderBarOptions = {}): Bar {
     if (!name || typeof name !== 'string') throw new BartenderError('Bar name is required')
     if (this.getBar(name)) throw new BartenderError(`Bar with name '${name}' is already defined`)
 
@@ -210,7 +215,7 @@ export class Bartender {
     const bar = name ? this.getBar(name) : this.getOpenBar()
     if (!bar || !bar.isOpen()) return Promise.resolve(null)
 
-    this.pullElements()
+    this.pullElements(bar)
     await bar.close()
 
     if (removeOpenClass === true) this.el.classList.remove('bartender--open')
@@ -241,7 +246,6 @@ export class Bartender {
     return pushElement
   }
 
-  // TODO: support pushing elements without transition
   private pushElements (bar: Bar | null): PushElement[] {
     if (!bar || !this.pushableElements.length) return this.pushableElements
 
@@ -254,14 +258,20 @@ export class Bartender {
     return this.pushableElements
   }
 
-  private pullElements (): PushElement[] {
-    if (!this.pushableElements.length) this.pushableElements
+  private pullElements (bar: Bar | null): PushElement[] {
+    if (!bar || !this.pushableElements.length) return this.pushableElements
+
+    const pushStyles = bar.getPushStyles()
 
     for (const item of this.pushableElements) {
-      item.pull()
+      item.pull(pushStyles)
     }
 
     return this.pushableElements
+  }
+
+  private onBarUpdate (): void {
+    this.pushElements(this.getOpenBar())
   }
 
   private onKeydown (event: KeyboardEvent): void {

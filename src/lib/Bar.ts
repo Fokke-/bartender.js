@@ -78,7 +78,7 @@ export class Bar {
     if (!validPositions.includes(position)) throw `Invalid position '${position}' for bar '${this.name}'. Use one of the following: ${validPositions.join(', ')}.`
 
     // Temporarily disable transition
-    if (this.el) this.el.style.transition = 'none'
+    this.el.classList.add('bartender-disable-transition')
 
     // Update element classes
     this.el.classList.remove(`bartender__bar--${this.position}`)
@@ -89,12 +89,12 @@ export class Bar {
 
     // Return transition
     setTimeout(() => {
-      if (this.el) this.el.style.transition = ''
+      this.el.classList.remove('bartender-disable-transition')
     })
 
     // If position was changed after bar was created,
-    // dispatch resize event to update pushable elements
-    if (this.ready === true) window.dispatchEvent(new Event('resize'))
+    // dispatch event to update pushable elements
+    if (this.ready === true) window.dispatchEvent(new CustomEvent('barUpdate'))
   }
 
   get mode () {
@@ -113,6 +113,9 @@ export class Bar {
 
     if (!validModes.includes(mode)) throw `Invalid mode '${mode}' for bar '${this.name}'. Use one of the following: ${validModes.join(', ')}.`
 
+    // Temporarily disable transition
+    this.el.classList.add('bartender-disable-transition')
+
     // Update element classes
     this.el.classList.remove(`bartender__bar--${this.mode}`)
     this.el.classList.add(`bartender__bar--${mode}`)
@@ -120,9 +123,14 @@ export class Bar {
     // Set new mode
     this._mode = mode
 
+    // Return transition
+    setTimeout(() => {
+      this.el.classList.remove('bartender-disable-transition')
+    })
+
     // If mode was changed after bar was created,
-    // dispatch resize event to update pushable elements
-    if (this.ready === true) window.dispatchEvent(new Event('resize'))
+    // dispatch event to update pushable elements
+    if (this.ready === true) window.dispatchEvent(new CustomEvent('barUpdate'))
   }
 
   get overlay () {

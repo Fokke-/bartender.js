@@ -46,10 +46,13 @@ export class PushElement {
     return this
   }
 
-  public pull (): this {
+  public pull (pushStyles: BartenderPushStyles): this {
     if (this.isPushed === false) return this
 
     this.el.style.transform = 'translateX(0) translateY(0)'
+    this.el.style.transitionTimingFunction = pushStyles.transitionTimingFunction
+    this.el.style.transitionDuration = pushStyles.transitionDuration
+    this.isPushed = false
 
     return this
   }

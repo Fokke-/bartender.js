@@ -143,4 +143,9 @@ $bartender-overlay-transition: opacity 250ms ease, background-color 250ms ease !
       opacity: 1;
     }
   }
+
+  // Utility class for disabling transition
+  &-disable-transition {
+    transition: none !important;
+  }
 }
