@@ -60,7 +60,6 @@ $bartender-overlay-transition: opacity 250ms ease, background-color 250ms ease !
       top: 0;
       width: 80%;
       max-width: 400px;
-      // TODO: is this what we are looking for?
       height: calc(100vh - calc(100vh - 100%));
 
       &.bartender__bar--open {
