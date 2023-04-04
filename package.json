@@ -24,12 +24,12 @@
     "README.md",
     "dist"
   ],
-  "types": "./dist/types/index.d.ts",
+  "types": "./dist/index.d.ts",
   "main": "./dist/Bartender.umd.js",
   "module": "./dist/Bartender.mjs",
   "exports": {
     ".": {
-      "types": "./dist/types/index.d.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/Bartender.mjs",
       "require": "./dist/Bartender.umd.js"
     },
