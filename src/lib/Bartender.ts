@@ -225,7 +225,7 @@ export class Bartender {
 
     // If we going to open right after closing the current one,
     // don't update elements yet.
-    if (switching === true) {
+    if (switching === false) {
       this.el.classList.remove('bartender--open')
       this.contentEl.setAttribute('aria-hidden', 'false')
     }
