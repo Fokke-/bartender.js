@@ -1,7 +1,8 @@
 import type {
   BartenderPushElementOptions,
   BartenderBarMode,
-  BartenderPushStyles
+  BartenderPushStyles,
+  BartenderBarPosition
 } from './types'
 import { BartenderError } from './BartenderError'
 import { Bar } from './Bar'
@@ -11,6 +12,7 @@ export class PushElement {
   private el: HTMLElement
   readonly bars: Bar[]
   readonly modes: BartenderBarMode[]
+  readonly positions: BartenderBarPosition[]
   private isPushed = false
 
   constructor (options: BartenderPushElementOptions = {}) {
@@ -21,6 +23,7 @@ export class PushElement {
 
     this.bars = options.bars || []
     this.modes = options.modes || []
+    this.positions = options.positions || []
   }
 
   public push (bar: Bar, pushStyles: BartenderPushStyles): this {
@@ -28,7 +31,8 @@ export class PushElement {
     // clear transition styles
     if (
       (this.bars.length && !this.bars.includes(bar)) ||
-      (this.modes.length && !this.modes.includes(bar.mode))
+      (this.modes.length && !this.modes.includes(bar.mode)) ||
+      (this.positions.length && !this.positions.includes(bar.position))
     ) {
       this.el.style.transform = ''
       this.el.style.transitionTimingFunction = ''

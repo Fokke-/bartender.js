@@ -14,31 +14,31 @@ window.bartender = new Bartender({
   contentEl: '.content',
 })
 
-const leftBar = window.bartender.addBar('left', {
+window.bartender.addBar('left', {
   el: '.bar--left',
   position: 'left',
   mode: 'push',
 })
 
-const rightBar = window.bartender.addBar('right', {
+window.bartender.addBar('right', {
   el: '.bar--right',
   position: 'right',
   mode: 'float',
 })
 
-const rightExtraBar = window.bartender.addBar('rightExtra', {
+window.bartender.addBar('rightExtra', {
   el: '.bar--rightExtra',
   position: 'right',
   mode: 'reveal',
 })
 
-const topBar = window.bartender.addBar('top', {
+window.bartender.addBar('top', {
   el: '.bar--top',
   position: 'top',
   mode: 'push',
 })
 
-const bottomBar = window.bartender.addBar('bottom', {
+window.bartender.addBar('bottom', {
   el: '.bar--bottom',
   position: 'bottom',
   mode: 'float',
@@ -47,7 +47,18 @@ const bottomBar = window.bartender.addBar('bottom', {
 
 const fixedBarBottom = document.querySelector('.toolBar--fixed.toolBar--bottom') as HTMLElement
 if (fixedBarBottom) {
-  window.bartender.addPushElement({ el: fixedBarBottom })
+  window.bartender.addPushElement({
+    el: fixedBarBottom,
+    positions: [
+      'left',
+      'right',
+      'bottom',
+    ],
+    modes: [
+      'push',
+      'reveal',
+    ],
+  })
 }
 
 const toggleButtons = document.querySelectorAll('.toggleButton')
