@@ -34,6 +34,8 @@ export class Bar {
     if (!el) throw new BartenderError(`Content element for bar '${this.name}' is required`)
     this.el = el
     this.el.classList.add('bartender__bar')
+    this.el.setAttribute('tabindex', '-1')
+    this.el.setAttribute('aria-hidden', 'true')
 
     this.position = options.position ?? this.position
     this.mode = options.mode ?? this._mode
@@ -199,6 +201,8 @@ export class Bar {
 
     if (this.scrollTop === true) this.el.scrollTo(0, 0)
     this.el.classList.add('bartender__bar--open')
+    this.el.setAttribute('aria-hidden', 'false')
+    this.el.focus()
     this.overlayObj.show()
     this.isOpened = true
 
@@ -220,6 +224,7 @@ export class Bar {
     }))
 
     this.el.classList.remove('bartender__bar--open')
+    this.el.setAttribute('aria-hidden', 'true')
     this.overlayObj.hide()
     this.isOpened = false
 

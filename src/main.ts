@@ -63,8 +63,8 @@ if (fixedBarBottom) {
 
 const toggleButtons = document.querySelectorAll('.toggleButton')
 for (const button of Array.from(toggleButtons)) {
-  button.addEventListener('click', () => {
-    window.bartender.toggle(button.getAttribute('data-bar') || '')
+  button.addEventListener('click', (event) => {
+    window.bartender.toggle(button.getAttribute('data-bar') || '', event.target as HTMLElement)
   })
 }
 

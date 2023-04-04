@@ -16,14 +16,11 @@ import { PushElement } from './PushElement'
 export class Bartender {
   // TODO: add support for focus traps
 
-  private queue: Queue
-  private resizeDebounce
   public debug = false
   readonly el: HTMLElement
   readonly contentEl: HTMLElement
   readonly switchTimeout: number = 150
   readonly bars: Bar[] = []
-  private pushableElements: PushElement[] = []
   readonly barDefaultOptions: BartenderBarOptions = {
     el: null,
     position: 'left',
@@ -32,6 +29,10 @@ export class Bartender {
     permanent: false,
     scrollTop: true,
   }
+  private previousOpenButton?: HTMLElement | null = null
+  private pushableElements: PushElement[] = []
+  private queue: Queue
+  private resizeDebounce
   private onBarUpdateHandler
   private onKeydownHandler
   private onResizeHandler
@@ -56,6 +57,7 @@ export class Bartender {
     if (contentEl.parentElement !== this.el) throw new BartenderError('Content element must be a direct child of the main element')
     this.contentEl = contentEl
     this.contentEl.classList.add('bartender__content')
+    this.contentEl.setAttribute('tabindex', '-1')
 
     // Register content element as pushable element
     this.addPushElement({
@@ -191,33 +193,42 @@ export class Bartender {
     const openBar = this.getOpenBar()
 
     if (openBar) {
-      await this.closeBar(openBar.name, false)
+      await this.closeBar(openBar.name, true)
       await sleep(this.switchTimeout)
     }
 
     this.el.classList.add('bartender--open')
+    this.contentEl.setAttribute('aria-hidden', 'true')
     this.pushElements(bar)
 
     return bar.open()
   }
 
-  public async open (name: string): Promise<Bar | Error> {
+  public async open (name: string, button?: HTMLElement | null): Promise<Bar | Error> {
     const id = Symbol()
     await this.queue.wait(id)
+
+    // Store reference to the button which was used to open the bar.
+    this.previousOpenButton = button
 
     return this.openBar(name).finally(() => {
       this.queue.end(id)
     })
   }
 
-  private async closeBar (name?: string, removeOpenClass = true): Promise<Bar | null> {
+  private async closeBar (name?: string, switching = false): Promise<Bar | null> {
     const bar = name ? this.getBar(name) : this.getOpenBar()
     if (!bar || !bar.isOpen()) return Promise.resolve(null)
 
     this.pullElements(bar)
     await bar.close()
 
-    if (removeOpenClass === true) this.el.classList.remove('bartender--open')
+    // If we going to open right after closing the current one,
+    // don't update elements yet.
+    if (switching === true) {
+      this.el.classList.remove('bartender--open')
+      this.contentEl.setAttribute('aria-hidden', 'false')
+    }
 
     return Promise.resolve(bar)
   }
@@ -228,14 +239,22 @@ export class Bartender {
 
     return this.closeBar(name).finally(() => {
       this.queue.end(id)
+
+      // Focus to the previous open button
+      if (this.previousOpenButton) {
+        this.previousOpenButton.focus()
+        this.previousOpenButton = null
+      } else {
+        this.contentEl.focus()
+      }
     })
   }
 
-  public async toggle (name: string): Promise<Bar | BartenderError | null> {
+  public async toggle (name: string, button?: HTMLElement | null): Promise<Bar | BartenderError | null> {
     const bar = this.getBar(name)
     if (!bar) return Promise.reject(new BartenderError(`Unknown bar '${name}'`))
 
-    return (bar.isOpen() === true) ? this.close() : this.open(name)
+    return (bar.isOpen() === true) ? this.close() : this.open(name, button)
   }
 
   public addPushElement (options: BartenderPushElementOptions = {}): PushElement {
