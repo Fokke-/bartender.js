@@ -1,16 +1,16 @@
 var v = Object.defineProperty;
 var w = Object.getOwnPropertySymbols;
 var y = Object.prototype.hasOwnProperty, E = Object.prototype.propertyIsEnumerable;
-var m = (i, e, t) => e in i ? v(i, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : i[e] = t, f = (i, e) => {
+var m = (r, e, t) => e in r ? v(r, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : r[e] = t, p = (r, e) => {
   for (var t in e || (e = {}))
-    y.call(e, t) && m(i, t, e[t]);
+    y.call(e, t) && m(r, t, e[t]);
   if (w)
     for (var t of w(e))
-      E.call(e, t) && m(i, t, e[t]);
-  return i;
+      E.call(e, t) && m(r, t, e[t]);
+  return r;
 };
-var r = (i, e, t) => (m(i, typeof e != "symbol" ? e + "" : e, t), t);
-var l = (i, e, t) => new Promise((s, n) => {
+var i = (r, e, t) => (m(r, typeof e != "symbol" ? e + "" : e, t), t);
+var l = (r, e, t) => new Promise((s, n) => {
   var h = (o) => {
     try {
       u(t.next(o));
@@ -24,11 +24,11 @@ var l = (i, e, t) => new Promise((s, n) => {
       n(c);
     }
   }, u = (o) => o.done ? s(o.value) : Promise.resolve(o.value).then(h, d);
-  u((t = t.apply(i, e)).next());
+  u((t = t.apply(r, e)).next());
 });
 import { Queue as g } from "async-await-queue";
 import { debounce as _ } from "ts-debounce";
-const b = (i) => i ? typeof i == "string" ? document.querySelector(i) : i instanceof Element ? i : null : null, p = (i = 100) => new Promise((e) => i ? setTimeout(e, i) : e());
+const b = (r) => r ? typeof r == "string" ? document.querySelector(r) : r instanceof Element ? r : null : null, f = (r = 100) => new Promise((e) => r ? setTimeout(e, r) : e());
 class a extends Error {
   constructor(e) {
     super(e), this.name = "Bartender error";
@@ -36,10 +36,16 @@ class a extends Error {
 }
 class B {
   constructor(e, t = !0) {
-    r(this, "_name", "");
-    r(this, "_enabled", !0);
-    r(this, "el");
-    this.el = document.createElement("div"), this.el.classList.add("bartender__overlay"), this.name = e, this.enabled = t;
+    i(this, "_name", "");
+    i(this, "_enabled", !0);
+    i(this, "el");
+    this.el = document.createElement("div"), this.el.classList.add("bartender__overlay");
+    try {
+      this.name = e;
+    } catch (s) {
+      throw s instanceof DOMException ? new a(`Name '${e}' is not valid HTML class name`) : new a(s);
+    }
+    this.enabled = t;
   }
   destroy() {
     return this.el.remove(), this;
@@ -63,18 +69,18 @@ class B {
     return this.el.classList.remove("bartender__overlay--visible"), this;
   }
 }
-class O {
+class L {
   constructor(e, t = {}) {
-    r(this, "ready", !1);
-    r(this, "overlayObj");
-    r(this, "_name", "");
-    r(this, "el");
-    r(this, "_position", "left");
-    r(this, "_mode", "float");
-    r(this, "_overlay", !0);
-    r(this, "permanent", !1);
-    r(this, "scrollTop", !0);
-    r(this, "isOpened", !1);
+    i(this, "ready", !1);
+    i(this, "overlayObj");
+    i(this, "_name", "");
+    i(this, "el");
+    i(this, "_position", "left");
+    i(this, "_mode", "float");
+    i(this, "_overlay", !0);
+    i(this, "permanent", !1);
+    i(this, "scrollTop", !0);
+    i(this, "isOpened", !1);
     var n, h, d, u, o;
     if (!e)
       throw "Bar name is required";
@@ -107,9 +113,9 @@ class O {
     ];
     if (!t.includes(e))
       throw `Invalid position '${e}' for bar '${this.name}'. Use one of the following: ${t.join(", ")}.`;
-    this.el && (this.el.style.transition = "none"), this.el.classList.remove(`bartender__bar--${this.position}`), this.el.classList.add(`bartender__bar--${e}`), this._position = e, setTimeout(() => {
-      this.el && (this.el.style.transition = "");
-    }), this.ready === !0 && window.dispatchEvent(new Event("resize"));
+    this.el.classList.add("bartender-disable-transition"), this.el.classList.remove(`bartender__bar--${this.position}`), this.el.classList.add(`bartender__bar--${e}`), this._position = e, setTimeout(() => {
+      this.el.classList.remove("bartender-disable-transition");
+    }), this.ready === !0 && window.dispatchEvent(new CustomEvent("barUpdate"));
   }
   get mode() {
     return this._mode;
@@ -124,7 +130,9 @@ class O {
     ];
     if (!t.includes(e))
       throw `Invalid mode '${e}' for bar '${this.name}'. Use one of the following: ${t.join(", ")}.`;
-    this.el.classList.remove(`bartender__bar--${this.mode}`), this.el.classList.add(`bartender__bar--${e}`), this._mode = e, this.ready === !0 && window.dispatchEvent(new Event("resize"));
+    this.el.classList.add("bartender-disable-transition"), this.el.classList.remove(`bartender__bar--${this.mode}`), this.el.classList.add(`bartender__bar--${e}`), this._mode = e, setTimeout(() => {
+      this.el.classList.remove("bartender-disable-transition");
+    }), this.ready === !0 && window.dispatchEvent(new CustomEvent("barUpdate"));
   }
   get overlay() {
     return this._overlay;
@@ -146,7 +154,7 @@ class O {
       return this.el.dispatchEvent(new CustomEvent("bartender-bar-before-open", {
         bubbles: !0,
         detail: { bar: this }
-      })), this.scrollTop === !0 && this.el.scrollTo(0, 0), this.el.classList.add("bartender__bar--open"), this.overlayObj.show(), this.isOpened = !0, yield p(this.getTransitionDuration()), this.el.dispatchEvent(new CustomEvent("bartender-bar-after-open", {
+      })), this.scrollTop === !0 && this.el.scrollTo(0, 0), this.el.classList.add("bartender__bar--open"), this.overlayObj.show(), this.isOpened = !0, yield f(this.getTransitionDuration()), this.el.dispatchEvent(new CustomEvent("bartender-bar-after-open", {
         bubbles: !0,
         detail: { bar: this }
       })), Promise.resolve(this);
@@ -157,7 +165,7 @@ class O {
       return this.el.dispatchEvent(new CustomEvent("bartender-bar-before-close", {
         bubbles: !0,
         detail: { bar: this }
-      })), this.el.classList.remove("bartender__bar--open"), this.overlayObj.hide(), this.isOpened = !1, yield p(this.getTransitionDuration()), this.el.dispatchEvent(new CustomEvent("bartender-bar-after-close", {
+      })), this.el.classList.remove("bartender__bar--open"), this.overlayObj.hide(), this.isOpened = !1, yield f(this.getTransitionDuration()), this.el.dispatchEvent(new CustomEvent("bartender-bar-after-close", {
         bubbles: !0,
         detail: { bar: this }
       })), Promise.resolve(this);
@@ -180,36 +188,37 @@ class O {
     };
   }
 }
-class L {
+class O {
   constructor(e = {}) {
-    r(this, "el");
-    r(this, "bars");
-    r(this, "modes");
-    r(this, "isPushed", !1);
+    i(this, "el");
+    i(this, "bars");
+    i(this, "modes");
+    i(this, "positions");
+    i(this, "isPushed", !1);
     const t = b(e.el || null);
     if (!t)
       throw new a("Element is required for push element");
-    this.el = t, this.bars = e.bars || [], this.modes = e.modes || [];
+    this.el = t, this.bars = e.bars || [], this.modes = e.modes || [], this.positions = e.positions || [];
   }
   push(e, t) {
-    return this.bars.length && !this.bars.includes(e) || this.modes.length && !this.modes.includes(e.mode) ? (this.el.style.transform = "", this.el.style.transitionTimingFunction = "", this.el.style.transitionDuration = "", this.isPushed = !1, this) : (this.el.style.transform = t.transform, this.el.style.transitionTimingFunction = t.transitionTimingFunction, this.el.style.transitionDuration = t.transitionDuration, this.isPushed = !0, this);
+    return this.bars.length && !this.bars.includes(e) || this.modes.length && !this.modes.includes(e.mode) || this.positions.length && !this.positions.includes(e.position) ? (this.el.style.transform = "", this.el.style.transitionTimingFunction = "", this.el.style.transitionDuration = "", this.isPushed = !1, this) : (this.el.style.transform = t.transform, this.el.style.transitionTimingFunction = t.transitionTimingFunction, this.el.style.transitionDuration = t.transitionDuration, this.isPushed = !0, this);
   }
-  pull() {
-    return this.isPushed === !1 ? this : (this.el.style.transform = "translateX(0) translateY(0)", this);
+  pull(e) {
+    return this.isPushed === !1 ? this : (this.el.style.transform = "translateX(0) translateY(0)", this.el.style.transitionTimingFunction = e.transitionTimingFunction, this.el.style.transitionDuration = e.transitionDuration, this.isPushed = !1, this);
   }
 }
-class C {
+class D {
   constructor(e = {}, t = {}) {
     // TODO: add support for focus traps
-    r(this, "queue");
-    r(this, "resizeDebounce");
-    r(this, "debug", !1);
-    r(this, "el");
-    r(this, "contentEl");
-    r(this, "switchTimeout", 150);
-    r(this, "bars", []);
-    r(this, "pushableElements", []);
-    r(this, "barDefaultOptions", {
+    i(this, "queue");
+    i(this, "resizeDebounce");
+    i(this, "debug", !1);
+    i(this, "el");
+    i(this, "contentEl");
+    i(this, "switchTimeout", 150);
+    i(this, "bars", []);
+    i(this, "pushableElements", []);
+    i(this, "barDefaultOptions", {
       el: null,
       position: "left",
       mode: "float",
@@ -217,8 +226,9 @@ class C {
       permanent: !1,
       scrollTop: !0
     });
-    r(this, "onKeydownHandler");
-    r(this, "onResizeHandler");
+    i(this, "onBarUpdateHandler");
+    i(this, "onKeydownHandler");
+    i(this, "onResizeHandler");
     var h, d;
     this.debug = (h = e.debug) != null ? h : this.debug, this.switchTimeout = (d = e.switchTimeout) != null ? d : this.switchTimeout, this.barDefaultOptions = Object.assign(this.barDefaultOptions, t);
     const s = b(e.el || ".bartender");
@@ -238,7 +248,7 @@ class C {
       ]
     }), this.queue = new g(1), this.resizeDebounce = _(() => {
       this.pushElements(this.getOpenBar());
-    }, 100), this.onKeydownHandler = this.onKeydown.bind(this), window.addEventListener("keydown", this.onKeydownHandler), this.onResizeHandler = this.onResize.bind(this), window.addEventListener("resize", this.onResizeHandler), this.el.classList.add("bartender--ready"), this.el.dispatchEvent(new CustomEvent("bartender-init", {
+    }, 100), this.onBarUpdateHandler = this.onBarUpdate.bind(this), window.addEventListener("barUpdate", this.onBarUpdateHandler), this.onKeydownHandler = this.onKeydown.bind(this), window.addEventListener("keydown", this.onKeydownHandler), this.onResizeHandler = this.onResize.bind(this), window.addEventListener("resize", this.onResizeHandler), this.el.classList.add("bartender--ready"), this.el.dispatchEvent(new CustomEvent("bartender-init", {
       bubbles: !0,
       detail: { bartender: this }
     }));
@@ -248,7 +258,7 @@ class C {
       const t = this.bars.reduce((s, n) => (s.push(n.name), s), []);
       for (const s of t)
         this.getBar(s) && (yield this.removeBar(s, e));
-      return this.el.classList.remove("bartender", "bartender--ready"), this.contentEl.classList.remove("bartender__content"), window.removeEventListener("keydown", this.onKeydownHandler), window.removeEventListener("resize", this.onResizeHandler), this.el.dispatchEvent(new CustomEvent("bartender-destroyed", {
+      return this.el.classList.remove("bartender", "bartender--ready"), this.contentEl.classList.remove("bartender__content"), window.removeEventListener("barUpdate", this.onBarUpdateHandler), window.removeEventListener("keydown", this.onKeydownHandler), window.removeEventListener("resize", this.onResizeHandler), this.el.dispatchEvent(new CustomEvent("bartender-destroyed", {
         bubbles: !0,
         detail: { bartender: this }
       })), Promise.resolve(this);
@@ -260,14 +270,13 @@ class C {
   getOpenBar() {
     return this.bars.find((e) => e.isOpen() === !0) || null;
   }
-  // TODO: sanitize name
   addBar(e, t = {}) {
     var n;
     if (!e || typeof e != "string")
       throw new a("Bar name is required");
     if (this.getBar(e))
       throw new a(`Bar with name '${e}' is already defined`);
-    const s = new O(e, f(f({}, this.barDefaultOptions), t));
+    const s = new L(e, p(p({}, this.barDefaultOptions), t));
     if (s.el.parentElement !== this.el)
       throw new a(`Element of bar '${s.name}' must be a direct child of the Bartender main element`);
     return (n = this.contentEl) == null || n.appendChild(s.overlayObj.el), s.overlayObj.el.addEventListener("click", () => {
@@ -300,7 +309,7 @@ class C {
       if (t.isOpen() === !0)
         return Promise.resolve(t);
       const s = this.getOpenBar();
-      return s && (yield this.closeBar(s.name, !1), yield p(this.switchTimeout)), this.el.classList.add("bartender--open"), this.pushElements(t), t.open();
+      return s && (yield this.closeBar(s.name, !1), yield f(this.switchTimeout)), this.el.classList.add("bartender--open"), this.pushElements(t), t.open();
     });
   }
   open(e) {
@@ -314,7 +323,7 @@ class C {
   closeBar(e, t = !0) {
     return l(this, null, function* () {
       const s = e ? this.getBar(e) : this.getOpenBar();
-      return !s || !s.isOpen() ? Promise.resolve(null) : (this.pullElements(), yield s.close(), t === !0 && this.el.classList.remove("bartender--open"), Promise.resolve(s));
+      return !s || !s.isOpen() ? Promise.resolve(null) : (this.pullElements(s), yield s.close(), t === !0 && this.el.classList.remove("bartender--open"), Promise.resolve(s));
     });
   }
   close(e) {
@@ -332,10 +341,9 @@ class C {
     });
   }
   addPushElement(e = {}) {
-    const t = new L(e);
+    const t = new O(e);
     return this.pushableElements.push(t), t;
   }
-  // TODO: support pushing elements without transition
   pushElements(e) {
     if (!e || !this.pushableElements.length)
       return this.pushableElements;
@@ -344,11 +352,16 @@ class C {
       s.push(e, t);
     return this.pushableElements;
   }
-  pullElements() {
-    this.pushableElements.length || this.pushableElements;
-    for (const e of this.pushableElements)
-      e.pull();
+  pullElements(e) {
+    if (!e || !this.pushableElements.length)
+      return this.pushableElements;
+    const t = e.getPushStyles();
+    for (const s of this.pushableElements)
+      s.pull(t);
     return this.pushableElements;
+  }
+  onBarUpdate() {
+    this.pushElements(this.getOpenBar());
   }
   onKeydown(e) {
     if (e.key === "Escape") {
@@ -363,5 +376,5 @@ class C {
   }
 }
 export {
-  C as Bartender
+  D as Bartender
 };

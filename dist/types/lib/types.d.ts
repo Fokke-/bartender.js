@@ -24,6 +24,7 @@ export interface BartenderPushElementOptions {
   el?: BartenderElementQuery,
   bars?: Bar[],
   modes?: BartenderBarMode[]
+  positions?: BartenderBarPosition[]
 }
 
 export interface BartenderPushStyles {

@@ -12,13 +12,14 @@ export declare class Bartender {
     readonly bars: Bar[];
     private pushableElements;
     private barDefaultOptions;
+    private onBarUpdateHandler;
     private onKeydownHandler;
     private onResizeHandler;
     constructor(options?: BartenderOptions, barOptions?: BartenderBarOptions);
     destroy(removeBarElements?: boolean): Promise<this>;
     getBar(name: string): Bar | null;
     private getOpenBar;
-    addBar(name: string, userOptions?: BartenderBarOptions): Bar | BartenderError;
+    addBar(name: string, userOptions?: BartenderBarOptions): Bar;
     removeBar(name: string, removeElement?: boolean): Promise<this>;
     private openBar;
     open(name: string): Promise<Bar | Error>;
@@ -28,6 +29,7 @@ export declare class Bartender {
     addPushElement(options?: BartenderPushElementOptions): PushElement;
     private pushElements;
     private pullElements;
+    private onBarUpdate;
     private onKeydown;
     private onResize;
 }
