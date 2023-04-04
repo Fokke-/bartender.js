@@ -130,7 +130,6 @@ export class Bartender {
     return this.bars.find(item => item.isOpen() === true) || null
   }
 
-  // TODO: sanitize name
   public addBar (name: string, userOptions: BartenderBarOptions = {}): Bar {
     if (!name || typeof name !== 'string') throw new BartenderError('Bar name is required')
     if (this.getBar(name)) throw new BartenderError(`Bar with name '${name}' is already defined`)
