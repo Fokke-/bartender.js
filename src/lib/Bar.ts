@@ -19,8 +19,8 @@ export class Bar {
   private _position: BartenderBarPosition = 'left'
   private _mode: BartenderBarMode = 'float'
   private _overlay = true
-  public permanent = false
-  public scrollTop = true
+  private _permanent = false
+  private _scrollTop = true
   private isOpened = false
 
   constructor (name: string, options: BartenderBarOptions = {}) {
@@ -38,8 +38,8 @@ export class Bar {
     this.position = options.position ?? this.position
     this.mode = options.mode ?? this._mode
     this.overlay = options.overlay ?? this._overlay
-    this.permanent = options.permanent ?? this.permanent
-    this.scrollTop = options.scrollTop ?? this.scrollTop
+    this.permanent = options.permanent ?? this._permanent
+    this.scrollTop = options.scrollTop ?? this._scrollTop
 
     this.ready = true
   }
@@ -94,7 +94,10 @@ export class Bar {
 
     // If position was changed after bar was created,
     // dispatch event to update pushable elements
-    if (this.ready === true) window.dispatchEvent(new CustomEvent('barUpdate'))
+    if (this.ready === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
+      bubbles: true,
+      detail: { bar: this },
+    }))
   }
 
   get mode () {
@@ -130,16 +133,50 @@ export class Bar {
 
     // If mode was changed after bar was created,
     // dispatch event to update pushable elements
-    if (this.ready === true) window.dispatchEvent(new CustomEvent('barUpdate'))
+    if (this.ready === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
+      bubbles: true,
+      detail: { bar: this },
+    }))
   }
 
   get overlay () {
     return this._overlay
   }
 
-  set overlay (val) {
+  set overlay (val: boolean) {
     this.overlayObj.enabled = val
     this._overlay = val
+
+    if (this.ready === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
+      bubbles: true,
+      detail: { bar: this },
+    }))
+  }
+
+  get permanent () {
+    return this._permanent
+  }
+
+  set permanent (val: boolean) {
+    this._permanent = val
+
+    if (this.ready === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
+      bubbles: true,
+      detail: { bar: this },
+    }))
+  }
+
+  get scrollTop () {
+    return this._scrollTop
+  }
+
+  set scrollTop (val: boolean) {
+    this._scrollTop = val
+
+    if (this.ready === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
+      bubbles: true,
+      detail: { bar: this },
+    }))
   }
 
   public isOpen (): boolean {
