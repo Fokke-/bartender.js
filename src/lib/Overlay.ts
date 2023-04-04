@@ -1,3 +1,5 @@
+import { BartenderError } from './BartenderError'
+
 export class Overlay {
   private _name = ''
   private _enabled = true
@@ -7,7 +9,14 @@ export class Overlay {
     this.el = document.createElement('div')
     this.el.classList.add('bartender__overlay')
 
-    this.name = name
+    try {
+      this.name = name
+    } catch (error) {
+      if (error instanceof DOMException) throw new BartenderError(`Name '${name}' is not valid HTML class name`)
+
+      throw new BartenderError(error as string)
+    }
+
     this.enabled = enabled
   }
 
