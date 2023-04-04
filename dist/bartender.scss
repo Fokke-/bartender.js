@@ -18,6 +18,13 @@ $bartender-overlay-transition: opacity 250ms ease, background-color 250ms ease !
   margin: 0 !important;
 }
 
+.bartender__content,
+.bartender__bar {
+  &:focus {
+    outline: 0;
+  }
+}
+
 .bartender {
   min-height: 100vh;
 
