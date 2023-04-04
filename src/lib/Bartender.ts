@@ -24,7 +24,7 @@ export class Bartender {
   readonly switchTimeout: number = 150
   readonly bars: Bar[] = []
   private pushableElements: PushElement[] = []
-  private barDefaultOptions: BartenderBarOptions = {
+  readonly barDefaultOptions: BartenderBarOptions = {
     el: null,
     position: 'left',
     mode: 'float',
@@ -76,7 +76,7 @@ export class Bartender {
 
     // Add event listeners
     this.onBarUpdateHandler = this.onBarUpdate.bind(this)
-    window.addEventListener('barUpdate', this.onBarUpdateHandler)
+    window.addEventListener('bartender-bar-update', this.onBarUpdateHandler)
 
     this.onKeydownHandler = this.onKeydown.bind(this)
     window.addEventListener('keydown', this.onKeydownHandler)
@@ -110,7 +110,7 @@ export class Bartender {
     this.contentEl.classList.remove('bartender__content')
 
     // Remove event listeners
-    window.removeEventListener('barUpdate', this.onBarUpdateHandler)
+    window.removeEventListener('bartender-bar-update', this.onBarUpdateHandler)
     window.removeEventListener('keydown', this.onKeydownHandler)
     window.removeEventListener('resize', this.onResizeHandler)
 
