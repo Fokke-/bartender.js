@@ -11,7 +11,7 @@ export declare class Bartender {
     readonly switchTimeout: number;
     readonly bars: Bar[];
     private pushableElements;
-    private barDefaultOptions;
+    readonly barDefaultOptions: BartenderBarOptions;
     private onBarUpdateHandler;
     private onKeydownHandler;
     private onResizeHandler;

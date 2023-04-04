@@ -8,8 +8,8 @@ export declare class Bar {
     private _position;
     private _mode;
     private _overlay;
-    permanent: boolean;
-    scrollTop: boolean;
+    private _permanent;
+    private _scrollTop;
     private isOpened;
     constructor(name: string, options?: BartenderBarOptions);
     destroy(removeElement?: boolean): this;
@@ -21,6 +21,10 @@ export declare class Bar {
     set mode(mode: BartenderBarMode);
     get overlay(): boolean;
     set overlay(val: boolean);
+    get permanent(): boolean;
+    set permanent(val: boolean);
+    get scrollTop(): boolean;
+    set scrollTop(val: boolean);
     isOpen(): boolean;
     getTransitionDuration(): number;
     open(): Promise<this>;

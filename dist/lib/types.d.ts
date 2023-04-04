@@ -14,7 +14,7 @@ export interface BartenderOptions {
 export interface BartenderBarOptions {
   el?: BartenderElementQuery,
   position?: BartenderBarPosition,
-  mode?: 'float' | 'push' | 'reveal',
+  mode?: BartenderBarMode,
   overlay?: boolean,
   permanent?: boolean,
   scrollTop?: boolean,
