@@ -60,7 +60,6 @@ export default defineConfig({
     dts({
       skipDiagnostics: false,
       copyDtsFiles: true,
-      outputDir: './dist/types',
     }),
     viteStaticCopy({
       targets: [
