@@ -17,6 +17,7 @@ module.exports = {
     sourceType: 'module',
   },
   ignorePatterns: [
+    'node_modules/**',
     'dist/**',
   ],
   rules: {
