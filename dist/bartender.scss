@@ -1,42 +1,22 @@
 $bartender-bar-transition: transform 250ms ease !default;
 $bartender-overlay-transition: opacity 250ms ease, background-color 250ms ease !default;
 
-// html,
-// body {
-//   height: 100%;
-// }
-
-// body {
-//   margin: 0;
-//   padding: 0;
-// }
-
-.bartender,
-.bartender__content,
-.bartender__bar {
-  box-sizing: border-box !important;
-  margin: 0 !important;
-}
-
-.bartender__content,
-.bartender__bar {
-  &:focus {
-    outline: 0;
-  }
-}
-
 .bartender {
+  box-sizing: border-box !important;
   min-height: 100vh;
+  margin: 0 !important;
 
   &--open {
     overflow: hidden !important;
   }
 
   &__content {
+    box-sizing: border-box !important;
     z-index: 2;
     position: relative;
     width: 100%;
     min-height: 100vh;
+    margin: 0 !important;
     background: #fff;
     will-change: transform;
     transition-property: transform;
@@ -47,12 +27,18 @@ $bartender-overlay-transition: opacity 250ms ease, background-color 250ms ease !
   }
 
   &__bar {
+    box-sizing: border-box !important;
     z-index: 9999;
     position: fixed;
     overflow: auto;
+    margin: 0 !important;
     background-color: #fff;
     will-change: transform;
     transition: $bartender-bar-transition;
+
+    &:focus {
+      outline: 0;
+    }
 
     @media (prefers-reduced-motion) {
       transition: none !important;
