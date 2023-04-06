@@ -26,13 +26,11 @@
     "dist"
   ],
   "types": "./dist/index.d.ts",
-  "main": "./dist/Bartender.umd.cjs",
   "module": "./dist/Bartender.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/Bartender.js",
-      "require": "./dist/Bartender.umd.cjs"
+      "import": "./dist/Bartender.js"
     },
     "./dist/bartender.scss": {
       "import": "./dist/bartender.scss",
