@@ -3,6 +3,7 @@ import type {
   BartenderBarOptions,
   BartenderPushElementOptions
 } from './types'
+import * as focusTrap from 'focus-trap'
 import { Queue } from 'async-await-queue'
 import { debounce } from 'ts-debounce'
 import {
@@ -14,12 +15,13 @@ import { Bar } from './Bar'
 import { PushElement } from './PushElement'
 
 export class Bartender {
-  // TODO: add support for focus traps
+  // TODO: add debug mode
 
   public debug = false
   readonly el: HTMLElement
   readonly contentEl: HTMLElement
   readonly switchTimeout: number = 150
+  readonly focusTrap: boolean = false
   readonly bars: Bar[] = []
   readonly barDefaultOptions: BartenderBarOptions = {
     el: null,
@@ -31,6 +33,7 @@ export class Bartender {
   }
   private previousOpenButton?: HTMLElement | null = null
   private pushableElements: PushElement[] = []
+  private trap: focusTrap.FocusTrap | null = null
   private queue: Queue
   private resizeDebounce
   private onBarUpdateHandler
@@ -43,7 +46,12 @@ export class Bartender {
   ) {
     this.debug = options.debug ?? this.debug
     this.switchTimeout = options.switchTimeout ?? this.switchTimeout
-    this.barDefaultOptions = Object.assign(this.barDefaultOptions, barOptions)
+    this.focusTrap = options.focusTrap ?? this.focusTrap
+    this.barDefaultOptions = {
+      ...this.barDefaultOptions,
+      ...barOptions,
+      focusTrap: this.focusTrap,
+    }
 
     // Get main element
     const el = resolveElement(options.el || '.bartender')
@@ -67,6 +75,30 @@ export class Bartender {
         'reveal',
       ],
     })
+
+    // Create focus trap
+    if (this.focusTrap === true) {
+      const containerNodes: HTMLElement[] = [
+        this.contentEl,
+      ]
+
+      const fixedContainer = this.el.querySelector('.bartender__fixed')
+      if (fixedContainer) containerNodes.push(fixedContainer as HTMLElement)
+
+      // TODO: support adding extra elements here
+      this.trap = focusTrap.createFocusTrap(containerNodes, {
+        initialFocus: this.contentEl,
+        fallbackFocus: () => {
+          return this.contentEl
+        },
+        escapeDeactivates: false,
+        clickOutsideDeactivates: false,
+        allowOutsideClick: false,
+        returnFocusOnDeactivate: false,
+        preventScroll: true,
+      })
+      this.trap.activate()
+    }
 
     // Initialize queue
     this.queue = new Queue(1)
@@ -110,6 +142,9 @@ export class Bartender {
     // Remove classes
     this.el.classList.remove('bartender', 'bartender--ready')
     this.contentEl.classList.remove('bartender__content')
+
+    // Destroy focus trap
+    if (this.trap) this.trap.deactivate()
 
     // Remove event listeners
     window.removeEventListener('bartender-bar-update', this.onBarUpdateHandler)
@@ -197,6 +232,7 @@ export class Bartender {
       await sleep(this.switchTimeout)
     }
 
+    if (this.trap) this.trap.pause()
     this.el.classList.add('bartender--open')
     this.contentEl.setAttribute('aria-hidden', 'true')
     this.pushElements(bar)
@@ -236,6 +272,8 @@ export class Bartender {
   public async close (name?: string): Promise<Bar | null> {
     const id = Symbol()
     await this.queue.wait(id)
+
+    if (this.trap) this.trap.unpause()
 
     return this.closeBar(name).finally(() => {
       this.queue.end(id)

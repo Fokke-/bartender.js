@@ -4,6 +4,7 @@ import type {
   BartenderBarMode,
   BartenderPushStyles
 } from './types'
+import * as focusTrap from 'focus-trap'
 import { BartenderError } from './BartenderError'
 import { Overlay } from './Overlay'
 import {
@@ -21,7 +22,9 @@ export class Bar {
   private _overlay = true
   private _permanent = false
   private _scrollTop = true
+  private focusTrap = false
   private isOpened = false
+  private trap: focusTrap.FocusTrap | null = null
 
   constructor (name: string, options: BartenderBarOptions = {}) {
     if (!name) throw 'Bar name is required'
@@ -42,12 +45,28 @@ export class Bar {
     this.overlay = options.overlay ?? this._overlay
     this.permanent = options.permanent ?? this._permanent
     this.scrollTop = options.scrollTop ?? this._scrollTop
+    this.focusTrap = options.focusTrap ?? this.focusTrap
+
+    if (this.focusTrap === true) {
+      this.trap = focusTrap.createFocusTrap(this.el, {
+        initialFocus: this.el,
+        fallbackFocus: () => {
+          return this.el
+        },
+        escapeDeactivates: false,
+        clickOutsideDeactivates: false,
+        allowOutsideClick: true,
+        returnFocusOnDeactivate: false,
+        preventScroll: true,
+      })
+    }
 
     this.ready = true
   }
 
   destroy (removeElement = false): this {
     if (removeElement === true) this.el.remove()
+    if (this.trap) this.trap.deactivate()
     this.overlayObj.destroy()
 
     return this
@@ -206,6 +225,8 @@ export class Bar {
     this.overlayObj.show()
     this.isOpened = true
 
+    if (this.trap) this.trap.activate()
+
     await sleep(this.getTransitionDuration())
 
     // Dispatch 'after open' event
@@ -227,6 +248,7 @@ export class Bar {
     this.el.setAttribute('aria-hidden', 'true')
     this.overlayObj.hide()
     this.isOpened = false
+    if (this.trap) this.trap.deactivate()
 
     await sleep(this.getTransitionDuration())
 

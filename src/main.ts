@@ -12,6 +12,7 @@ window.bartender = new Bartender({
   debug: true,
   el: 'body',
   contentEl: '.content',
+  focusTrap: true,
 })
 
 window.bartender.addBar('left', {
@@ -41,8 +42,7 @@ window.bartender.addBar('top', {
 window.bartender.addBar('bottom', {
   el: '.bar--bottom',
   position: 'bottom',
-  mode: 'float',
-  overlay: false,
+  mode: 'push',
 })
 
 const fixedBarBottom = document.querySelector('.toolBar--fixed.toolBar--bottom') as HTMLElement

@@ -62,6 +62,7 @@
   },
   "dependencies": {
     "async-await-queue": "^2.1.4",
+    "focus-trap": "^7.4.0",
     "ts-debounce": "^4.0.0"
   }
 }
