@@ -7,10 +7,12 @@ export declare class Bartender {
     readonly el: HTMLElement;
     readonly contentEl: HTMLElement;
     readonly switchTimeout: number;
+    readonly focusTrap: boolean;
     readonly bars: Bar[];
     readonly barDefaultOptions: BartenderBarOptions;
     private previousOpenButton?;
     private pushableElements;
+    private trap;
     private queue;
     private resizeDebounce;
     private onBarUpdateHandler;

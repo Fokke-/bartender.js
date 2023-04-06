@@ -10,7 +10,9 @@ export declare class Bar {
     private _overlay;
     private _permanent;
     private _scrollTop;
+    private focusTrap;
     private isOpened;
+    private trap;
     constructor(name: string, options?: BartenderBarOptions);
     destroy(removeElement?: boolean): this;
     get name(): string;
