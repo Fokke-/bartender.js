@@ -31,11 +31,13 @@ export default defineConfig({
       external: [
         'async-await-queue',
         'ts-debounce',
+        'focus-trap',
       ],
       output: {
         globals: {
           'async-await-queue': 'asyncAwaitQueue',
           'ts-debounce': 'tsDebounce',
+          'focus-trap': 'focusTrap',
         },
         assetFileNames: (chunkInfo) => {
           if (chunkInfo.name === 'style.css') return 'bartender.css'
@@ -46,6 +48,9 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'Bartender',
       fileName: 'Bartender',
+      formats: [
+        'es',
+      ],
     },
   },
   plugins: [
