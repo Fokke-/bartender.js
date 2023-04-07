@@ -8,6 +8,7 @@ export interface BartenderOptions {
   debug?: boolean,
   el?: BartenderElementQuery,
   contentEl?: BartenderElementQuery,
+  fixedElementContainer?: BartenderElementQuery,
   switchTimeout?: number,
   focusTrap?: boolean
 }
