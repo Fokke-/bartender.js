@@ -22,6 +22,7 @@ export class Bartender {
   readonly contentEl: HTMLElement
   readonly switchTimeout: number = 150
   readonly focusTrap: boolean = false
+  readonly fixedElementContainer: HTMLElement | null = null
   readonly bars: Bar[] = []
   readonly barDefaultOptions: BartenderBarOptions = {
     el: null,
@@ -99,6 +100,9 @@ export class Bartender {
       })
       this.trap.activate()
     }
+
+    // Add reference to the fixed element container
+    this.fixedElementContainer = this.el.querySelector('.bartender__fixedElementContainer')
 
     // Initialize queue
     this.queue = new Queue(1)
