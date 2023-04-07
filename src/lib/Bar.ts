@@ -105,6 +105,7 @@ export class Bar {
   destroy (): this {
     if (this.trap) this.trap.deactivate()
     this.overlayObj.destroy()
+    this.el.classList.remove('bartender__bar', `bartender__bar--${this.position}`)
 
     return this
   }
