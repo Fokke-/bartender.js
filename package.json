@@ -47,6 +47,7 @@
     "@typescript-eslint/parser": "^5.57.0",
     "autoprefixer": "^10.4.14",
     "eslint": "^8.37.0",
+    "eslint-plugin-jsdoc": "^40.1.1",
     "sass": "^1.60.0",
     "stylelint": "^15.4.0",
     "stylelint-config-sass-guidelines": "^10.0.0",

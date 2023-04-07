@@ -3,8 +3,8 @@ import type { BartenderElementQuery } from './types'
 /**
  * Resolve HTML element
  *
- * @param query
- * @returns Resolved element or null if none found
+ * @param {string|Element|null} query - Selector string or element
+ * @returns {HTMLElement|null} Resolved element
  */
 export const resolveElement = (query: BartenderElementQuery): HTMLElement | null => {
   if (!query) return null
@@ -14,6 +14,12 @@ export const resolveElement = (query: BartenderElementQuery): HTMLElement | null
   return null
 }
 
+/**
+ * Sleep for given number of milliseconds
+ *
+ * @param {number} duration - Duration in milliseconds
+ * @returns {Promise<void>}
+ */
 export const sleep = (duration = 100): Promise<void> => {
   return new Promise(resolve => {
     if (!duration) return resolve()

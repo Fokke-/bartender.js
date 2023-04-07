@@ -4,14 +4,16 @@ module.exports = {
     node: true,
     browser: true,
   },
-  parser: '@typescript-eslint/parser',
   plugins: [
     '@typescript-eslint',
+    'jsdoc',
   ],
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
+    'plugin:jsdoc/recommended-error',
   ],
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
@@ -20,6 +22,7 @@ module.exports = {
     'node_modules/**',
     'dist/**',
   ],
+  settings: { jsdoc: { mode: 'typescript' } },
   rules: {
     'no-console': 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
@@ -113,5 +116,7 @@ module.exports = {
         functions: 'never',
       },
     ],
+    'jsdoc/require-param-description': 0,
+    'jsdoc/require-returns-description': 0,
   },
 }

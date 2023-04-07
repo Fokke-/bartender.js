@@ -12,22 +12,55 @@ import {
   sleep
 } from './utils'
 
+/**
+ * Bartender bar
+ */
 export class Bar {
-  private ready = false
+  /** @property {boolean} initialized - Is bar initialized? */
+  private initialized = false
+
+  /** @property {Overlay} overlayObj - Overlay object for the bar */
   readonly overlayObj: Overlay
+
+  /** @property {string} _name - Bar name */
   private _name = ''
+
+  /** @property {HTMLElement} el - Bar element */
   readonly el: HTMLElement
+
+  /** @property {string} _position - Bar position */
   private _position: BartenderBarPosition = 'left'
+
+  /** @property {string} _mode - Bar mode */
   private _mode: BartenderBarMode = 'float'
+
+  /** @property {boolean} _overlay - Enable overlay? */
   private _overlay = true
+
+  /** @property {boolean} _permanent - Enable permanent mode? */
   private _permanent = false
+
+  /** @property {boolean} _scrollTop - Scroll to the top when bar is opened? */
   private _scrollTop = true
+
+  /** @property {boolean} focusTrap - Enable focus trap? */
   private focusTrap = false
+
+  /** @property {boolean} isOpened - Is the bar currently open? */
   private isOpened = false
+
+  /** @property {object|null} trap - Focus trap */
   private trap: focusTrap.FocusTrap | null = null
 
+  /**
+   * Create a new bar
+   *
+   * @param {string} name - Unique name of the bar
+   * @param {object} options - Bar options
+   * @throws {BartenderError}
+   */
   constructor (name: string, options: BartenderBarOptions = {}) {
-    if (!name) throw 'Bar name is required'
+    if (!name) throw new BartenderError('Bar name is required')
 
     this.overlayObj = new Overlay(name, this.overlay)
     this.name = name
@@ -61,33 +94,44 @@ export class Bar {
       })
     }
 
-    this.ready = true
+    this.initialized = true
   }
 
-  destroy (removeElement = false): this {
-    if (removeElement === true) this.el.remove()
+  /**
+   * Destroy bar instance
+   *
+   * @returns {this}
+   */
+  destroy (): this {
     if (this.trap) this.trap.deactivate()
     this.overlayObj.destroy()
 
     return this
   }
 
+  /** @type {string} */
   get name () {
     return this._name
   }
 
+  /** @type {string} */
   set name (name: string) {
     this._name = name
     this.overlayObj.name = name
   }
 
+  /** @type {string} */
   get position () {
     return this._position
   }
 
+  /**
+   * @type {string}
+   * @throws {BartenderError}
+   */
   set position (position: BartenderBarPosition) {
     // Validate position
-    if (!position) throw `Position is required for bar '${this.name}'`
+    if (!position) throw new BartenderError(`Position is required for bar '${this.name}'`)
 
     const validPositions = [
       'left',
@@ -96,7 +140,7 @@ export class Bar {
       'bottom',
     ]
 
-    if (!validPositions.includes(position)) throw `Invalid position '${position}' for bar '${this.name}'. Use one of the following: ${validPositions.join(', ')}.`
+    if (!validPositions.includes(position)) throw new BartenderError(`Invalid position '${position}' for bar '${this.name}'. Use one of the following: ${validPositions.join(', ')}.`)
 
     // Temporarily disable transition
     this.el.classList.add('bartender-disable-transition')
@@ -115,19 +159,24 @@ export class Bar {
 
     // If position was changed after bar was created,
     // dispatch event to update pushable elements
-    if (this.ready === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
+    if (this.initialized === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
       bubbles: true,
       detail: { bar: this },
     }))
   }
 
+  /** @type {string} */
   get mode () {
     return this._mode
   }
 
+  /**
+   * @type {string}
+   * @throws {BartenderError}
+   */
   set mode (mode: BartenderBarMode) {
     // Validate mode
-    if (!mode) throw `Mode is required for bar '${this.name}'`
+    if (!mode) throw new BartenderError(`Mode is required for bar '${this.name}'`)
 
     const validModes = [
       'float',
@@ -135,7 +184,7 @@ export class Bar {
       'reveal',
     ]
 
-    if (!validModes.includes(mode)) throw `Invalid mode '${mode}' for bar '${this.name}'. Use one of the following: ${validModes.join(', ')}.`
+    if (!validModes.includes(mode)) throw new BartenderError(`Invalid mode '${mode}' for bar '${this.name}'. Use one of the following: ${validModes.join(', ')}.`)
 
     // Temporarily disable transition
     this.el.classList.add('bartender-disable-transition')
@@ -154,56 +203,72 @@ export class Bar {
 
     // If mode was changed after bar was created,
     // dispatch event to update pushable elements
-    if (this.ready === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
+    if (this.initialized === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
       bubbles: true,
       detail: { bar: this },
     }))
   }
 
+  /** @type {boolean} */
   get overlay () {
     return this._overlay
   }
 
+  /** @type {boolean} */
   set overlay (val: boolean) {
     this.overlayObj.enabled = val
     this._overlay = val
 
-    if (this.ready === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
+    if (this.initialized === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
       bubbles: true,
       detail: { bar: this },
     }))
   }
 
+  /** @type {boolean} */
   get permanent () {
     return this._permanent
   }
 
+  /** @type {boolean} */
   set permanent (val: boolean) {
     this._permanent = val
 
-    if (this.ready === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
+    if (this.initialized === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
       bubbles: true,
       detail: { bar: this },
     }))
   }
 
+  /** @type {boolean} */
   get scrollTop () {
     return this._scrollTop
   }
 
+  /** @type {boolean} */
   set scrollTop (val: boolean) {
     this._scrollTop = val
 
-    if (this.ready === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
+    if (this.initialized === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
       bubbles: true,
       detail: { bar: this },
     }))
   }
 
+  /**
+   * Is bar currently open?
+   *
+   * @returns {boolean}
+   */
   public isOpen (): boolean {
     return this.isOpened
   }
 
+  /**
+   * Get transition duration in milliseconds
+   *
+   * @returns {number}
+   */
   public getTransitionDuration (): number {
     if (!this.el) return 0
 
@@ -211,6 +276,11 @@ export class Bar {
     return parseFloat(duration) * 1000
   }
 
+  /**
+   * Open bar
+   *
+   * @returns {Promise<this>}
+   */
   async open (): Promise<this> {
     // Dispatch 'before open' event
     this.el.dispatchEvent(new CustomEvent('bartender-bar-before-open', {
@@ -238,6 +308,11 @@ export class Bar {
     return Promise.resolve(this)
   }
 
+  /**
+   * Close bar
+   *
+   * @returns {Promise<this>}
+   */
   async close (): Promise<this> {
     this.el.dispatchEvent(new CustomEvent('bartender-bar-before-close', {
       bubbles: true,
@@ -260,6 +335,11 @@ export class Bar {
     return Promise.resolve(this)
   }
 
+  /**
+   * Get styles for pushable elements
+   *
+   * @returns {object}
+   */
   getPushStyles (): BartenderPushStyles {
     if (!this.position || !this.el) {
       return {

@@ -8,13 +8,32 @@ import { BartenderError } from './BartenderError'
 import { Bar } from './Bar'
 import { resolveElement } from './utils'
 
+/**
+ * Bartender pushable element
+ */
 export class PushElement {
+
+  /** @property {HTMLElement} el - Element to push */
   private el: HTMLElement
+
+  /** @property {Bar[]} bars - Matched bars */
   readonly bars: Bar[]
+
+  /** @property {string[]} modes - Matched modes */
   readonly modes: BartenderBarMode[]
+
+  /** @property {string[]} positions - Matched positions */
   readonly positions: BartenderBarPosition[]
+
+  /** @property {boolean} isPushed - Is the element currently pushed? */
   private isPushed = false
 
+  /**
+   * Create a new pushable element
+   *
+   * @param {object} options - Options for pushable element
+   * @throws {BartenderError}
+   */
   constructor (options: BartenderPushElementOptions = {}) {
     // Get element
     const el = resolveElement(options.el || null)
@@ -26,6 +45,13 @@ export class PushElement {
     this.positions = options.positions || []
   }
 
+  /**
+   * Push element
+   *
+   * @param {Bar} bar - The bar to match against push element properties
+   * @param {object} pushStyles - Push styles from the bar
+   * @returns {this}
+   */
   public push (bar: Bar, pushStyles: BartenderPushStyles): this {
     // If this element is not supposed to be pushed,
     // clear transition styles
@@ -50,6 +76,12 @@ export class PushElement {
     return this
   }
 
+  /**
+   * Pull element and return it to the original position
+   *
+   * @param {object} pushStyles - Push styles from the bar
+   * @returns {this}
+   */
   public pull (pushStyles: BartenderPushStyles): this {
     if (this.isPushed === false) return this
 
@@ -60,4 +92,5 @@ export class PushElement {
 
     return this
   }
+
 }

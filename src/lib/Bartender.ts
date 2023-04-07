@@ -14,16 +14,37 @@ import { BartenderError } from './BartenderError'
 import { Bar } from './Bar'
 import { PushElement } from './PushElement'
 
+/**
+ * Class for creating accessible off-canvas bars.
+ */
 export class Bartender {
-  // TODO: add debug mode
 
+  // TODO: add debug mode
+  // TODO: prefix private features with #?
+  // TODO: add removePushElement method
+
+  /** @property {boolean} debug - Enable debug mode? */
   public debug = false
+
+  /** @property {HTMLElement} el - Main element */
   readonly el: HTMLElement
+
+  /** @property {HTMLElement} contentEl - Content element */
   readonly contentEl: HTMLElement
+
+  /** @property {number} switchTimeout - Time to wait in milliseconds until another bar is opened */
   readonly switchTimeout: number = 150
+
+  /** @property {boolean} focusTrap - Enable focus trap? */
   readonly focusTrap: boolean = false
+
+  /** @property {HTMLElement|null} fixedElementContainer - Reference to the fixed element container */
   readonly fixedElementContainer: HTMLElement | null = null
+
+  /** @property {Bar[]} bars - Bars added to the instance */
   readonly bars: Bar[] = []
+
+  /** @property {object} barDefaultOptions - Default options for the bars */
   readonly barDefaultOptions: BartenderBarOptions = {
     el: null,
     position: 'left',
@@ -32,15 +53,38 @@ export class Bartender {
     permanent: false,
     scrollTop: true,
   }
+
+  /** @property {HTMLElement|null} previousOpenButton - Reference to the previous open button */
   private previousOpenButton?: HTMLElement | null = null
+
+  /** @property {PushElement[]} pushableElements - Pushable elements added to the instance */
   private pushableElements: PushElement[] = []
+
+  /** @property {object|null} trap - Focus trap */
   private trap: focusTrap.FocusTrap | null = null
+
+  /** @property {object} queue - Queue for actions */
   private queue: Queue
+
+  /** @property {Function} resizeDebounce - Debouncer for resizing */
   private resizeDebounce
+
+  /** @property {Function} resizeDebounce - Debouncer for resizing */
   private onBarUpdateHandler
+
+  /** @property {Function} onKeydownHandler - Handler for keydown event */
   private onKeydownHandler
+
+  /** @property {Function} onKeydownHandler - Handler for resize event */
   private onResizeHandler
 
+  /**
+   * Create a new Bartender instance
+   *
+   * @param {object} options - Instance options
+   * @param {object} barOptions - Default options for bars
+   * @throws {BartenderError}
+   */
   constructor (
     options: BartenderOptions = {},
     barOptions: BartenderBarOptions = {}
@@ -54,13 +98,13 @@ export class Bartender {
       focusTrap: this.focusTrap,
     }
 
-    // Get main element
+    // Main element
     const el = resolveElement(options.el || '.bartender')
     if (!el) throw new BartenderError('Main element is required')
     this.el = el
     this.el.classList.add('bartender')
 
-    // Get content element
+    // Content element
     const contentEl = resolveElement(options.contentEl || '.bartender__content')
     if (!contentEl) throw new BartenderError('Content element is required')
     if (contentEl.parentElement !== this.el) throw new BartenderError('Content element must be a direct child of the main element')
@@ -69,6 +113,7 @@ export class Bartender {
     this.contentEl.setAttribute('tabindex', '-1')
 
     // Register content element as pushable element
+    // TODO: this should be configurable
     this.addPushElement({
       el: this.contentEl,
       modes: [
@@ -77,17 +122,18 @@ export class Bartender {
       ],
     })
 
+    // Reference to the fixed element container
+    // TODO: use resolver
+    this.fixedElementContainer = this.el.querySelector('.bartender__fixedElementContainer')
+
     // Create focus trap
     if (this.focusTrap === true) {
-      const containerNodes: HTMLElement[] = [
+      const containerNodes: Array<HTMLElement | null> = [
         this.contentEl,
-      ]
+        this.fixedElementContainer,
+      ].filter(item => !!item)
 
-      const fixedContainer = this.el.querySelector('.bartender__fixed')
-      if (fixedContainer) containerNodes.push(fixedContainer as HTMLElement)
-
-      // TODO: support adding extra elements here
-      this.trap = focusTrap.createFocusTrap(containerNodes, {
+      this.trap = focusTrap.createFocusTrap(containerNodes as HTMLElement[], {
         initialFocus: this.contentEl,
         fallbackFocus: () => {
           return this.contentEl
@@ -101,10 +147,7 @@ export class Bartender {
       this.trap.activate()
     }
 
-    // Add reference to the fixed element container
-    this.fixedElementContainer = this.el.querySelector('.bartender__fixedElementContainer')
-
-    // Initialize queue
+    // Queue for actions
     this.queue = new Queue(1)
 
     // Debouncer for resizing
@@ -112,7 +155,7 @@ export class Bartender {
       this.pushElements(this.getOpenBar())
     }, 100)
 
-    // Add event listeners
+    // Event listeners
     this.onBarUpdateHandler = this.onBarUpdate.bind(this)
     window.addEventListener('bartender-bar-update', this.onBarUpdateHandler)
 
@@ -129,7 +172,12 @@ export class Bartender {
     }))
   }
 
-  public async destroy (removeBarElements = false): Promise<this> {
+  /**
+   * Destroy Bartender instance
+   *
+   * @returns {Promise<this>}
+   */
+  public async destroy (): Promise<this> {
     // Get all bar names
     const barNames = this.bars.reduce((acc: string[], bar) => {
       acc.push(bar.name)
@@ -140,7 +188,7 @@ export class Bartender {
     for (const name of barNames) {
       if (!this.getBar(name)) continue
 
-      await this.removeBar(name, removeBarElements)
+      await this.removeBar(name)
     }
 
     // Remove classes
@@ -163,22 +211,41 @@ export class Bartender {
     return Promise.resolve(this)
   }
 
+  /**
+   * Get bar by name
+   *
+   * @param {string} name - Bar name
+   * @returns {object|null}
+   */
   public getBar (name: string): Bar | null {
     return this.bars.find(item => item.name === name) || null
   }
 
+  /**
+   * Get currently open bar
+   *
+   * @returns {object|null}
+   */
   private getOpenBar (): Bar | null {
     return this.bars.find(item => item.isOpen() === true) || null
   }
 
-  public addBar (name: string, userOptions: BartenderBarOptions = {}): Bar {
+  /**
+   * Add a new bar
+   *
+   * @param {string} name - Unique name of the bar
+   * @param {object} options - Bar options
+   * @throws {BartenderError}
+   * @returns {object} Bar object
+   */
+  public addBar (name: string, options: BartenderBarOptions = {}): Bar {
     if (!name || typeof name !== 'string') throw new BartenderError('Bar name is required')
     if (this.getBar(name)) throw new BartenderError(`Bar with name '${name}' is already defined`)
 
     // Create a new bar
     const bar = new Bar(name, {
       ...this.barDefaultOptions,
-      ...userOptions,
+      ...options,
     })
 
     // Check that bar element is a direct child on main element
@@ -202,7 +269,14 @@ export class Bartender {
     return bar
   }
 
-  public async removeBar (name: string, removeElement = false): Promise<this> {
+  /**
+   * Remove bar
+   *
+   * @param {string} name - Bar name
+   * @throws {BartenderError}
+   * @returns {Promise<this>}
+   */
+  public async removeBar (name: string): Promise<this> {
     if (!name || typeof name !== 'string') throw new BartenderError('Bar name is required')
 
     const bar = this.getBar(name)
@@ -210,7 +284,7 @@ export class Bartender {
 
     if (this.getOpenBar() === bar) await this.close()
 
-    bar.destroy(removeElement)
+    bar.destroy()
 
     const barIndex = this.bars.findIndex(item => item.name === name)
     this.bars.splice(barIndex, 1)
@@ -223,9 +297,16 @@ export class Bartender {
     return Promise.resolve(this)
   }
 
-  private async openBar (name: string): Promise<Bar | BartenderError> {
+  /**
+   * Open bar
+   *
+   * @param {string} name - Bar name
+   * @throws {BartenderError}
+   * @returns {Promise<Bar>}
+   */
+  private async openBar (name: string): Promise<Bar> {
     const bar = this.getBar(name)
-    if (!bar) return Promise.reject(new BartenderError(`Unknown bar '${name}'`))
+    if (!bar) throw new BartenderError(`Unknown bar '${name}'`)
     if (bar.isOpen() === true) return Promise.resolve(bar)
 
     // Close any open bar
@@ -244,7 +325,14 @@ export class Bartender {
     return bar.open()
   }
 
-  public async open (name: string, button?: HTMLElement | null): Promise<Bar | Error> {
+  /**
+   * Open bar
+   *
+   * @param {string} name - Bar name
+   * @param {HTMLElement|null} button - Reference to the element which was used to open the bar
+   * @returns {Promise<Bar>}
+   */
+  public async open (name: string, button?: HTMLElement | null): Promise<Bar> {
     const id = Symbol()
     await this.queue.wait(id)
 
@@ -256,6 +344,13 @@ export class Bartender {
     })
   }
 
+  /**
+   * Close bar
+   *
+   * @param {string} name - Bar name
+   * @param {boolean} switching - Will another bar open immediately after closing?
+   * @returns {Promise<Bar|null>}
+   */
   private async closeBar (name?: string, switching = false): Promise<Bar | null> {
     const bar = name ? this.getBar(name) : this.getOpenBar()
     if (!bar || !bar.isOpen()) return Promise.resolve(null)
@@ -273,6 +368,12 @@ export class Bartender {
     return Promise.resolve(bar)
   }
 
+  /**
+   * Close bar
+   *
+   * @param {string} name - Bar name
+   * @returns {Promise<Bar|null>}
+   */
   public async close (name?: string): Promise<Bar | null> {
     const id = Symbol()
     await this.queue.wait(id)
@@ -292,13 +393,27 @@ export class Bartender {
     })
   }
 
-  public async toggle (name: string, button?: HTMLElement | null): Promise<Bar | BartenderError | null> {
+  /**
+   * Toggle bar
+   *
+   * @param {string} name - Bar name
+   * @param {HTMLElement|null} button - Reference to the element which was used to toggle the bar
+   * @throws {BartenderError}
+   * @returns {Promise<Bar|null>}
+   */
+  public async toggle (name: string, button?: HTMLElement | null): Promise<Bar | null> {
     const bar = this.getBar(name)
-    if (!bar) return Promise.reject(new BartenderError(`Unknown bar '${name}'`))
+    if (!bar) throw new BartenderError(`Unknown bar '${name}'`)
 
     return (bar.isOpen() === true) ? this.close() : this.open(name, button)
   }
 
+  /**
+   * Add a new pushable element
+   *
+   * @param {object} options - Options for pushable element
+   * @returns {PushElement}
+   */
   public addPushElement (options: BartenderPushElementOptions = {}): PushElement {
     const pushElement = new PushElement(options)
     this.pushableElements.push(pushElement)
@@ -306,6 +421,12 @@ export class Bartender {
     return pushElement
   }
 
+  /**
+   * Push elements
+   *
+   * @param {Bar|null} bar - The bar from which the styles are fetched
+   * @returns {PushElement[]}
+   */
   private pushElements (bar: Bar | null): PushElement[] {
     if (!bar || !this.pushableElements.length) return this.pushableElements
 
@@ -318,6 +439,12 @@ export class Bartender {
     return this.pushableElements
   }
 
+  /**
+   * Pull elements and return them to the original position
+   *
+   * @param {Bar|null} bar - The bar from which the styles are fetched
+   * @returns {PushElement[]}
+   */
   private pullElements (bar: Bar | null): PushElement[] {
     if (!bar || !this.pushableElements.length) return this.pushableElements
 
@@ -330,10 +457,21 @@ export class Bartender {
     return this.pushableElements
   }
 
+  /**
+   * Handler for bartender-bar-update event
+   *
+   * @returns {void}
+   */
   private onBarUpdate (): void {
     this.pushElements(this.getOpenBar())
   }
 
+  /**
+   * Handler for keydown event
+   *
+   * @param {KeyboardEvent} event
+   * @returns {void}
+   */
   private onKeydown (event: KeyboardEvent): void {
     if (event.key === 'Escape') {
       const openBar = this.getOpenBar()
@@ -343,7 +481,13 @@ export class Bartender {
     }
   }
 
+  /**
+   * Handler for resize event
+   *
+   * @returns {void}
+   */
   private onResize (): void {
     this.resizeDebounce()
   }
+
 }
