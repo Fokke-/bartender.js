@@ -6,7 +6,7 @@ import { PushElement } from './PushElement';
  */
 export declare class Bartender {
     /** @property {boolean} debug - Enable debug mode? */
-    debug: boolean;
+    private _debug;
     /** @property {HTMLElement} el - Main element */
     readonly el: HTMLElement;
     /** @property {HTMLElement} contentEl - Content element */
@@ -45,6 +45,10 @@ export declare class Bartender {
      * @throws {BartenderError}
      */
     constructor(options?: BartenderOptions, barOptions?: BartenderBarOptions);
+    /** @type {boolean} */
+    get debug(): boolean;
+    /** @type {boolean} */
+    set debug(val: boolean);
     /**
      * Destroy Bartender instance
      *

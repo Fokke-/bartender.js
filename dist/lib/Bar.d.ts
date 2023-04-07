@@ -4,6 +4,8 @@ import { Overlay } from './Overlay';
  * Bartender bar
  */
 export declare class Bar {
+    /** @property {boolean} debug - Enable debug mode? */
+    debug: boolean;
     /** @property {boolean} initialized - Is bar initialized? */
     private initialized;
     /** @property {Overlay} overlayObj - Overlay object for the bar */

@@ -12,7 +12,7 @@ $bartender-overlay-transition: opacity 250ms ease, background-color 250ms ease !
 
   &__content {
     box-sizing: border-box !important;
-    z-index: 2;
+    z-index: 10;
     position: relative;
     width: 100%;
     min-height: 100vh;
