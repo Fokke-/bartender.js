@@ -19,8 +19,6 @@ import { PushElement } from './PushElement'
  */
 export class Bartender {
 
-  // TODO: prefix private features with #?
-
   /** @property {boolean} debug - Enable debug mode? */
   private _debug = false
 
