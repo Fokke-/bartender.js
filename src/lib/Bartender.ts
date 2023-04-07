@@ -19,11 +19,10 @@ import { PushElement } from './PushElement'
  */
 export class Bartender {
 
-  // TODO: add debug mode
   // TODO: prefix private features with #?
 
   /** @property {boolean} debug - Enable debug mode? */
-  public debug = false
+  private _debug = false
 
   /** @property {HTMLElement} el - Main element */
   readonly el: HTMLElement
@@ -88,7 +87,7 @@ export class Bartender {
     options: BartenderOptions = {},
     barOptions: BartenderBarOptions = {}
   ) {
-    this.debug = options.debug ?? this.debug
+    this.debug = options.debug ?? this._debug
     this.switchTimeout = options.switchTimeout ?? this.switchTimeout
     this.focusTrap = options.focusTrap ?? this.focusTrap
     this.barDefaultOptions = {
@@ -170,6 +169,22 @@ export class Bartender {
       bubbles: true,
       detail: { bartender: this },
     }))
+
+    if (this.debug) console.debug('Bartender initialized', this)
+  }
+
+  /** @type {boolean} */
+  get debug () {
+    return this._debug
+  }
+
+  /** @type {boolean} */
+  set debug (val: boolean) {
+    this._debug = val
+
+    for (const bar of this.bars) {
+      bar.debug = val
+    }
   }
 
   /**
@@ -209,6 +224,8 @@ export class Bartender {
       bubbles: true,
       detail: { bartender: this },
     }))
+
+    if (this.debug) console.debug('Bartender destroyed', this)
 
     return Promise.resolve(this)
   }
@@ -250,6 +267,9 @@ export class Bartender {
       ...options,
     })
 
+    // Set debug mode for bar
+    bar.debug = this.debug
+
     // Check that bar element is a direct child on main element
     if (bar.el.parentElement !== this.el) throw new BartenderError(`Element of bar '${bar.name}' must be a direct child of the Bartender main element`)
 
@@ -268,6 +288,8 @@ export class Bartender {
       detail: { bar },
     }))
 
+    if (this.debug) console.debug('Added a new bar', bar)
+
     return bar
   }
 
@@ -283,7 +305,6 @@ export class Bartender {
 
     const bar = this.getBar(name)
     if (!bar) throw new BartenderError(`Bar with name '${name}' was not found`)
-
     if (this.getOpenBar() === bar) await this.close()
 
     bar.destroy()
@@ -295,6 +316,8 @@ export class Bartender {
       bubbles: true,
       detail: { name },
     }))
+
+    if (this.debug) console.debug(`Removed bar '${name}'`)
 
     return Promise.resolve(this)
   }
@@ -420,6 +443,8 @@ export class Bartender {
     const pushElement = new PushElement(options)
     this.pushableElements.push(pushElement)
 
+    if (this.debug) console.debug('Added a new pushable element', pushElement)
+
     return pushElement
   }
 
@@ -434,6 +459,7 @@ export class Bartender {
     const index = this.pushableElements.findIndex(item => item.el === el)
     if (index === -1) throw new BartenderError('Pushable element was not found')
 
+    if (this.debug) console.debug('Removed pushable element', this.pushableElements[index])
     this.pushableElements.splice(index, 1)
 
     return this.pushableElements

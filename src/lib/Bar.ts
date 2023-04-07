@@ -16,6 +16,9 @@ import {
  * Bartender bar
  */
 export class Bar {
+  /** @property {boolean} debug - Enable debug mode? */
+  public debug = false
+
   /** @property {boolean} initialized - Is bar initialized? */
   private initialized = false
 
@@ -73,7 +76,7 @@ export class Bar {
     this.el.setAttribute('tabindex', '-1')
     this.el.setAttribute('aria-hidden', 'true')
 
-    this.position = options.position ?? this.position
+    this.position = options.position ?? this._position
     this.mode = options.mode ?? this._mode
     this.overlay = options.overlay ?? this._overlay
     this.permanent = options.permanent ?? this._permanent
@@ -142,6 +145,7 @@ export class Bar {
     ]
 
     if (!validPositions.includes(position)) throw new BartenderError(`Invalid position '${position}' for bar '${this.name}'. Use one of the following: ${validPositions.join(', ')}.`)
+    if (this.initialized === true && this.position === position) return
 
     // Temporarily disable transition
     this.el.classList.add('bartender-disable-transition')
@@ -160,10 +164,14 @@ export class Bar {
 
     // If position was changed after bar was created,
     // dispatch event to update pushable elements
-    if (this.initialized === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
-      bubbles: true,
-      detail: { bar: this },
-    }))
+    if (this.initialized === true) {
+      this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
+        bubbles: true,
+        detail: { bar: this },
+      }))
+
+      if (this.debug) console.debug('Updated bar position', this)
+    }
   }
 
   /** @type {string} */
@@ -186,6 +194,7 @@ export class Bar {
     ]
 
     if (!validModes.includes(mode)) throw new BartenderError(`Invalid mode '${mode}' for bar '${this.name}'. Use one of the following: ${validModes.join(', ')}.`)
+    if (this.initialized === true && this.mode === mode) return
 
     // Temporarily disable transition
     this.el.classList.add('bartender-disable-transition')
@@ -204,10 +213,14 @@ export class Bar {
 
     // If mode was changed after bar was created,
     // dispatch event to update pushable elements
-    if (this.initialized === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
-      bubbles: true,
-      detail: { bar: this },
-    }))
+    if (this.initialized === true) {
+      this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
+        bubbles: true,
+        detail: { bar: this },
+      }))
+
+      if (this.debug) console.debug('Updated bar mode', this)
+    }
   }
 
   /** @type {boolean} */
@@ -217,13 +230,19 @@ export class Bar {
 
   /** @type {boolean} */
   set overlay (val: boolean) {
+    if (this.initialized === true && this.overlay === val) return
+
     this.overlayObj.enabled = val
     this._overlay = val
 
-    if (this.initialized === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
-      bubbles: true,
-      detail: { bar: this },
-    }))
+    if (this.initialized === true) {
+      this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
+        bubbles: true,
+        detail: { bar: this },
+      }))
+
+      if (this.debug) console.debug('Updated bar overlay', this, this.overlayObj)
+    }
   }
 
   /** @type {boolean} */
@@ -283,6 +302,8 @@ export class Bar {
    * @returns {Promise<this>}
    */
   async open (): Promise<this> {
+    if (this.debug) console.debug('Opening bar', this)
+
     // Dispatch 'before open' event
     this.el.dispatchEvent(new CustomEvent('bartender-bar-before-open', {
       bubbles: true,
@@ -306,6 +327,8 @@ export class Bar {
       detail: { bar: this },
     }))
 
+    if (this.debug) console.debug('Finished opening bar', this)
+
     return Promise.resolve(this)
   }
 
@@ -315,6 +338,8 @@ export class Bar {
    * @returns {Promise<this>}
    */
   async close (): Promise<this> {
+    if (this.debug) console.debug('Closing bar', this)
+
     this.el.dispatchEvent(new CustomEvent('bartender-bar-before-close', {
       bubbles: true,
       detail: { bar: this },
@@ -332,6 +357,8 @@ export class Bar {
       bubbles: true,
       detail: { bar: this },
     }))
+
+    if (this.debug) console.debug('Finished closing bar', this)
 
     return Promise.resolve(this)
   }
