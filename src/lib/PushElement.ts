@@ -14,7 +14,7 @@ import { resolveElement } from './utils'
 export class PushElement {
 
   /** @property {HTMLElement} el - Element to push */
-  private el: HTMLElement
+  readonly el: HTMLElement
 
   /** @property {Bar[]} bars - Matched bars */
   readonly bars: Bar[]

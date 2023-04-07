@@ -21,7 +21,6 @@ export class Bartender {
 
   // TODO: add debug mode
   // TODO: prefix private features with #?
-  // TODO: add removePushElement method
 
   /** @property {boolean} debug - Enable debug mode? */
   public debug = false
@@ -113,7 +112,6 @@ export class Bartender {
     this.contentEl.setAttribute('tabindex', '-1')
 
     // Register content element as pushable element
-    // TODO: this should be configurable
     this.addPushElement({
       el: this.contentEl,
       modes: [
@@ -180,6 +178,8 @@ export class Bartender {
    * @returns {Promise<this>}
    */
   public async destroy (): Promise<this> {
+    await this.close()
+
     // Get all bar names
     const barNames = this.bars.reduce((acc: string[], bar) => {
       acc.push(bar.name)
@@ -421,6 +421,22 @@ export class Bartender {
     this.pushableElements.push(pushElement)
 
     return pushElement
+  }
+
+  /**
+   * Remove pushable element
+   *
+   * @param {Element} el - Element to remove
+   * @throws {BartenderError}
+   * @returns {PushElement[]}
+   */
+  public removePushElement (el: Element): PushElement[] {
+    const index = this.pushableElements.findIndex(item => item.el === el)
+    if (index === -1) throw new BartenderError('Pushable element was not found')
+
+    this.pushableElements.splice(index, 1)
+
+    return this.pushableElements
   }
 
   /**
