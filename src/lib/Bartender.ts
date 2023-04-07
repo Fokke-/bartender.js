@@ -35,11 +35,11 @@ export class Bartender {
   /** @property {number} switchTimeout - Time to wait in milliseconds until another bar is opened */
   readonly switchTimeout: number = 150
 
-  /** @property {boolean} focusTrap - Enable focus trap? */
-  readonly focusTrap: boolean = false
-
   /** @property {HTMLElement|null} fixedElementContainer - Reference to the fixed element container */
   readonly fixedElementContainer: HTMLElement | null = null
+
+  /** @property {boolean} focusTrap - Enable focus trap? */
+  readonly focusTrap: boolean = false
 
   /** @property {Bar[]} bars - Bars added to the instance */
   readonly bars: Bar[] = []
@@ -122,9 +122,11 @@ export class Bartender {
       ],
     })
 
-    // Reference to the fixed element container
-    // TODO: use resolver
-    this.fixedElementContainer = this.el.querySelector('.bartender__fixedElementContainer')
+    // Fixed element container
+    this.fixedElementContainer = resolveElement(
+      options.fixedElementContainer || '.bartender__fixedElementContainer',
+      this.el
+    )
 
     // Create focus trap
     if (this.focusTrap === true) {

@@ -4,12 +4,24 @@ import type { BartenderElementQuery } from './types'
  * Resolve HTML element
  *
  * @param {string|Element|null} query - Selector string or element
+ * @param {object} parent - Parent element
+ * @param {boolean} directChild - Match only to the direct child
  * @returns {HTMLElement|null} Resolved element
  */
-export const resolveElement = (query: BartenderElementQuery): HTMLElement | null => {
+export const resolveElement = (
+  query: BartenderElementQuery,
+  parent: Document | HTMLElement = document,
+  directChild = false
+): HTMLElement | null => {
   if (!query) return null
-  if (typeof query === 'string') return document.querySelector(query) as HTMLElement
   if (query instanceof Element) return query as HTMLElement
+  if (typeof query === 'string') {
+    if (directChild) {
+      return parent.querySelector(`:scope > ${query}`) as HTMLElement
+    }
+
+    return parent.querySelector(query) as HTMLElement
+  }
 
   return null
 }
