@@ -1,383 +1,206 @@
 # Bartender.js - Accessible off-canvas bars
 
-Bartender is a simple zero-dependency library for creating accessible off-canvas bars to your website. Multiple bars are supported, and they can be located in any side of the viewport.
+Bartender is a library for creating accessible off-canvas bars. Any number of bars are supported, and they can be located on any side of the viewport.
 
 The following accessibility concerns have been taken into account:
 
-- When off-canvas bar is closed, it's child elements are not focusable
-- When bar is open, it's child elements are focusable, and the focus will be initially set on the bar element
-- Optionally trap focus to the open bar
+- ARIA-attributes are being used for all relevant elements
 - After closing the bar the focus will return to the button which was used to open the bar
+- If focus trap is enabled and bar is open, only it's child elements are focusable
+- If focus trap is enabled and bar is closed, it's child elements are not focusable
 - All transitions are disabled if user prefers reduced motion
 
 ## Browser support
 
-All major browsers are supported. If you need to support IE11, use compatibility build.
+All major browsers are supported. Library is transpiled to ES2015.
 
-## Install using NPM
+## Installation
 
 ```console
 npm i @fokke-/bartender.js
 ```
 
-## Using the library
+## Minimal example
 
-Check `/demo/minimal.html` for minimal working example. Note that it's highly recommended to define viewport meta tag to avoid buggy rendering when using bars with `push` or `reveal` modes.
+### Markup
 
-```html
-<!doctype html>
-
-<html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <link rel="stylesheet" href="../dist/bartender.min.css">
-  </head>
-
-  <!-- Main wrap for bartender -->
-  <body class="bartender-main">
-
-    <!-- Wrapper for page content -->
-    <div class="bartender-content">
-      <button data-bartender-open="left">Open left bar</button>
-    </div>
-
-    <!-- Left bar -->
-    <div data-bartender-bar="left" data-bartender-bar-mode="float">
-      <button data-bartender-close>Close</button>
-    </div>
-
-    <script src="../dist/bartender.min.js"></script>
-    <script>
-      // Initialize Bartender
-      const bartender = new Bartender();
-    </script>
-  </body>
-</html>
-```
-
-### 1. Include CSS
-
-#### Import SCSS
-
-```scss
-// If you're using webpack etc...
-@import '@fokke-/bartender.js/dist/bartender.scss';
-
-// Or if you extracted the library in your project directory
-@import './dist/bartender.scss'
-```
-
-#### ...or include CSS manually
+Note that it's highly recommended to define viewport meta tag to avoid quirks when using bars with `push` or `reveal` modes.
 
 ```html
-<link rel="stylesheet" href="dist/bartender.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 ```
 
-#### ...or include CSS from CDN
+1. Create main wrap for Bartender. Ideally it would be your `<body>` element, but `<div>` elements are fine too.
+2. Create wrap element for your page content as a direct child of the Bartender main element.
+3. Create any number of bar elements as a direct children of the Bartender main element.
+4. Optional: if you need to use fixed positioned elements in your page content, add container element as a direct child of the bartender main element.
 
-```html
-<link rel="stylesheet" href="https://unpkg.com/@fokke-/bartender.js@1.0.8/dist/bartender.min.css">
-```
-
-### 2. Include JS
-
-#### Import module
-
-```javascript
-import Bartender from '@fokke-/bartender.js'
-```
-
-#### ...or include JS manually
-
-```html
-<!-- Standard build -->
-<script src="dist/bartender.js"></script>
-
-<!-- Compatibility build with IE11 support -->
-<script src="dist/bartender.compat.js"></script>
-```
-
-#### ...or include JS from CDN
-
-```html
-<!-- Standard build -->
-<script src="https://unpkg.com/@fokke-/bartender.js@1.0.8/dist/bartender.min.js"></script>
-
-<!-- Compatibility build with IE11 support -->
-<script src="https://unpkg.com/@fokke-/bartender.js@1.0.8/dist/bartender.compat.js"></script>
-```
-
-### 3. Set the required wrapper elements
-
-- `bartender-main` will act as a main wrapper for Bartender. Most likely this will be your body element.
-- `bartender-content` is the wrapper element for your page content.
+Note that the class names in the example below are defaults. You can use any classes as they are configurable when you initialize the library later.
 
 ```html
 <!-- Main wrap for bartender -->
-<body class="bartender-main">
-  <!-- Wrapper for page content -->
-  <div class="bartender-content">
+<body class="bartender">
 
+  <!-- Wrap for page content -->
+  <div class="bartender__content">
+    <button class="toggleMobileNav">Toggle mobile navigation</button>
   </div>
 
-  <!-- Place your bars here later -->
+  <!-- Add any number of bars -->
+  <div class="mobileNav bartender__bar">
+    <button class="closeMobileNav">Close mobile navigation</button>
+  </div>
+
+  <!-- Optionally add container for fixed positioned elements. -->
+  <!-- <div class="bartender__fixedElementContainer"></div> -->
+
 </body>
 ```
 
-### 4. Add one or more bars
+### Include (S)CSS
 
-The bar elements need to have `data-bartender-bar` attribute with desired position (left, right, top, bottom) as a value. **Place all bar elements as direct children of Bartender main element.**
+```scss
+@import '@fokke-/bartender.js/dist/bartender.scss';
 
-Note that you can also [add bars by using API](#addbarelement-options).
+// ...or
 
-```html
-<!-- Left bar -->
-<div data-bartender-bar="left" data-bartender-bar-mode="float"></div>
-
-<!-- Right bar -->
-<div data-bartender-bar="right" data-bartender-bar-mode="float"></div>
+@import '@fokke-/bartender.js/dist/bartender.css';
 ```
 
-You can also specify `data-bartender-bar-mode` attribute to specify transition mode for the bar. The following modes are available:
-
-#### float
-
-The bar will float over the content. This is the default mode.
-
-#### push
-
-The bar will slide in, and the content wrapper will be pushed away from the bar.
-
-#### reveal
-
-Content wrapper will be pushed away, revealing the bar underneath.
-
-### 5. Add buttons for opening or toggling bars (optional)
-
-Note that these buttons can also be placed in bars too. For example, you can open right bar from the left bar.
-
-```html
-<button data-bartender-open="left">Open left bar</button>
-<button data-bartender-toggle="left">Toggle left bar</button>
-```
-
-### 6. Add buttons for closing bars (optional)
-
-If you want to create button (or any other element) to close any open bar, add `data-bartender-close` attribute to the element.
-
-```html
-<button data-bartender-close>Close bar</button>
-```
-
-### 7. Add pushable elements (optional)
-
-If you have elements with fixed positioning (e.g. toolbar) and bar is opened, these elements will stay in place. If you want them to be moved alongside the bar, add `data-bartender-push` attribute to the fixed elements, and **place them as direct children of Bartender main element.**
-
-```html
-<div data-bartender-push></div>
-```
-
-### 8. Initialize Bartender
+### Initialize the library
 
 ```javascript
-// Use default options
-const bartender = new Bartender();
+import Bartender from '@fokke-/bartender.js'
+
+// Create main instance
+const bartender = new Bartender({
+  el: '.bartender',
+  contentEl: '.bartender__content',
+})
+
+// Add a new bar
+bartender.addBar('mobileNav', {
+  el: '.mobileNav',
+  position: 'left',
+  mode: 'float',
+})
+
+// Toggle button
+document.querySelector('.toggleMobileNav').addEventListener('click', (event) => {
+  bartender.toggle('mobileNav', event.target)
+})
+
+// Close button
+document.querySelector('.closeMobileNav').addEventListener('click', (event) => {
+  bartender.close()
+})
 ```
 
-## Options
+## Configuration
 
-You can pass an object as an argument for Bartender constructor to modify default options.
+Bartender constructor accepts two object arguments. The first argument defines main options and the second argument defines default options for new bars.
 
 ```javascript
 const bartender = new Bartender({
-  debug: false,
-  overlay: true,
-  closeOnOverlayClick: true,
-  closeOnEsc: true,
-  trapFocus: false,
-  scrollTop: true,
-  mainWrapSelector: '.bartender-main',
-  contentWrapSelector: '.bartender-content',
-  focusableElementSelector: '[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])',
-  readyClass: 'bartender-ready',
-  openClass: 'bartender-open',
+  // main options
+}, {
+  // default options for new bars
 });
 ```
 
-### debug
+TODO: mention bar default options
+
+| Property | Type | Default | Description
+| ------------- | ------------- | ------------- | ------------- |
+| debug  | boolean | false | If enabled, Bartender will log it's activity to console. Note that these messages will be outputted at debug log level and you need to configure your console to show these messages.
+| el  | string \| Element | .bartender | Main element as selector string or reference to the element.
+| contentEl  | string \| Element | .bartender__content | Page content element as selector string or reference to the element.
+| fixedElementContainer  | string \| Element | .bartender__fixedElementContainer | Fixed element container as selector string or reference to the element. Fixed elements as direct children of main element will work, but using a container is required if you enable focus trap.
+| switchTimeout  | number | 150 | If bar is opened when there's already another active bar, the open bar will be closed and the library will pause for the given time before opening the another bar.
+| focusTrap  | boolean | false | If enabled, keyboard focus will be trapped either to the page content or to the currently open bar. **IMPORTANT:** If you enable this, you **must** provide a way to close the bar with keyboard. Even though by default `esc` key closes the bar, adding a dedicated close button to the bar is highly recommended.
+
+
+#### debug
 
 Type: `boolean`, Default: `false`
 
-Enable debugging mode. If enabled, Bartender will log it's activity to console.
+If enabled, Bartender will log it's activity to console. Note that these messages will be outputted at debug log level and you need to configure your console to show these messages.
 
-### overlay
+#### el
 
-Type: `boolean`, Default: `true`
+Type: `string | Element`, Default: `.bartender`
 
-Show shading overlay when bar is open.
+Specify main element as selector string or reference to the element.
 
-### closeOnOverlayClick
+#### contentEl
 
-Type: `boolean`, Default: `true`
+Type: `string | Element`, Default: `.bartender__content`
 
-Close any open bar by clicking the overlay.
+Specify page content element as selector string or reference to the element.
 
-### closeOnEsc
+#### fixedElementContainer
 
-Type: `boolean`, Default: `true`
+Type: `string | Element`, Default: `.bartender__fixedElementContainer`
 
-Close any open bar using escape key.
+Specify fixed element container as selector string or reference to the element. Fixed elements as direct children of main element will work, but using a container is required if you enable focus trap.
 
-### trapFocus
+#### switchTimeout
+
+Type: `number` (milliseconds), Default: `150`
+
+If bar is opened when there's already another active bar, the open bar will be closed and the library will pause for the given time before opening the another bar.
+
+#### focusTrap
 
 Type: `boolean`, Default: `false`
 
-If bar is open, focus will be trapped to the open bar and it's child elements, and elements within content wrap are not focusable. If this option is enabled, you **should** provide user a way to close the bar with keyboard by adding close button in the bar.
+If enabled, keyboard focus will be trapped either to the page content or to the currently open bar. **IMPORTANT:** If you enable this, you **must** provide a way to close the bar with keyboard. Even though by default `esc` key closes the bar, adding a dedicated close button to the bar is highly recommended.
 
-If you have lots of focusable elements, this operation can also be quite expensive performance-wise.
+### Default options for new bars
 
-### scrollTop
+#### position
+
+Type: `string`, Default: `left`
+
+Specify bar position as string. Possible values are `left`, `right`, `top` and `bottom`.
+
+#### mode
+
+Type: `string`, Default: `float`
+
+Specify bar mode as string. Possible values are:
+
+- `float` - The bar will slide in and float over the content.
+- `push` - The bar will slide in, and the content wrap will be pushed away from the bar.
+- `reveal` - Content wrap will be pushed away, revealing the bar underneath
+
+#### overlay
 
 Type: `boolean`, Default: `true`
 
-Scroll bar to the top when opening it.
+Show shading overlay over content wrap when bar is open.
 
-### mainWrapSelector
+#### permanent
 
-Type: `string`, Default: `.bartender-main`
+Type: `boolean`, Default: `false`
 
-This selector will be used to find main wrapper.
+If enabled, the bar is not closable by clicking overlay of pressing `esc` key.
 
-### contentWrapSelector
+**IMPORTANT:** If you enable this, remember to provide a way to close the bar.
 
-Type: `string`, Default: `.bartender-content`
+#### scrollTop
 
-This selector will be used to find content wrapper.
+Type: `boolean`, Default: `true`
 
-### focusableElementSelector
-
-Type: `string`, Default: `[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])`
-
-This selector will be used to find focusable elements.
-
-### readyClass
-
-Type: `string`, Default: `bartender-ready`
-
-This class will be added to the main wrapper when Bartender has been initialized.
-
-### openClass
-
-Type: `string`, Default: `bartender-open`
-
-This class will be added to the main wrapper when any bar is open.
+If enabled, bar will be scrolled to top when opening it.
 
 ## API
 
-### open(position)
+### destroy()
 
-Open bar element. Specify bar position (left, right, top, bottom) as an argument.
+Destroys the Bartender instance.
 
-```javascript
-bartender.open('left');
-```
+### getBar(name)
 
-### close()
 
-Close any open bar element.
 
-```javascript
-bartender.close();
-```
-
-### toggle(position)
-
-Toggle bar element. If bar is closed, open it. Otherwise close it. Specify bar position (left, right, top, bottom) as an argument.
-
-```javascript
-bartender.toggle('left');
-```
-
-### addBar(element, options)
-
-Creates a new bar. If element is undefined, it will be created. Specify options as second argument.
-
-```javascript
-// Use existing element
-bartender.addBar(document.querySelector('my-new-bar'), {
-  position: 'right',
-  mode: 'float',
-});
-
-// Create new element
-bartender.addBar(null, {
-  position: 'right',
-  mode: 'float',
-});
-```
-
-### removeBar(position, removeElement)
-
-Removes existing bar. Specify bar position (left, right, top, bottom) as first argument. By default the bar element will be removed.
-
-```javascript
-// Remove bar and destroy the element
-bartender.removeBar('right')
-
-// Remove bar, but don't destroy the element
-bartender.removeBar('right', false)
-```
-
-## Styling
-
-Please note that all transitions are disabled, if user prefers reduced motion. [Read more about reduced motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion).
-
-### Bars
-
-```css
-/* These styles apply to all bars */
-[data-bartender-bar] {
-  background: red;
-}
-
-/* These styles apply only to the left bar */
-[data-bartender-bar='left'] {
-  background: #ff69b4;
-}
-```
-
-By default bars will be animated using transition `transform 250ms linear`. You can override this if you're using scss:
-
-```scss
-$bartender-transition: transform 500ms linear;
-```
-
-### Overlay shading
-
-```css
-.bartender-overlay {
-  background: #ff69b4;
-  opacity: 0.5;
-}
-```
-
-## Events
-
-Add event listener(s) to the Bartender main wrapper element to catch event triggered by the library. All these events bubble, so you can add event listener to the window object too.
-
-```javascript
-// Example event listener
-bartender.mainWrap.addEventListener('bartender-open', (e) => {
-  console.log("Opening bar '" + e.detail.bar.position + "'");
-});
-```
-
-### The following events are available
-
-#### bartender-open
-
-This event is triggered immediately when bar has _started to open_. The bar object and the button used to open the bar will be included in `detail` object.
-
-#### bartender-close
-
-This event is triggered immediately when bar has _started to close_. The bar object will be included in `detail` object.
