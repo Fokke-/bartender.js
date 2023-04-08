@@ -29,7 +29,7 @@ $bartender-overlay-transition: opacity 250ms ease, background-color 250ms ease !
   &__bar {
     box-sizing: border-box !important;
     z-index: 9999;
-    position: fixed;
+    position: fixed !important;
     overflow: auto;
     margin: 0 !important;
     background-color: #fff;
