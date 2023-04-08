@@ -20,7 +20,7 @@ All major browsers are supported. Library is transpiled to ES2015.
 npm i @fokke-/bartender.js
 ```
 
-## Minimal example
+## Quick start
 
 ### Markup
 
@@ -30,12 +30,12 @@ Note that it's highly recommended to define viewport meta tag to avoid quirks wh
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 ```
 
-1. Create main wrap for Bartender. Ideally it would be your `<body>` element, but `<div>` elements are fine too.
+1. Create main wrap for Bartender. Ideally it would be your `<body>` element.
 2. Create wrap element for your page content as a direct child of the Bartender main element.
-3. Create any number of bar elements as a direct children of the Bartender main element.
+3. Add any number of bar elements as a direct children of the Bartender main element.
 4. Optional: if you need to use fixed positioned elements in your page content, add container element as a direct child of the bartender main element.
 
-Note that the class names in the example below are defaults. You can use any classes as they are configurable when you initialize the library later.
+Note that the class names in the example below are defaults. You can use any classes as they are configurable when you initialize the library later. However, using default classes in addition to your own classes is recommended to avoid FOUC.
 
 ```html
 <!-- Main wrap for bartender -->
