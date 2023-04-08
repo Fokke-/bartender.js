@@ -120,7 +120,7 @@ export class Bartender {
 
     // Fixed element container
     this.fixedElementContainer = resolveElement(
-      options.fixedElementContainer || '.bartender__fixedElementContainer',
+      options.fixedElementContainer || '.bartender__fixed',
       this.el,
       true
     )

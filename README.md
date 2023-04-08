@@ -52,7 +52,7 @@ Note that the class names in the example below are defaults. You can use any cla
   </div>
 
   <!-- Optionally add container for fixed positioned elements. -->
-  <!-- <div class="bartender__fixedElementContainer"></div> -->
+  <!-- <div class="bartender__fixed"></div> -->
 
 </body>
 ```
@@ -115,7 +115,7 @@ TODO: mention bar default options
 | debug  | boolean | false | If enabled, Bartender will log it's activity to console. Note that these messages will be outputted at debug log level and you need to configure your console to show these messages.
 | el  | string \| Element | .bartender | Main element as selector string or reference to the element.
 | contentEl  | string \| Element | .bartender__content | Page content element as selector string or reference to the element.
-| fixedElementContainer  | string \| Element | .bartender__fixedElementContainer | Fixed element container as selector string or reference to the element. Fixed elements as direct children of main element will work, but using a container is required if you enable focus trap.
+| fixed  | string \| Element | .bartender__fixed | Fixed element container as selector string or reference to the element. Fixed elements as direct children of main element will work, but using a container is required if you enable focus trap.
 | switchTimeout  | number | 150 | If bar is opened when there's already another active bar, the open bar will be closed and the library will pause for the given time before opening the another bar.
 | focusTrap  | boolean | false | If enabled, keyboard focus will be trapped either to the page content or to the currently open bar. **IMPORTANT:** If you enable this, you **must** provide a way to close the bar with keyboard. Even though by default `esc` key closes the bar, adding a dedicated close button to the bar is highly recommended.
 
@@ -138,9 +138,9 @@ Type: `string | Element`, Default: `.bartender__content`
 
 Specify page content element as selector string or reference to the element.
 
-#### fixedElementContainer
+#### fixed
 
-Type: `string | Element`, Default: `.bartender__fixedElementContainer`
+Type: `string | Element`, Default: `.bartender__fixed`
 
 Specify fixed element container as selector string or reference to the element. Fixed elements as direct children of main element will work, but using a container is required if you enable focus trap.
 
