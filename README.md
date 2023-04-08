@@ -276,7 +276,7 @@ bartender.close('mobileNav')
 bartender.close()
 ```
 
-### toggle (name, button?)
+### toggle(name, button?)
 
 Toggle bar open/closed state. If you specify reference to the element as a second argument, the focus will be returned to given element after bar is closed.
 
@@ -291,7 +291,7 @@ const button = document.querySelector('.toggleMobileNav')
 bartender.toggle('mobileNav', button)
 ```
 
-### addPushElement (element, options?)
+### addPushElement(element, options?)
 
 Specify additional element you want to be pushed when bar is opened. This can be useful for fixed elements placed in fixed element container.
 
