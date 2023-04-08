@@ -52,7 +52,9 @@ Note that the class names in the example below are defaults. You can use any cla
   </div>
 
   <!-- Optionally add container for fixed positioned elements. -->
-  <!-- <div class="bartender__fixedElementContainer"></div> -->
+  <div class="bartender__fixed">
+    <!-- Place your fixed positioned elements here -->
+  </div>
 
 </body>
 ```
@@ -98,9 +100,7 @@ document.querySelector('.closeMobileNav').addEventListener('click', (event) => {
 
 ## Configuration
 
-Bartender constructor accepts two object arguments. The first argument defines main options and the second argument defines default options for new bars.
-
-  TODO: mention bar default options
+Bartender constructor accepts two object arguments. The first argument defines main options. The second argument allows you to override [default options for new bars](#bar-options).
 
 ```javascript
 const bartender = new Bartender({
@@ -110,8 +110,8 @@ const bartender = new Bartender({
 });
 ```
 
-
 ### Main Options
+
 #### debug
 
 Type: `boolean`, Default: `false`
@@ -130,7 +130,7 @@ Type: `string | Element`, Default: `'.bartender__content'`
 
 Specify page content element as selector string or reference to the element.
 
-#### fixedElementContainer
+#### fixed
 
 Type: `string | Element`, Default: `'.bartender__fixed'`
 
@@ -164,9 +164,9 @@ bartender.destroy()
 
 Get bar instance by name.
 
-| Argument | Type | Description
+| Argument | Type | Description |
 | - | - | - |
-| name | string | Bar name
+| name | string | Bar name |
 
 ```javascript
 bartender.getBar('mobileNav')
@@ -176,10 +176,10 @@ bartender.getBar('mobileNav')
 
 Add a new bar.
 
-| Argument | Type | Description
+| Argument | Type | Description |
 | - | - | - |
-| name | string | Unique name for the bar
-| options | object | Bar options. Available options are listed below.
+| name | string | Unique name for the bar |
+| options | object | Bar options. Available options are listed below. |
 
 ```javascript
 bartender.addBar('mobileNav', {
@@ -232,3 +232,218 @@ If enabled, the bar is not closable by clicking overlay of pressing `esc` key.
 Type: `boolean`, Default: `true`
 
 If enabled, bar will be scrolled to top when opening it.
+
+### removeBar(name)
+
+Remove bar instance by name.
+
+| Argument | Type | Description |
+| - | - | - |
+| name | string | Bar name |
+
+```javascript
+bartender.removeBar('mobileNav')
+```
+
+### open(name, button?)
+
+Open bar by name. If you specify reference to the element as a second argument, the focus will be returned to given element after bar is closed.
+
+| Argument | Type | Description |
+| - | - | - |
+| name | string | Bar name |
+| button | HTMLElement | Optional reference to the button |
+
+```javascript
+const button = document.querySelector('.toggleMobileNav')
+
+bartender.open('mobileNav', button)
+```
+
+### close(name?)
+
+Close bar by name. If name is undefined, any open bar will be closed.
+
+| Argument | Type | Description |
+| - | - | - |
+| name | string | Bar name |
+
+```javascript
+// Close bar 'mobileNav'
+bartender.close('mobileNav')
+
+// Close any open bar
+bartender.close()
+```
+
+### toggle (name, button?)
+
+Toggle bar open/closed state. If you specify reference to the element as a second argument, the focus will be returned to given element after bar is closed.
+
+| Argument | Type | Description |
+| - | - | - |
+| name | string | Bar name |
+| button | HTMLElement | Optional reference to the button |
+
+```javascript
+const button = document.querySelector('.toggleMobileNav')
+
+bartender.toggle('mobileNav', button)
+```
+
+### addPushElement (element, options?)
+
+Specify additional element you want to be pushed when bar is opened. This can be useful for fixed elements placed in fixed element container.
+
+By default element is pushed by all bars, modes and positions, but you can fine-tune this behaviour by options.
+
+| Argument | Type | Description |
+| - | - | - |
+| el | string \| element | Element as selector string or reference to the element. |
+| options | object | Pushable element options. Available options are listed below. |
+
+```javascript
+// Push element only if mode is 'push' or 'reveal' AND position is 'left' or 'right'.
+bartender.addPushElement('.myFixedElement', {
+  modes: [
+    'push',
+    'reveal',
+  ],
+  positions: [
+    'left',
+    'right',
+  ],
+})
+```
+
+#### Pushable element options
+
+Note that if you specify multiple options, they all have to match to the bar being opened.
+
+##### bars
+
+Type: `Array<string>`, Default: `[]`
+
+An array of bar names.
+
+##### modes
+
+Type: `Array<string>`, Default: `[]`
+
+An array of [bar modes](#mode).
+
+##### positions
+
+Type: `Array<string>`, Default: `[]`
+
+An array of [bar positions](#position).
+
+### removePushElement (el)
+
+Remove pushable element by reference.
+
+| Argument | Type | Description |
+| - | - | - |
+| el | element | Reference to the element. |
+
+```javascript
+bartender.removePushElement(document.querySelector('.myFixedElement'))
+```
+
+## Events
+
+### bartender-init
+
+Bartender has been initialized. Instance will be included in `detail` object.
+
+```javascript
+window.addEventListener('bartender-init', (event) => {
+  console.log(event.detail.bartender)
+})
+```
+
+### bartender-destroyed
+
+Bartender instance has been destroyed. Instance will be included in `detail` object.
+
+```javascript
+window.addEventListener('bartender-destroyed', (event) => {
+  console.log(event.detail.bartender)
+})
+```
+
+### bartender-bar-added
+
+A new bar has been added. Bar will be included in `detail` object.
+
+```javascript
+window.addEventListener('bartender-bar-added', (event) => {
+  console.log(event.detail.bar)
+})
+```
+
+### bartender-bar-removed
+
+A bar has been removed. Bar name will be included in `detail` object.
+
+```javascript
+window.addEventListener('bartender-bar-removed', (event) => {
+  console.log(event.detail.name)
+})
+```
+
+### bartender-bar-updated
+
+This event is dispatched when one of the following bar properties change:
+
+- position
+- mode
+- overlay
+- permanent
+- scrollTop
+
+```javascript
+window.addEventListener('bartender-bar-updated', (event) => {
+  console.log(event.detail.bar)
+})
+```
+
+### bartender-bar-before-open
+
+Bar has started to open. Bar will be included in `detail` object.
+
+```javascript
+window.addEventListener('bartender-bar-before-open', (event) => {
+  console.log(event.detail.bar)
+})
+```
+
+### bartender-bar-after-open
+
+Bar is open. Bar will be included in `detail` object.
+
+```javascript
+window.addEventListener('bartender-bar-after-open', (event) => {
+  console.log(event.detail.bar)
+})
+```
+
+### bartender-bar-before-close
+
+Bar has started to close. Bar will be included in `detail` object.
+
+```javascript
+window.addEventListener('bartender-bar-before-close', (event) => {
+  console.log(event.detail.bar)
+})
+```
+
+### bartender-bar-after-close
+
+Bar is closed. Bar will be included in `detail` object.
+
+```javascript
+window.addEventListener('bartender-bar-after-close', (event) => {
+  console.log(event.detail.bar)
+})
+```
