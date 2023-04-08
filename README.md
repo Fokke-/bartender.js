@@ -52,7 +52,7 @@ Note that the class names in the example below are defaults. You can use any cla
   </div>
 
   <!-- Optionally add container for fixed positioned elements. -->
-  <!-- <div class="bartender__fixed"></div> -->
+  <!-- <div class="bartender__fixedElementContainer"></div> -->
 
 </body>
 ```
@@ -100,6 +100,8 @@ document.querySelector('.closeMobileNav').addEventListener('click', (event) => {
 
 Bartender constructor accepts two object arguments. The first argument defines main options and the second argument defines default options for new bars.
 
+  TODO: mention bar default options
+
 ```javascript
 const bartender = new Bartender({
   // main options
@@ -108,18 +110,8 @@ const bartender = new Bartender({
 });
 ```
 
-TODO: mention bar default options
 
-| Property | Type | Default | Description
-| ------------- | ------------- | ------------- | ------------- |
-| debug  | boolean | false | If enabled, Bartender will log it's activity to console. Note that these messages will be outputted at debug log level and you need to configure your console to show these messages.
-| el  | string \| Element | .bartender | Main element as selector string or reference to the element.
-| contentEl  | string \| Element | .bartender__content | Page content element as selector string or reference to the element.
-| fixed  | string \| Element | .bartender__fixed | Fixed element container as selector string or reference to the element. Fixed elements as direct children of main element will work, but using a container is required if you enable focus trap.
-| switchTimeout  | number | 150 | If bar is opened when there's already another active bar, the open bar will be closed and the library will pause for the given time before opening the another bar.
-| focusTrap  | boolean | false | If enabled, keyboard focus will be trapped either to the page content or to the currently open bar. **IMPORTANT:** If you enable this, you **must** provide a way to close the bar with keyboard. Even though by default `esc` key closes the bar, adding a dedicated close button to the bar is highly recommended.
-
-
+### Main Options
 #### debug
 
 Type: `boolean`, Default: `false`
@@ -128,19 +120,19 @@ If enabled, Bartender will log it's activity to console. Note that these message
 
 #### el
 
-Type: `string | Element`, Default: `.bartender`
+Type: `string | Element`, Default: `'.bartender'`
 
 Specify main element as selector string or reference to the element.
 
 #### contentEl
 
-Type: `string | Element`, Default: `.bartender__content`
+Type: `string | Element`, Default: `'.bartender__content'`
 
 Specify page content element as selector string or reference to the element.
 
-#### fixed
+#### fixedElementContainer
 
-Type: `string | Element`, Default: `.bartender__fixed`
+Type: `string | Element`, Default: `'.bartender__fixed'`
 
 Specify fixed element container as selector string or reference to the element. Fixed elements as direct children of main element will work, but using a container is required if you enable focus trap.
 
@@ -154,19 +146,66 @@ If bar is opened when there's already another active bar, the open bar will be c
 
 Type: `boolean`, Default: `false`
 
-If enabled, keyboard focus will be trapped either to the page content or to the currently open bar. **IMPORTANT:** If you enable this, you **must** provide a way to close the bar with keyboard. Even though by default `esc` key closes the bar, adding a dedicated close button to the bar is highly recommended.
+If enabled, keyboard focus will be trapped either to the page content or to the currently open bar.
 
-### Default options for new bars
+**IMPORTANT:** If you enable this, you **must** provide a way to close the bar with keyboard. Even though by default `esc` key closes the bar, adding a dedicated close button to the bar is highly recommended.
 
-#### position
+## API
 
-Type: `string`, Default: `left`
+### destroy()
 
-Specify bar position as string. Possible values are `left`, `right`, `top` and `bottom`.
+Destroy Bartender instance.
 
-#### mode
+```javascript
+bartender.destroy()
+```
 
-Type: `string`, Default: `float`
+### getBar(name)
+
+Get bar instance by name.
+
+| Argument | Type | Description
+| - | - | - |
+| name | string | Bar name
+
+```javascript
+bartender.getBar('mobileNav')
+```
+
+### addBar(name, options)
+
+Add a new bar.
+
+| Argument | Type | Description
+| - | - | - |
+| name | string | Unique name for the bar
+| options | object | Bar options. Available options are listed below.
+
+```javascript
+bartender.addBar('mobileNav', {
+  el: '.mobileNav',
+  position: 'left',
+  mode: 'float',
+})
+```
+
+#### Bar options
+
+##### el
+
+Type: `string | Element`
+
+Specify element as selector string or reference to the element.
+
+##### position
+
+Type: `string`, Default: `'left'`
+
+Specify bar position as string. Possible values are `'left'`, `'right'`, `'top'` and `'bottom'`.
+
+##### mode
+
+Type: `string`, Default: `'float'`
 
 Specify bar mode as string. Possible values are:
 
@@ -174,13 +213,13 @@ Specify bar mode as string. Possible values are:
 - `push` - The bar will slide in, and the content wrap will be pushed away from the bar.
 - `reveal` - Content wrap will be pushed away, revealing the bar underneath
 
-#### overlay
+##### overlay
 
 Type: `boolean`, Default: `true`
 
 Show shading overlay over content wrap when bar is open.
 
-#### permanent
+##### permanent
 
 Type: `boolean`, Default: `false`
 
@@ -188,19 +227,8 @@ If enabled, the bar is not closable by clicking overlay of pressing `esc` key.
 
 **IMPORTANT:** If you enable this, remember to provide a way to close the bar.
 
-#### scrollTop
+##### scrollTop
 
 Type: `boolean`, Default: `true`
 
 If enabled, bar will be scrolled to top when opening it.
-
-## API
-
-### destroy()
-
-Destroys the Bartender instance.
-
-### getBar(name)
-
-
-
