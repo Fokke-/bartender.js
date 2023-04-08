@@ -1,5 +1,6 @@
 import type {
   BartenderOptions,
+  BartenderBarDefaultOptions,
   BartenderBarOptions,
   BartenderPushElementOptions
 } from './types'
@@ -83,7 +84,7 @@ export class Bartender {
    */
   constructor (
     options: BartenderOptions = {},
-    barOptions: BartenderBarOptions = {}
+    barOptions: BartenderBarDefaultOptions = {}
   ) {
     this.debug = options.debug ?? this._debug
     this.switchTimeout = options.switchTimeout ?? this.switchTimeout
@@ -120,7 +121,8 @@ export class Bartender {
     // Fixed element container
     this.fixedElementContainer = resolveElement(
       options.fixedElementContainer || '.bartender__fixedElementContainer',
-      this.el
+      this.el,
+      true
     )
 
     // Create focus trap
