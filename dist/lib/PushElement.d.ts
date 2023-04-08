@@ -1,4 +1,4 @@
-import type { BartenderPushElementOptions, BartenderBarMode, BartenderPushStyles, BartenderBarPosition } from './types';
+import type { BartenderElementQuery, BartenderPushElementOptions, BartenderBarMode, BartenderPushStyles, BartenderBarPosition } from './types';
 import { Bar } from './Bar';
 /**
  * Bartender pushable element
@@ -17,10 +17,11 @@ export declare class PushElement {
     /**
      * Create a new pushable element
      *
+     * @param {BartenderElementQuery} el - Pushable element
      * @param {object} options - Options for pushable element
      * @throws {BartenderError}
      */
-    constructor(options?: BartenderPushElementOptions);
+    constructor(el: BartenderElementQuery, options?: BartenderPushElementOptions);
     /**
      * Push element
      *

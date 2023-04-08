@@ -39,7 +39,7 @@ class n extends Error {
     super(e), this.name = "Bartender error";
   }
 }
-class C {
+class $ {
   /**
    * Create a new overlay
    *
@@ -102,7 +102,7 @@ class C {
     return this.el.classList.remove("bartender__overlay--visible"), this;
   }
 }
-class $ {
+class C {
   /**
    * Create a new bar
    *
@@ -140,7 +140,7 @@ class $ {
     var a, u, b, h, o, d;
     if (!e)
       throw new n("Bar name is required");
-    this.overlayObj = new C(e, this.overlay), this.name = e;
+    this.overlayObj = new $(e, this.overlay), this.name = e;
     const s = p(t.el || null);
     if (!s)
       throw new n(`Content element for bar '${this.name}' is required`);
@@ -191,7 +191,7 @@ class $ {
       throw new n(`Invalid position '${e}' for bar '${this.name}'. Use one of the following: ${t.join(", ")}.`);
     this.initialized === !0 && this.position === e || (this.el.classList.add("bartender-disable-transition"), this.el.classList.remove(`bartender__bar--${this.position}`), this.el.classList.add(`bartender__bar--${e}`), this._position = e, setTimeout(() => {
       this.el.classList.remove("bartender-disable-transition");
-    }), this.initialized === !0 && (this.el.dispatchEvent(new CustomEvent("bartender-bar-update", {
+    }), this.initialized === !0 && (this.el.dispatchEvent(new CustomEvent("bartender-bar-updated", {
       bubbles: !0,
       detail: { bar: this }
     })), this.debug && console.debug("Updated bar position", this)));
@@ -216,7 +216,7 @@ class $ {
       throw new n(`Invalid mode '${e}' for bar '${this.name}'. Use one of the following: ${t.join(", ")}.`);
     this.initialized === !0 && this.mode === e || (this.el.classList.add("bartender-disable-transition"), this.el.classList.remove(`bartender__bar--${this.mode}`), this.el.classList.add(`bartender__bar--${e}`), this._mode = e, setTimeout(() => {
       this.el.classList.remove("bartender-disable-transition");
-    }), this.initialized === !0 && (this.el.dispatchEvent(new CustomEvent("bartender-bar-update", {
+    }), this.initialized === !0 && (this.el.dispatchEvent(new CustomEvent("bartender-bar-updated", {
       bubbles: !0,
       detail: { bar: this }
     })), this.debug && console.debug("Updated bar mode", this)));
@@ -227,7 +227,7 @@ class $ {
   }
   /** @type {boolean} */
   set overlay(e) {
-    this.initialized === !0 && this.overlay === e || (this.overlayObj.enabled = e, this._overlay = e, this.initialized === !0 && (this.el.dispatchEvent(new CustomEvent("bartender-bar-update", {
+    this.initialized === !0 && this.overlay === e || (this.overlayObj.enabled = e, this._overlay = e, this.initialized === !0 && (this.el.dispatchEvent(new CustomEvent("bartender-bar-updated", {
       bubbles: !0,
       detail: { bar: this }
     })), this.debug && console.debug("Updated bar overlay", this, this.overlayObj)));
@@ -238,7 +238,7 @@ class $ {
   }
   /** @type {boolean} */
   set permanent(e) {
-    this._permanent = e, this.initialized === !0 && this.el.dispatchEvent(new CustomEvent("bartender-bar-update", {
+    this._permanent = e, this.initialized === !0 && this.el.dispatchEvent(new CustomEvent("bartender-bar-updated", {
       bubbles: !0,
       detail: { bar: this }
     }));
@@ -249,7 +249,7 @@ class $ {
   }
   /** @type {boolean} */
   set scrollTop(e) {
-    this._scrollTop = e, this.initialized === !0 && this.el.dispatchEvent(new CustomEvent("bartender-bar-update", {
+    this._scrollTop = e, this.initialized === !0 && this.el.dispatchEvent(new CustomEvent("bartender-bar-updated", {
       bubbles: !0,
       detail: { bar: this }
     }));
@@ -331,10 +331,11 @@ class P {
   /**
    * Create a new pushable element
    *
+   * @param {BartenderElementQuery} el - Pushable element
    * @param {object} options - Options for pushable element
    * @throws {BartenderError}
    */
-  constructor(e = {}) {
+  constructor(e, t = {}) {
     /** @property {HTMLElement} el - Element to push */
     i(this, "el");
     /** @property {Bar[]} bars - Matched bars */
@@ -345,10 +346,10 @@ class P {
     i(this, "positions");
     /** @property {boolean} isPushed - Is the element currently pushed? */
     i(this, "isPushed", !1);
-    const t = p(e.el || null);
-    if (!t)
+    const s = p(e || null);
+    if (!s)
       throw new n("Element is required for push element");
-    this.el = t, this.bars = e.bars || [], this.modes = e.modes || [], this.positions = e.positions || [];
+    this.el = s, this.bars = t.bars || [], this.modes = t.modes || [], this.positions = t.positions || [];
   }
   /**
    * Push element
@@ -431,15 +432,15 @@ class F {
       throw new n("Content element is required");
     if (a.parentElement !== this.el)
       throw new n("Content element must be a direct child of the main element");
-    if (this.contentEl = a, this.contentEl.classList.add("bartender__content"), this.contentEl.setAttribute("tabindex", "-1"), this.addPushElement({
-      el: this.contentEl,
+    if (this.contentEl = a, this.contentEl.classList.add("bartender__content"), this.contentEl.setAttribute("tabindex", "-1"), this.addPushElement(this.contentEl, {
       modes: [
         "push",
         "reveal"
       ]
     }), this.fixedElementContainer = p(
-      e.fixedElementContainer || ".bartender__fixedElementContainer",
-      this.el
+      e.fixedElementContainer || ".bartender__fixed",
+      this.el,
+      !0
     ), this.focusTrap === !0) {
       const o = [
         this.contentEl,
@@ -509,7 +510,7 @@ class F {
   /**
    * Add a new bar
    *
-   * @param {string} name - Unique name of the bar
+   * @param {string} name - Unique name for the bar
    * @param {object} options - Bar options
    * @throws {BartenderError}
    * @returns {object} Bar object
@@ -520,7 +521,7 @@ class F {
       throw new n("Bar name is required");
     if (this.getBar(e))
       throw new n(`Bar with name '${e}' is already defined`);
-    const s = new $(e, c(c({}, this.barDefaultOptions), t));
+    const s = new C(e, c(c({}, this.barDefaultOptions), t));
     if (s.debug = this.debug, s.el.parentElement !== this.el)
       throw new n(`Element of bar '${s.name}' must be a direct child of the Bartender main element`);
     return (a = this.contentEl) == null || a.appendChild(s.overlayObj.el), s.overlayObj.el.addEventListener("click", () => {
@@ -631,12 +632,13 @@ class F {
   /**
    * Add a new pushable element
    *
+   * @param {BartenderElementQuery} el - Pushable element
    * @param {object} options - Options for pushable element
    * @returns {PushElement}
    */
-  addPushElement(e = {}) {
-    const t = new P(e);
-    return this.pushableElements.push(t), this.debug && console.debug("Added a new pushable element", t), t;
+  addPushElement(e, t = {}) {
+    const s = new P(e, t);
+    return this.pushableElements.push(s), this.debug && console.debug("Added a new pushable element", s), s;
   }
   /**
    * Remove pushable element

@@ -13,8 +13,7 @@ export interface BartenderOptions {
   focusTrap?: boolean
 }
 
-export interface BartenderBarOptions {
-  el?: BartenderElementQuery,
+export interface BartenderBarDefaultOptions {
   position?: BartenderBarPosition,
   mode?: BartenderBarMode,
   overlay?: boolean,
@@ -23,8 +22,11 @@ export interface BartenderBarOptions {
   focusTrap?: boolean
 }
 
-export interface BartenderPushElementOptions {
+export interface BartenderBarOptions extends BartenderBarDefaultOptions {
   el?: BartenderElementQuery,
+}
+
+export interface BartenderPushElementOptions {
   bars?: Bar[],
   modes?: BartenderBarMode[]
   positions?: BartenderBarPosition[]

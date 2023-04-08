@@ -1,4 +1,4 @@
-import type { BartenderOptions, BartenderBarOptions, BartenderPushElementOptions } from './types';
+import type { BartenderOptions, BartenderBarDefaultOptions, BartenderBarOptions, BartenderElementQuery, BartenderPushElementOptions } from './types';
 import { Bar } from './Bar';
 import { PushElement } from './PushElement';
 /**
@@ -44,7 +44,7 @@ export declare class Bartender {
      * @param {object} barOptions - Default options for bars
      * @throws {BartenderError}
      */
-    constructor(options?: BartenderOptions, barOptions?: BartenderBarOptions);
+    constructor(options?: BartenderOptions, barOptions?: BartenderBarDefaultOptions);
     /** @type {boolean} */
     get debug(): boolean;
     /** @type {boolean} */
@@ -71,7 +71,7 @@ export declare class Bartender {
     /**
      * Add a new bar
      *
-     * @param {string} name - Unique name of the bar
+     * @param {string} name - Unique name for the bar
      * @param {object} options - Bar options
      * @throws {BartenderError}
      * @returns {object} Bar object
@@ -128,10 +128,11 @@ export declare class Bartender {
     /**
      * Add a new pushable element
      *
+     * @param {BartenderElementQuery} el - Pushable element
      * @param {object} options - Options for pushable element
      * @returns {PushElement}
      */
-    addPushElement(options?: BartenderPushElementOptions): PushElement;
+    addPushElement(el: BartenderElementQuery, options?: BartenderPushElementOptions): PushElement;
     /**
      * Remove pushable element
      *
