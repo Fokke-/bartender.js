@@ -1,8 +1,17 @@
 # Bartender.js - Accessible off-canvas bars
 
-Bartender is a library for creating accessible off-canvas bars. Any number of bars are supported, and they can be located on any side of the viewport.
+Bartender is a library for creating accessible off-canvas bars. Any number of bars is supported, and they can be located on any side of the viewport.
 
-The following accessibility concerns have been taken into account:
+
+## Features
+
+- Add any number of bars to any side of the viewport
+- Bar properties, such as position or mode can be changed on the fly
+- Fully stylable
+- TypeScript is supported
+- Comprehesive API, integrable to frameworks
+
+## Accessibility
 
 - ARIA-attributes are being used for all relevant elements
 - After closing the bar the focus will return to the button which was used to open the bar
