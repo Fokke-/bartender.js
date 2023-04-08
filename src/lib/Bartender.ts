@@ -2,6 +2,7 @@ import type {
   BartenderOptions,
   BartenderBarDefaultOptions,
   BartenderBarOptions,
+  BartenderElementQuery,
   BartenderPushElementOptions
 } from './types'
 import * as focusTrap from 'focus-trap'
@@ -110,8 +111,7 @@ export class Bartender {
     this.contentEl.setAttribute('tabindex', '-1')
 
     // Register content element as pushable element
-    this.addPushElement({
-      el: this.contentEl,
+    this.addPushElement(this.contentEl, {
       modes: [
         'push',
         'reveal',
@@ -252,7 +252,7 @@ export class Bartender {
   /**
    * Add a new bar
    *
-   * @param {string} name - Unique name of the bar
+   * @param {string} name - Unique name for the bar
    * @param {object} options - Bar options
    * @throws {BartenderError}
    * @returns {object} Bar object
@@ -436,11 +436,12 @@ export class Bartender {
   /**
    * Add a new pushable element
    *
+   * @param {BartenderElementQuery} el - Pushable element
    * @param {object} options - Options for pushable element
    * @returns {PushElement}
    */
-  public addPushElement (options: BartenderPushElementOptions = {}): PushElement {
-    const pushElement = new PushElement(options)
+  public addPushElement (el: BartenderElementQuery, options: BartenderPushElementOptions = {}): PushElement {
+    const pushElement = new PushElement(el, options)
     this.pushableElements.push(pushElement)
 
     if (this.debug) console.debug('Added a new pushable element', pushElement)

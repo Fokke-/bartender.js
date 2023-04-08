@@ -1,4 +1,5 @@
 import type {
+  BartenderElementQuery,
   BartenderPushElementOptions,
   BartenderBarMode,
   BartenderPushStyles,
@@ -31,15 +32,16 @@ export class PushElement {
   /**
    * Create a new pushable element
    *
+   * @param {BartenderElementQuery} el - Pushable element
    * @param {object} options - Options for pushable element
    * @throws {BartenderError}
    */
-  constructor (options: BartenderPushElementOptions = {}) {
+  constructor (el: BartenderElementQuery, options: BartenderPushElementOptions = {}) {
     // Get element
-    const el = resolveElement(options.el || null)
-    if (!el) throw new BartenderError('Element is required for push element')
-    this.el = el
+    const element = resolveElement(el || null)
+    if (!element) throw new BartenderError('Element is required for push element')
 
+    this.el = element
     this.bars = options.bars || []
     this.modes = options.modes || []
     this.positions = options.positions || []

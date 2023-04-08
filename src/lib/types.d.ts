@@ -27,7 +27,6 @@ export interface BartenderBarOptions extends BartenderBarDefaultOptions {
 }
 
 export interface BartenderPushElementOptions {
-  el?: BartenderElementQuery,
   bars?: Bar[],
   modes?: BartenderBarMode[]
   positions?: BartenderBarPosition[]

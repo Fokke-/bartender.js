@@ -165,7 +165,7 @@ export class Bar {
     // If position was changed after bar was created,
     // dispatch event to update pushable elements
     if (this.initialized === true) {
-      this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
+      this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
         bubbles: true,
         detail: { bar: this },
       }))
@@ -214,7 +214,7 @@ export class Bar {
     // If mode was changed after bar was created,
     // dispatch event to update pushable elements
     if (this.initialized === true) {
-      this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
+      this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
         bubbles: true,
         detail: { bar: this },
       }))
@@ -236,7 +236,7 @@ export class Bar {
     this._overlay = val
 
     if (this.initialized === true) {
-      this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
+      this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
         bubbles: true,
         detail: { bar: this },
       }))
@@ -254,7 +254,7 @@ export class Bar {
   set permanent (val: boolean) {
     this._permanent = val
 
-    if (this.initialized === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
+    if (this.initialized === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
       bubbles: true,
       detail: { bar: this },
     }))
@@ -269,7 +269,7 @@ export class Bar {
   set scrollTop (val: boolean) {
     this._scrollTop = val
 
-    if (this.initialized === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-update', {
+    if (this.initialized === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
       bubbles: true,
       detail: { bar: this },
     }))
