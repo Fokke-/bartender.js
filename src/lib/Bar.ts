@@ -167,7 +167,11 @@ export class Bar {
     if (this.initialized === true) {
       this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
         bubbles: true,
-        detail: { bar: this },
+        detail: {
+          bar: this,
+          property: 'position',
+          value: position,
+        },
       }))
 
       if (this.debug) console.debug('Updated bar position', this)
@@ -216,7 +220,11 @@ export class Bar {
     if (this.initialized === true) {
       this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
         bubbles: true,
-        detail: { bar: this },
+        detail: {
+          bar: this,
+          property: 'mode',
+          value: mode,
+        },
       }))
 
       if (this.debug) console.debug('Updated bar mode', this)
@@ -238,7 +246,11 @@ export class Bar {
     if (this.initialized === true) {
       this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
         bubbles: true,
-        detail: { bar: this },
+        detail: {
+          bar: this,
+          property: 'overlay',
+          value: val,
+        },
       }))
 
       if (this.debug) console.debug('Updated bar overlay', this, this.overlayObj)
@@ -256,7 +268,11 @@ export class Bar {
 
     if (this.initialized === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
       bubbles: true,
-      detail: { bar: this },
+      detail: {
+        bar: this,
+        property: 'permanent',
+        value: val,
+      },
     }))
   }
 
@@ -271,7 +287,11 @@ export class Bar {
 
     if (this.initialized === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
       bubbles: true,
-      detail: { bar: this },
+      detail: {
+        bar: this,
+        property: 'scrollTop',
+        value: val,
+      },
     }))
   }
 

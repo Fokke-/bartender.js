@@ -2,7 +2,6 @@
 
 Bartender is a library for creating accessible off-canvas bars. Any number of bars is supported, and they can be located on any side of the viewport.
 
-
 ## Features
 
 - Add any number of bars to any side of the viewport
@@ -198,6 +197,12 @@ bartender.addBar('mobileNav', {
 })
 ```
 
+Bar options can be modified on the fly, except for the `el` property.
+
+```javascript
+bartender.getBar('mobileNav').position = 'right'
+```
+
 #### Bar options
 
 ##### el
@@ -312,6 +317,9 @@ By default element is pushed by all bars, modes and positions, but you can fine-
 | options | object | Pushable element options. Available options are listed below. |
 
 ```javascript
+// Always push the element, regardless of bar configuration
+bartender.addPushElement('.myFixedElement')
+
 // Push element only if mode is 'push' or 'reveal' AND position is 'left' or 'right'.
 bartender.addPushElement('.myFixedElement', {
   modes: [
@@ -411,9 +419,11 @@ This event is dispatched when one of the following bar properties change:
 - permanent
 - scrollTop
 
+Bar, updated property name and property value will be included in `detail` object.
+
 ```javascript
 window.addEventListener('bartender-bar-updated', (event) => {
-  console.log(event.detail.bar)
+  console.log(`Updated bar '${event.detail.bar.name}' property '${event.detail.property}' to '${event.detail.value}'`)
 })
 ```
 
