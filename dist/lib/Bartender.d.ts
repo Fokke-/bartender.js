@@ -156,7 +156,7 @@ export declare class Bartender {
      */
     private pullElements;
     /**
-     * Handler for bartender-bar-update event
+     * Handler for bartender-bar-updated event
      *
      * @returns {void}
      */
