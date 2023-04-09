@@ -156,7 +156,7 @@ export class Bartender {
 
     // Event listeners
     this.onBarUpdateHandler = this.onBarUpdate.bind(this)
-    window.addEventListener('bartender-bar-update', this.onBarUpdateHandler)
+    window.addEventListener('bartender-bar-updated', this.onBarUpdateHandler)
 
     this.onKeydownHandler = this.onKeydown.bind(this)
     window.addEventListener('keydown', this.onKeydownHandler)
@@ -216,7 +216,7 @@ export class Bartender {
     if (this.trap) this.trap.deactivate()
 
     // Remove event listeners
-    window.removeEventListener('bartender-bar-update', this.onBarUpdateHandler)
+    window.removeEventListener('bartender-bar-updated', this.onBarUpdateHandler)
     window.removeEventListener('keydown', this.onKeydownHandler)
     window.removeEventListener('resize', this.onResizeHandler)
 
@@ -506,7 +506,7 @@ export class Bartender {
   }
 
   /**
-   * Handler for bartender-bar-update event
+   * Handler for bartender-bar-updated event
    *
    * @returns {void}
    */
