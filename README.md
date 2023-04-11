@@ -130,19 +130,19 @@ If enabled, Bartender will log it's activity to console. Note that these message
 
 Type: `string | Element`, Default: `'.bartender'`
 
-Specify main element as selector string or reference to the element.
+Main element as selector string or reference to the element.
 
 #### contentEl
 
 Type: `string | Element`, Default: `'.bartender__content'`
 
-Specify page content element as selector string or reference to the element.
+Page content element as selector string or reference to the element.
 
-#### fixed
+#### fixedElementContainer
 
 Type: `string | Element`, Default: `'.bartender__fixed'`
 
-Specify fixed element container as selector string or reference to the element. Fixed elements as direct children of main element will work, but using a container is required if you enable focus trap.
+Fixed element container as selector string or reference to the element. Fixed elements as direct children of main element will work, but using a container is required if you enable focus trap.
 
 #### switchTimeout
 
@@ -209,19 +209,19 @@ bartender.getBar('mobileNav').position = 'right'
 
 Type: `string | Element`
 
-Specify element as selector string or reference to the element.
+Bar element as selector string or reference to the element.
 
 ##### position
 
 Type: `string`, Default: `'left'`
 
-Specify bar position as string. Possible values are `'left'`, `'right'`, `'top'` and `'bottom'`.
+Bar position as string. Possible values are `'left'`, `'right'`, `'top'` and `'bottom'`.
 
 ##### mode
 
 Type: `string`, Default: `'float'`
 
-Specify bar mode as string. Possible values are:
+Bar mode as string. Possible values are:
 
 - `float` - The bar will slide in and float over the content.
 - `push` - The bar will slide in, and the content wrap will be pushed away from the bar.
@@ -313,14 +313,14 @@ By default element is pushed by all bars, modes and positions, but you can fine-
 
 | Argument | Type | Description |
 | - | - | - |
-| el | string \| element | Element as selector string or reference to the element. |
+| el | string \| Element | Element as selector string or reference to the element. |
 | options | object | Pushable element options. Available options are listed below. |
 
 ```javascript
 // Always push the element, regardless of bar configuration
 bartender.addPushElement('.myFixedElement')
 
-// Push element only if mode is 'push' or 'reveal' AND position is 'left' or 'right'.
+// Push element only if bar mode is 'push' or 'reveal' AND position is 'left' or 'right'.
 bartender.addPushElement('.myFixedElement', {
   modes: [
     'push',
@@ -339,9 +339,9 @@ Note that if you specify multiple options, they all have to match to the bar bei
 
 ##### bars
 
-Type: `Array<string>`, Default: `[]`
+Type: `Array<Bar>`, Default: `[]`
 
-An array of bar names.
+An array of bar instances.
 
 ##### modes
 
