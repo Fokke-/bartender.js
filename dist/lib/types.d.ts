@@ -37,4 +37,3 @@ export interface BartenderPushStyles {
   transitionDuration: string,
   transitionTimingFunction: string,
 }
-

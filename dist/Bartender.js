@@ -12,20 +12,20 @@ var f = (r, e, t) => e in r ? E(r, e, { enumerable: !0, configurable: !0, writab
 }, w = (r, e) => y(r, _(e));
 var i = (r, e, t) => (f(r, typeof e != "symbol" ? e + "" : e, t), t);
 var l = (r, e, t) => new Promise((s, a) => {
-  var h = (o) => {
+  var u = (o) => {
     try {
-      d(t.next(o));
-    } catch (u) {
-      a(u);
+      h(t.next(o));
+    } catch (d) {
+      a(d);
     }
   }, b = (o) => {
     try {
-      d(t.throw(o));
-    } catch (u) {
-      a(u);
+      h(t.throw(o));
+    } catch (d) {
+      a(d);
     }
-  }, d = (o) => o.done ? s(o.value) : Promise.resolve(o.value).then(h, b);
-  d((t = t.apply(r, e)).next());
+  }, h = (o) => o.done ? s(o.value) : Promise.resolve(o.value).then(u, b);
+  h((t = t.apply(r, e)).next());
 });
 import * as g from "focus-trap";
 import { Queue as O } from "async-await-queue";
@@ -102,7 +102,7 @@ class $ {
     return this.el.classList.remove("bartender__overlay--visible"), this;
   }
 }
-class C {
+class P {
   /**
    * Create a new bar
    *
@@ -137,14 +137,14 @@ class C {
     i(this, "isOpened", !1);
     /** @property {object|null} trap - Focus trap */
     i(this, "trap", null);
-    var a, h, b, d, o, u;
+    var a, u, b, h, o, d;
     if (!e)
       throw new n("Bar name is required");
     this.overlayObj = new $(e, this.overlay), this.name = e;
     const s = p(t.el || null);
     if (!s)
       throw new n(`Content element for bar '${this.name}' is required`);
-    this.el = s, this.el.classList.add("bartender__bar"), this.el.setAttribute("tabindex", "-1"), this.el.setAttribute("aria-hidden", "true"), this.position = (a = t.position) != null ? a : this._position, this.mode = (h = t.mode) != null ? h : this._mode, this.overlay = (b = t.overlay) != null ? b : this._overlay, this.permanent = (d = t.permanent) != null ? d : this._permanent, this.scrollTop = (o = t.scrollTop) != null ? o : this._scrollTop, this.focusTrap = (u = t.focusTrap) != null ? u : this.focusTrap, this.focusTrap === !0 && (this.trap = g.createFocusTrap(this.el, {
+    this.el = s, this.el.classList.add("bartender__bar"), this.el.setAttribute("tabindex", "-1"), this.el.setAttribute("aria-hidden", "true"), this.position = (a = t.position) != null ? a : this._position, this.mode = (u = t.mode) != null ? u : this._mode, this.overlay = (b = t.overlay) != null ? b : this._overlay, this.permanent = (h = t.permanent) != null ? h : this._permanent, this.scrollTop = (o = t.scrollTop) != null ? o : this._scrollTop, this.focusTrap = (d = t.focusTrap) != null ? d : this.focusTrap, this.focusTrap === !0 && (this.trap = g.createFocusTrap(this.el, {
       initialFocus: this.el,
       fallbackFocus: () => this.el,
       escapeDeactivates: !1,
@@ -347,7 +347,7 @@ class C {
     };
   }
 }
-class P {
+class C {
   /**
    * Create a new pushable element
    *
@@ -439,8 +439,8 @@ class F {
     i(this, "onKeydownHandler");
     /** @property {Function} onKeydownHandler - Handler for resize event */
     i(this, "onResizeHandler");
-    var h, b, d;
-    this.debug = (h = e.debug) != null ? h : this._debug, this.switchTimeout = (b = e.switchTimeout) != null ? b : this.switchTimeout, this.focusTrap = (d = e.focusTrap) != null ? d : this.focusTrap, this.barDefaultOptions = w(c(c({}, this.barDefaultOptions), t), {
+    var u, b, h;
+    this.debug = (u = e.debug) != null ? u : this._debug, this.switchTimeout = (b = e.switchTimeout) != null ? b : this.switchTimeout, this.focusTrap = (h = e.focusTrap) != null ? h : this.focusTrap, this.barDefaultOptions = w(c(c({}, this.barDefaultOptions), t), {
       focusTrap: this.focusTrap
     });
     const s = p(e.el || ".bartender");
@@ -465,7 +465,7 @@ class F {
       const o = [
         this.contentEl,
         this.fixedElementContainer
-      ].filter((u) => !!u);
+      ].filter((d) => !!d);
       this.trap = g.createFocusTrap(o, {
         initialFocus: this.contentEl,
         fallbackFocus: () => this.contentEl,
@@ -536,18 +536,21 @@ class F {
    * @returns {object} Bar object
    */
   addBar(e, t = {}) {
-    var a;
     if (!e || typeof e != "string")
       throw new n("Bar name is required");
     if (this.getBar(e))
       throw new n(`Bar with name '${e}' is already defined`);
-    const s = new C(e, c(c({}, this.barDefaultOptions), t));
-    if (s.debug = this.debug, this.bars.some((h) => h.el === s.el))
+    const s = new P(e, c(c({}, this.barDefaultOptions), t));
+    if (s.debug = this.debug, this.bars.some((a) => a.el === s.el))
       throw new n(`Element of bar '${s.name}' is already being used for another bar`);
     if (s.el.parentElement !== this.el)
       throw new n(`Element of bar '${s.name}' must be a direct child of the Bartender main element`);
-    return (a = this.contentEl) == null || a.appendChild(s.overlayObj.el), s.overlayObj.el.addEventListener("click", () => {
+    return this.el.appendChild(s.overlayObj.el), s.overlayObj.el.addEventListener("click", () => {
       s.permanent !== !0 && this.close();
+    }), this.addPushElement(s.overlayObj.el, {
+      bars: [
+        s
+      ]
     }), this.bars.push(s), this.el.dispatchEvent(new CustomEvent("bartender-bar-added", {
       bubbles: !0,
       detail: { bar: s }
@@ -567,7 +570,7 @@ class F {
       const t = this.getBar(e);
       if (!t)
         throw new n(`Bar with name '${e}' was not found`);
-      this.getOpenBar() === t && (yield this.close()), t.destroy();
+      this.getOpenBar() === t && this.close(), this.removePushElement(t.overlayObj.el), t.destroy();
       const s = this.bars.findIndex((a) => a.name === e);
       return this.bars.splice(s, 1), this.el.dispatchEvent(new CustomEvent("bartender-bar-removed", {
         bubbles: !0,
@@ -659,7 +662,9 @@ class F {
    * @returns {PushElement}
    */
   addPushElement(e, t = {}) {
-    const s = new P(e, t);
+    if (this.pushableElements.some((a) => a.el === e))
+      throw new n("This element is already defined as pushable element.");
+    const s = new C(e, t);
     return this.pushableElements.push(s), this.debug && console.debug("Added a new pushable element", s), s;
   }
   /**
