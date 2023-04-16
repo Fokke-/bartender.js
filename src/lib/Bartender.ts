@@ -452,6 +452,8 @@ export class Bartender {
    * @returns {PushElement}
    */
   public addPushElement (el: BartenderElementQuery, options: BartenderPushElementOptions = {}): PushElement {
+    if (this.pushableElements.some(item => item.el === el)) throw new BartenderError('This element is already defined as pushable element.')
+
     const pushElement = new PushElement(el, options)
     this.pushableElements.push(pushElement)
 
