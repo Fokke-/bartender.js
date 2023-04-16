@@ -15,7 +15,7 @@ $bartender-overlay-transition: transform $bartender-transition-duration $bartend
   &__content {
     box-sizing: border-box !important;
     z-index: 10;
-    position: relative;
+    position: relative !important;
     width: 100%;
     min-height: 100vh;
     margin: 0 !important;
@@ -31,7 +31,7 @@ $bartender-overlay-transition: transform $bartender-transition-duration $bartend
   &__bar {
     box-sizing: border-box !important;
     z-index: 20;
-    position: fixed;
+    position: fixed !important;
     overflow: auto;
     margin: 0 !important;
     background-color: #fff;
@@ -113,7 +113,7 @@ $bartender-overlay-transition: transform $bartender-transition-duration $bartend
 
   &__overlay {
     z-index: 20;
-    position: absolute;
+    position: fixed !important;
     left: 0;
     right: 0;
     top: 0;
