@@ -315,7 +315,7 @@ export class Bartender {
 
     const bar = this.getBar(name)
     if (!bar) throw new BartenderError(`Bar with name '${name}' was not found`)
-    if (this.getOpenBar() === bar) await this.close()
+    if (this.getOpenBar() === bar) this.close()
 
     this.removePushElement(bar.overlayObj.el)
     bar.destroy()
