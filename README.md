@@ -361,7 +361,7 @@ Remove pushable element by reference.
 
 | Argument | Type | Description |
 | - | - | - |
-| el | element | Reference to the element. |
+| el | Element | Reference to the element. |
 
 ```javascript
 bartender.removePushElement(document.querySelector('.myFixedElement'))
