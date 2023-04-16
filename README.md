@@ -231,7 +231,7 @@ Bar mode as string. Possible values are:
 
 Type: `boolean`, Default: `true`
 
-Show shading overlay over content wrap when bar is open.
+Show shading overlay over content wrap when bar is open. If disabled, overlay element will still be rendered, but it will be transparent.
 
 ##### permanent
 
