@@ -466,3 +466,51 @@ window.addEventListener('bartender-bar-after-close', (event) => {
   console.log(event.detail.bar)
 })
 ```
+
+## Styling
+
+Note that all transitions are disabled, if user prefers reduced motion. [Read more about reduced motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion).
+
+These scss variables will be used as defaults for all transitions:
+
+```scss
+$bartender-transition-duration: 250ms !default;
+$bartender-transition-timing-function: ease !default;
+```
+
+### Bars
+
+Each bar will receive unique class name based on it's name and mode.
+
+```css
+/* Styles for all bars */
+.bartender__bar {
+  background: #dadada;
+}
+
+/* Styles for bar named "left" */
+.bartender__bar--left {
+  background: #dadada;
+}
+
+/* Styles for all bars with mode "float" */
+.bartender__bar--float {
+  background: #dadada;
+}
+```
+
+### Overlay shading
+
+Each bar has it's own overlay element, so you can style overlays per bar basis.
+
+```css
+/* Styles for all overlays */
+.bartender__overlay {
+  background-color: rgba(128, 0, 0, 0.5);
+}
+
+/* Styles for the overlay of bar named "left" */
+.bartender__overlay--left {
+  background-color: rgba(128, 0, 0, 0.5);
+}
+```
