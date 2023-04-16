@@ -1,5 +1,7 @@
-$bartender-bar-transition: transform 250ms ease !default;
-$bartender-overlay-transition: opacity 250ms ease, background-color 250ms ease !default;
+$bartender-transition-duration: 250ms !default;
+$bartender-transition-timing-function: ease !default;
+$bartender-bar-transition: transform $bartender-transition-duration $bartender-transition-timing-function !default;
+$bartender-overlay-transition: transform $bartender-transition-duration $bartender-transition-timing-function, opacity $bartender-transition-duration $bartender-transition-timing-function, background-color $bartender-transition-duration $bartender-transition-timing-function !default;
 
 .bartender {
   box-sizing: border-box !important;
@@ -28,7 +30,7 @@ $bartender-overlay-transition: opacity 250ms ease, background-color 250ms ease !
 
   &__bar {
     box-sizing: border-box !important;
-    z-index: 9999;
+    z-index: 20;
     position: fixed;
     overflow: auto;
     margin: 0 !important;
@@ -110,7 +112,7 @@ $bartender-overlay-transition: opacity 250ms ease, background-color 250ms ease !
   }
 
   &__overlay {
-    z-index: 9999;
+    z-index: 20;
     position: absolute;
     left: 0;
     right: 0;
@@ -119,7 +121,7 @@ $bartender-overlay-transition: opacity 250ms ease, background-color 250ms ease !
     background-color: rgba(0, 0, 0, 0.5);
     pointer-events: none;
     opacity: 0;
-    will-change: opacity, background-color;
+    will-change: transform, opacity, background-color;
     transition: $bartender-overlay-transition;
 
     @media (prefers-reduced-motion) {

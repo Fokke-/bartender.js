@@ -267,7 +267,7 @@ export class Bartender {
       ...options,
     })
 
-    // Set debug mode for bar
+    // Set debug mode
     bar.debug = this.debug
 
     // Check that element is not assigned to another bar
@@ -277,11 +277,18 @@ export class Bartender {
     if (bar.el.parentElement !== this.el) throw new BartenderError(`Element of bar '${bar.name}' must be a direct child of the Bartender main element`)
 
     // Insert overlay element
-    this.contentEl?.appendChild(bar.overlayObj.el)
+    this.el.appendChild(bar.overlayObj.el)
     bar.overlayObj.el.addEventListener('click', () => {
       if (bar.permanent === true) return
 
       this.close()
+    })
+
+    // Set overlay as pushable element
+    this.addPushElement(bar.overlayObj.el, {
+      bars: [
+        bar,
+      ],
     })
 
     this.bars.push(bar)
@@ -310,6 +317,7 @@ export class Bartender {
     if (!bar) throw new BartenderError(`Bar with name '${name}' was not found`)
     if (this.getOpenBar() === bar) await this.close()
 
+    this.removePushElement(bar.overlayObj.el)
     bar.destroy()
 
     const barIndex = this.bars.findIndex(item => item.name === name)
