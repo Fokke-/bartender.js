@@ -72,7 +72,7 @@ export class Bar {
     const el = resolveElement(options.el || null)
     if (!el) throw new BartenderError(`Content element for bar '${this.name}' is required`)
     this.el = el
-    this.el.classList.add('bartender__bar')
+    this.el.classList.add('bartender__bar', 'bartender__bar--closed')
     this.el.setAttribute('tabindex', '-1')
     this.el.setAttribute('aria-hidden', 'true')
 
@@ -331,6 +331,7 @@ export class Bar {
     }))
 
     if (this.scrollTop === true) this.el.scrollTo(0, 0)
+    this.el.classList.remove('bartender__bar--closed')
     this.el.classList.add('bartender__bar--open')
     this.el.setAttribute('aria-hidden', 'false')
     this.el.focus()
@@ -373,6 +374,7 @@ export class Bar {
 
     await sleep(this.getTransitionDuration())
 
+    this.el.classList.add('bartender__bar--closed')
     this.el.dispatchEvent(new CustomEvent('bartender-bar-after-close', {
       bubbles: true,
       detail: { bar: this },
