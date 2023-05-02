@@ -80,7 +80,7 @@ Note that the class names in the example below are defaults. You can use any cla
 ### Initialize the library
 
 ```javascript
-import Bartender from '@fokke-/bartender.js'
+import { Bartender } from '@fokke-/bartender.js'
 
 // Create main instance
 const bartender = new Bartender({
