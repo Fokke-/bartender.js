@@ -5,7 +5,6 @@ import type {
   BartenderElementQuery,
   BartenderPushElementOptions
 } from './types'
-import * as focusTrap from 'focus-trap'
 import { Queue } from 'async-await-queue'
 import { debounce } from 'ts-debounce'
 import {
@@ -57,9 +56,6 @@ export class Bartender {
 
   /** @property {PushElement[]} pushableElements - Pushable elements added to the instance */
   private pushableElements: PushElement[] = []
-
-  /** @property {object|null} trap - Focus trap */
-  private trap: focusTrap.FocusTrap | null = null
 
   /** @property {object} queue - Queue for actions */
   private queue: Queue
@@ -124,27 +120,6 @@ export class Bartender {
       this.el,
       true
     )
-
-    // Create focus trap
-    if (this.focusTrap === true) {
-      const containerNodes: Array<HTMLElement | null> = [
-        this.contentEl,
-        this.fixedElementContainer,
-      ].filter(item => !!item)
-
-      this.trap = focusTrap.createFocusTrap(containerNodes as HTMLElement[], {
-        initialFocus: this.contentEl,
-        fallbackFocus: () => {
-          return this.contentEl
-        },
-        escapeDeactivates: false,
-        clickOutsideDeactivates: false,
-        allowOutsideClick: false,
-        returnFocusOnDeactivate: false,
-        preventScroll: true,
-      })
-      this.trap.activate()
-    }
 
     // Queue for actions
     this.queue = new Queue(1)
@@ -211,9 +186,6 @@ export class Bartender {
     // Remove classes
     this.el.classList.remove('bartender', 'bartender--ready')
     this.contentEl.classList.remove('bartender__content')
-
-    // Destroy focus trap
-    if (this.trap) this.trap.deactivate()
 
     // Remove event listeners
     window.removeEventListener('bartender-bar-updated', this.onBarUpdateHandler)
@@ -353,7 +325,6 @@ export class Bartender {
       await sleep(this.switchTimeout)
     }
 
-    if (this.trap) this.trap.pause()
     this.el.classList.add('bartender--open')
     this.contentEl.setAttribute('aria-hidden', 'true')
     this.pushElements(bar)
@@ -413,8 +384,6 @@ export class Bartender {
   public async close (name?: string): Promise<Bar | null> {
     const id = Symbol()
     await this.queue.wait(id)
-
-    if (this.trap) this.trap.unpause()
 
     return this.closeBar(name).finally(() => {
       this.queue.end(id)
