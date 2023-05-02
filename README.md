@@ -41,7 +41,7 @@ Note that it's highly recommended to define viewport meta tag to avoid quirks wh
 1. Create main wrap for Bartender. Ideally it would be your `<body>` element.
 2. Create wrap element for your page content as a direct child of the Bartender main element.
 3. Add any number of bar elements as a direct children of the Bartender main element.
-4. Optional: if you need to use fixed positioned elements in your page content, add container element as a direct child of the bartender main element.
+4. If you need to use fixed positioned elements in your page content, add them as direct children of the bartender main element.
 
 Note that the class names in the example below are defaults. You can use any classes as they are configurable when you initialize the library later. However, using default classes in addition to your own classes is recommended to avoid FOUC.
 
@@ -59,10 +59,7 @@ Note that the class names in the example below are defaults. You can use any cla
     <button class="closeMobileNav">Close mobile navigation</button>
   </div>
 
-  <!-- Optionally add container for fixed positioned elements. -->
-  <div class="bartender__fixed">
-    <!-- Place your fixed positioned elements here -->
-  </div>
+  <!-- Place your fixed positioned elements here -->
 
 </body>
 ```
@@ -137,12 +134,6 @@ Main element as selector string or reference to the element.
 Type: `string | Element`, Default: `'.bartender__content'`
 
 Page content element as selector string or reference to the element.
-
-#### fixedElementContainer
-
-Type: `string | Element`, Default: `'.bartender__fixed'`
-
-Fixed element container as selector string or reference to the element. Fixed elements as direct children of main element will work, but using a container is required if you enable focus trap.
 
 #### switchTimeout
 
@@ -307,7 +298,7 @@ bartender.toggle('mobileNav', button)
 
 ### addPushElement(element, options?)
 
-Specify additional element you want to be pushed when bar is opened. This can be useful for fixed elements placed in fixed element container.
+Specify additional element you want to be pushed when bar is opened. This can be useful for fixed elements.
 
 By default element is pushed by all bars, modes and positions, but you can fine-tune this behaviour by options.
 

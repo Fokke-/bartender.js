@@ -32,9 +32,6 @@ export class Bartender {
   /** @property {number} switchTimeout - Time to wait in milliseconds until another bar is opened */
   readonly switchTimeout: number = 150
 
-  /** @property {HTMLElement|null} fixedElementContainer - Reference to the fixed element container */
-  readonly fixedElementContainer: HTMLElement | null = null
-
   /** @property {boolean} focusTrap - Enable focus trap? */
   readonly focusTrap: boolean = false
 
@@ -113,13 +110,6 @@ export class Bartender {
         'reveal',
       ],
     })
-
-    // Fixed element container
-    this.fixedElementContainer = resolveElement(
-      options.fixedElementContainer || '.bartender__fixed',
-      this.el,
-      true
-    )
 
     // Queue for actions
     this.queue = new Queue(1)
