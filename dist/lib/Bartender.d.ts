@@ -13,8 +13,6 @@ export declare class Bartender {
     readonly contentEl: HTMLElement;
     /** @property {number} switchTimeout - Time to wait in milliseconds until another bar is opened */
     readonly switchTimeout: number;
-    /** @property {HTMLElement|null} fixedElementContainer - Reference to the fixed element container */
-    readonly fixedElementContainer: HTMLElement | null;
     /** @property {boolean} focusTrap - Enable focus trap? */
     readonly focusTrap: boolean;
     /** @property {Bar[]} bars - Bars added to the instance */
@@ -25,8 +23,6 @@ export declare class Bartender {
     private previousOpenButton?;
     /** @property {PushElement[]} pushableElements - Pushable elements added to the instance */
     private pushableElements;
-    /** @property {object|null} trap - Focus trap */
-    private trap;
     /** @property {object} queue - Queue for actions */
     private queue;
     /** @property {Function} resizeDebounce - Debouncer for resizing */

@@ -46,6 +46,10 @@ $bartender-overlay-transition: transform $bartender-transition-duration $bartend
       transition: none !important;
     }
 
+    &--closed {
+      visibility: hidden;
+    }
+
     &--reveal {
       z-index: 1;
     }
