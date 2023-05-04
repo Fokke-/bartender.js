@@ -64,6 +64,7 @@ export default defineConfig({
       ],
     }),
     dts({
+      rollupTypes: true,
       skipDiagnostics: false,
       copyDtsFiles: true,
     }),
