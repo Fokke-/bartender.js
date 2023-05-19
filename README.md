@@ -14,8 +14,8 @@ Bartender is a library for creating accessible off-canvas bars. Any number of ba
 
 - ARIA-attributes are being used for all relevant elements
 - After closing the bar the focus will return to the button which was used to open the bar
+- If bar is closed, it's child elements are not focusable
 - If focus trap is enabled and bar is open, only it's child elements are focusable
-- If focus trap is enabled and bar is closed, it's child elements are not focusable
 - All transitions are disabled if user prefers reduced motion
 
 ## Browser support
@@ -32,7 +32,7 @@ npm i @fokke-/bartender.js
 
 ### Markup
 
-Note that it's highly recommended to define viewport meta tag to avoid quirks when using bars with `push` or `reveal` modes.
+Note that it's highly recommended to define the following viewport meta tag to avoid quirks when using bars with `push` or `reveal` modes.
 
 ```html
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
