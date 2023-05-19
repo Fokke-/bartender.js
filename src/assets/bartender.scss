@@ -26,7 +26,6 @@ $bartender-overlay-transition: transform $bartender-transition-duration $bartend
     background: #fff;
     will-change: transform;
     transition-property: transform;
-    border: solid .5em red;
 
     &:focus {
       outline: 0;
@@ -46,7 +45,6 @@ $bartender-overlay-transition: transform $bartender-transition-duration $bartend
     background-color: #fff;
     will-change: transform;
     transition: $bartender-bar-transition;
-    border: solid .5em blue;
 
     &:focus {
       outline: 0;
