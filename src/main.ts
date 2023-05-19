@@ -32,13 +32,13 @@ window.bartender.addBar('rightExtra', {
 window.bartender.addBar('top', {
   el: '.bar--top',
   position: 'top',
-  mode: 'push',
+  mode: 'reveal',
 })
 
 window.bartender.addBar('bottom', {
   el: '.bar--bottom',
   position: 'bottom',
-  mode: 'push',
+  mode: 'reveal',
 })
 
 const fixedBarBottom = document.querySelector('.toolBar--fixed.toolBar--bottom') as HTMLElement
