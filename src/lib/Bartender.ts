@@ -32,9 +32,6 @@ export class Bartender {
   /** @property {number} switchTimeout - Time to wait in milliseconds until another bar is opened */
   readonly switchTimeout: number = 150
 
-  /** @property {boolean} focusTrap - Enable focus trap? */
-  readonly focusTrap: boolean = false
-
   /** @property {Bar[]} bars - Bars added to the instance */
   readonly bars: Bar[] = []
 
@@ -46,6 +43,7 @@ export class Bartender {
     overlay: true,
     permanent: false,
     scrollTop: true,
+    focusTrap: false,
   }
 
   /** @property {HTMLElement|null} previousOpenButton - Reference to the previous open button */
@@ -82,11 +80,9 @@ export class Bartender {
   ) {
     this.debug = options.debug ?? this._debug
     this.switchTimeout = options.switchTimeout ?? this.switchTimeout
-    this.focusTrap = options.focusTrap ?? this.focusTrap
     this.barDefaultOptions = {
       ...this.barDefaultOptions,
       ...barOptions,
-      focusTrap: this.focusTrap,
     }
 
     // Main element
