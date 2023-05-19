@@ -315,6 +315,7 @@ export class Bartender {
       await sleep(this.switchTimeout)
     }
 
+    document.body.classList.add('bartender-disable-scrolling')
     this.el.classList.add('bartender--open')
     this.contentEl.setAttribute('aria-hidden', 'true')
     this.pushElements(bar)
@@ -355,9 +356,10 @@ export class Bartender {
     this.pullElements(bar)
     await bar.close()
 
-    // If we going to open right after closing the current one,
+    // If we going to open another bar right after closing the current one,
     // don't update elements yet.
     if (switching === false) {
+      document.body.classList.remove('bartender-disable-scrolling')
       this.el.classList.remove('bartender--open')
       this.contentEl.setAttribute('aria-hidden', 'false')
     }
