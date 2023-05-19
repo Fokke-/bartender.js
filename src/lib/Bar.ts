@@ -53,7 +53,7 @@ export class Bar {
   private isOpened = false
 
   /** @property {object|null} trap - Focus trap */
-  private trap: focusTrap.FocusTrap | null = null
+  private trap: focusTrap.FocusTrap
 
   /**
    * Create a new bar
@@ -82,20 +82,17 @@ export class Bar {
     this.permanent = options.permanent ?? this._permanent
     this.scrollTop = options.scrollTop ?? this._scrollTop
     this.focusTrap = options.focusTrap ?? this.focusTrap
-
-    if (this.focusTrap === true) {
-      this.trap = focusTrap.createFocusTrap(this.el, {
-        initialFocus: this.el,
-        fallbackFocus: () => {
-          return this.el
-        },
-        escapeDeactivates: false,
-        clickOutsideDeactivates: false,
-        allowOutsideClick: true,
-        returnFocusOnDeactivate: false,
-        preventScroll: true,
-      })
-    }
+    this.trap = focusTrap.createFocusTrap(this.el, {
+      initialFocus: this.el,
+      fallbackFocus: () => {
+        return this.el
+      },
+      escapeDeactivates: false,
+      clickOutsideDeactivates: false,
+      allowOutsideClick: true,
+      returnFocusOnDeactivate: false,
+      preventScroll: true,
+    })
 
     this.initialized = true
   }
@@ -338,7 +335,7 @@ export class Bar {
     this.overlayObj.show()
     this.isOpened = true
 
-    if (this.trap) this.trap.activate()
+    if (this.focusTrap === true) this.trap.activate()
 
     await sleep(this.getTransitionDuration())
 
