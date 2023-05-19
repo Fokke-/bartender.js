@@ -141,14 +141,6 @@ Type: `number` (milliseconds), Default: `150`
 
 If bar is opened when there's already another active bar, the open bar will be closed and the library will pause for the given time before opening the another bar.
 
-#### focusTrap
-
-Type: `boolean`, Default: `false`
-
-If enabled, keyboard focus will be trapped either to the page content or to the currently open bar.
-
-**IMPORTANT:** If you enable this, you **must** provide a way to close the bar with keyboard. Even though by default `esc` key closes the bar, adding a dedicated close button to the bar is highly recommended.
-
 ## API
 
 ### destroy()
@@ -237,6 +229,14 @@ If enabled, the bar is not closable by clicking overlay of pressing `esc` key.
 Type: `boolean`, Default: `true`
 
 If enabled, bar will be scrolled to top when opening it.
+
+#### focusTrap
+
+Type: `boolean`, Default: `false`
+
+If enabled, keyboard focus will be trapped to the currently open bar.
+
+**IMPORTANT:** If you enable this, you **must** provide a way to close the bar with keyboard. Even though by default `esc` key closes the bar, adding a dedicated close button to the bar is highly recommended.
 
 ### removeBar(name)
 
