@@ -5,7 +5,9 @@ $bartender-overlay-transition: transform $bartender-transition-duration $bartend
 
 .bartender {
   box-sizing: border-box !important;
-  min-height: 100vh;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
   margin: 0 !important;
 
   &--open {
@@ -14,14 +16,17 @@ $bartender-overlay-transition: transform $bartender-transition-duration $bartend
 
   &__content {
     box-sizing: border-box !important;
+    overflow: auto;
     z-index: 10;
     position: relative !important;
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
+    height: 100dvh;
     margin: 0 !important;
     background: #fff;
     will-change: transform;
     transition-property: transform;
+    border: solid .5em red;
 
     &:focus {
       outline: 0;
@@ -29,7 +34,6 @@ $bartender-overlay-transition: transform $bartender-transition-duration $bartend
 
     .bartender--open & {
       overflow: hidden;
-      max-height: 100vh;
     }
   }
 
@@ -42,6 +46,7 @@ $bartender-overlay-transition: transform $bartender-transition-duration $bartend
     background-color: #fff;
     will-change: transform;
     transition: $bartender-bar-transition;
+    border: solid .5em blue;
 
     &:focus {
       outline: 0;
@@ -64,7 +69,8 @@ $bartender-overlay-transition: transform $bartender-transition-duration $bartend
       top: 0;
       width: 80%;
       max-width: 400px;
-      height: calc(100vh - calc(100vh - 100%));
+      height: 100vh;
+      height: 100dvh;
 
       &.bartender__bar--open {
         transform: translateX(0)
@@ -93,7 +99,8 @@ $bartender-overlay-transition: transform $bartender-transition-duration $bartend
     &--bottom {
       left: 0;
       width: 100%;
-      height: 50%;
+      height: 50vh;
+      height: 50dvh;
       max-height: 400px;
 
       &.bartender__bar--open {

@@ -566,7 +566,7 @@ class C {
       if (t.isOpen() === !0)
         return Promise.resolve(t);
       const s = this.getOpenBar();
-      return s && (yield this.closeBar(s.name, !0), yield f(this.switchTimeout)), document.body.classList.add("bartender-disable-scrolling"), this.el.classList.add("bartender--open"), this.contentEl.setAttribute("aria-hidden", "true"), this.pushElements(t), t.open();
+      return s && (yield this.closeBar(s.name, !0), yield f(this.switchTimeout)), this.el.classList.add("bartender--open"), this.contentEl.setAttribute("aria-hidden", "true"), this.pushElements(t), t.open();
     });
   }
   /**
@@ -594,7 +594,7 @@ class C {
   closeBar(e, t = !1) {
     return l(this, null, function* () {
       const s = e ? this.getBar(e) : this.getOpenBar();
-      return !s || !s.isOpen() ? Promise.resolve(null) : (this.pullElements(s), yield s.close(), t === !1 && (document.body.classList.remove("bartender-disable-scrolling"), this.el.classList.remove("bartender--open"), this.contentEl.setAttribute("aria-hidden", "false")), Promise.resolve(s));
+      return !s || !s.isOpen() ? Promise.resolve(null) : (this.pullElements(s), yield s.close(), t === !1 && (this.el.classList.remove("bartender--open"), this.contentEl.setAttribute("aria-hidden", "false")), Promise.resolve(s));
     });
   }
   /**
