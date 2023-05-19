@@ -135,7 +135,7 @@ class T {
     /** @property {boolean} isOpened - Is the bar currently open? */
     i(this, "isOpened", !1);
     /** @property {object|null} trap - Focus trap */
-    i(this, "trap", null);
+    i(this, "trap");
     var a, h, d, u, o, b;
     if (!e)
       throw new n("Bar name is required");
@@ -143,7 +143,7 @@ class T {
     const s = p(t.el || null);
     if (!s)
       throw new n(`Content element for bar '${this.name}' is required`);
-    this.el = s, this.el.classList.add("bartender__bar", "bartender__bar--closed"), this.el.setAttribute("tabindex", "-1"), this.el.setAttribute("aria-hidden", "true"), this.position = (a = t.position) != null ? a : this._position, this.mode = (h = t.mode) != null ? h : this._mode, this.overlay = (d = t.overlay) != null ? d : this._overlay, this.permanent = (u = t.permanent) != null ? u : this._permanent, this.scrollTop = (o = t.scrollTop) != null ? o : this._scrollTop, this.focusTrap = (b = t.focusTrap) != null ? b : this.focusTrap, this.focusTrap === !0 && (this.trap = B.createFocusTrap(this.el, {
+    this.el = s, this.el.classList.add("bartender__bar", "bartender__bar--closed"), this.el.setAttribute("tabindex", "-1"), this.el.setAttribute("aria-hidden", "true"), this.position = (a = t.position) != null ? a : this._position, this.mode = (h = t.mode) != null ? h : this._mode, this.overlay = (d = t.overlay) != null ? d : this._overlay, this.permanent = (u = t.permanent) != null ? u : this._permanent, this.scrollTop = (o = t.scrollTop) != null ? o : this._scrollTop, this.focusTrap = (b = t.focusTrap) != null ? b : this.focusTrap, this.trap = B.createFocusTrap(this.el, {
       initialFocus: this.el,
       fallbackFocus: () => this.el,
       escapeDeactivates: !1,
@@ -151,7 +151,7 @@ class T {
       allowOutsideClick: !0,
       returnFocusOnDeactivate: !1,
       preventScroll: !0
-    })), this.initialized = !0;
+    }), this.initialized = !0;
   }
   /**
    * Destroy bar instance
@@ -302,7 +302,7 @@ class T {
       return this.debug && console.debug("Opening bar", this), this.el.dispatchEvent(new CustomEvent("bartender-bar-before-open", {
         bubbles: !0,
         detail: { bar: this }
-      })), this.scrollTop === !0 && this.el.scrollTo(0, 0), this.el.classList.remove("bartender__bar--closed"), this.el.classList.add("bartender__bar--open"), this.el.setAttribute("aria-hidden", "false"), this.el.focus(), this.overlayObj.show(), this.isOpened = !0, this.trap && this.trap.activate(), yield f(this.getTransitionDuration()), this.el.dispatchEvent(new CustomEvent("bartender-bar-after-open", {
+      })), this.scrollTop === !0 && this.el.scrollTo(0, 0), this.el.classList.remove("bartender__bar--closed"), this.el.classList.add("bartender__bar--open"), this.el.setAttribute("aria-hidden", "false"), this.el.focus(), this.overlayObj.show(), this.isOpened = !0, this.focusTrap === !0 && this.trap.activate(), yield f(this.getTransitionDuration()), this.el.dispatchEvent(new CustomEvent("bartender-bar-after-open", {
         bubbles: !0,
         detail: { bar: this }
       })), this.debug && console.debug("Finished opening bar", this), Promise.resolve(this);

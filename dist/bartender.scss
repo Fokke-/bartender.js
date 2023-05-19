@@ -26,6 +26,11 @@ $bartender-overlay-transition: transform $bartender-transition-duration $bartend
     &:focus {
       outline: 0;
     }
+
+    .bartender--open & {
+      overflow: hidden;
+      max-height: 100vh;
+    }
   }
 
   &__bar {
