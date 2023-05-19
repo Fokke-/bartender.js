@@ -8,12 +8,7 @@ declare global {
   }
 }
 
-window.bartender = new Bartender({
-  debug: true,
-  el: 'body',
-  contentEl: '.content',
-  focusTrap: true,
-})
+window.bartender = new Bartender({ debug: true })
 
 window.bartender.addBar('left', {
   el: '.bar--left',
@@ -25,6 +20,7 @@ window.bartender.addBar('right', {
   el: '.bar--right',
   position: 'right',
   mode: 'float',
+  focusTrap: true,
 })
 
 window.bartender.addBar('rightExtra', {

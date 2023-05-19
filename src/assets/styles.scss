@@ -3,14 +3,18 @@
 }
 
 body {
+  margin: 0;
   font-family: sans-serif;
 }
 
-.content {
-  background: #c1c1c1;
+.bartender {
+  &__content {
+    background: #c1c1c1;
+  }
 }
 
 .bar {
+  padding: 2rem;
   background: #dadada;
 }
 
