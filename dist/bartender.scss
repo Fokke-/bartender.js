@@ -142,6 +142,11 @@ $bartender-overlay-transition: transform $bartender-transition-duration $bartend
     }
   }
 
+  // Utility class for disabling scrolling
+  &-disable-scrolling {
+    overflow: hidden !important;
+  }
+
   // Utility class for disabling transition
   &-disable-transition {
     transition: none !important;

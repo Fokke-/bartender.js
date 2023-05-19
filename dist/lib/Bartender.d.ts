@@ -13,8 +13,6 @@ export declare class Bartender {
     readonly contentEl: HTMLElement;
     /** @property {number} switchTimeout - Time to wait in milliseconds until another bar is opened */
     readonly switchTimeout: number;
-    /** @property {boolean} focusTrap - Enable focus trap? */
-    readonly focusTrap: boolean;
     /** @property {Bar[]} bars - Bars added to the instance */
     readonly bars: Bar[];
     /** @property {object} barDefaultOptions - Default options for the bars */
