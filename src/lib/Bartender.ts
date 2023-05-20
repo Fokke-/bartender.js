@@ -46,8 +46,8 @@ export class Bartender {
     focusTrap: false,
   }
 
-  /** @property {HTMLElement|null} previousOpenButton - Reference to the previous open button */
-  private previousOpenButton?: HTMLElement | null = null
+  /** @property {HTMLElement|null} returnFocus - Reference to the element to which focus will be restored after closing the bar */
+  private returnFocus?: HTMLElement | null = null
 
   /** @property {PushElement[]} pushableElements - Pushable elements added to the instance */
   private pushableElements: PushElement[] = []
@@ -322,15 +322,14 @@ export class Bartender {
    * Open bar
    *
    * @param {string} name - Bar name
-   * @param {HTMLElement|null} button - Reference to the element which was used to open the bar
+   * @param {HTMLElement|null} returnFocus - Reference to the element to which focus will be restored after closing the bar
    * @returns {Promise<Bar>}
    */
-  public async open (name: string, button?: HTMLElement | null): Promise<Bar> {
+  public async open (name: string, returnFocus?: HTMLElement | null): Promise<Bar> {
     const id = Symbol()
     await this.queue.wait(id)
 
-    // Store reference to the button which was used to open the bar.
-    this.previousOpenButton = button
+    this.returnFocus = returnFocus
 
     return this.openBar(name).finally(() => {
       this.queue.end(id)
@@ -374,13 +373,14 @@ export class Bartender {
     return this.closeBar(name).finally(() => {
       this.queue.end(id)
 
-      // Focus to the previous open button
-      if (this.previousOpenButton) {
-        this.previousOpenButton.focus()
-        this.previousOpenButton = null
-      } else {
-        this.contentEl.focus()
+      // Return focus
+      if (this.returnFocus) {
+        this.returnFocus.focus()
+        this.returnFocus = null
+        return
       }
+
+      this.contentEl.focus()
     })
   }
 
@@ -388,15 +388,15 @@ export class Bartender {
    * Toggle bar
    *
    * @param {string} name - Bar name
-   * @param {HTMLElement|null} button - Reference to the element which was used to toggle the bar
+   * @param {HTMLElement|null} returnFocus - Reference to the element to which focus will be restored after closing the bar
    * @throws {BartenderError}
    * @returns {Promise<Bar|null>}
    */
-  public async toggle (name: string, button?: HTMLElement | null): Promise<Bar | null> {
+  public async toggle (name: string, returnFocus?: HTMLElement | null): Promise<Bar | null> {
     const bar = this.getBar(name)
     if (!bar) throw new BartenderError(`Unknown bar '${name}'`)
 
-    return (bar.isOpen() === true) ? this.close() : this.open(name, button)
+    return (bar.isOpen() === true) ? this.close() : this.open(name, returnFocus)
   }
 
   /**
