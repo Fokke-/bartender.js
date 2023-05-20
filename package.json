@@ -13,7 +13,9 @@
   "keywords": [
     "off-canvas",
     "accessibility",
-    "a11y"
+    "a11y",
+    "sidebar",
+    "navigation"
   ],
   "scripts": {
     "dev": "vite --host",
