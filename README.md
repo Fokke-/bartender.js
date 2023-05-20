@@ -2,6 +2,8 @@
 
 Bartender is a library for creating accessible off-canvas bars. Any number of bars is supported, and they can be located on any side of the viewport.
 
+Check out the demo in [Bartender.js playground](https://bartender.fokke.fi).
+
 ## Features
 
 - Add any number of bars to any side of the viewport
@@ -21,6 +23,7 @@ Bartender is a library for creating accessible off-canvas bars. Any number of ba
 ## Browser support
 
 All major browsers are supported. Library is transpiled to ES2015.
+
 
 ## Installation
 
