@@ -10,6 +10,11 @@ body {
 .bartender {
   &__content {
     background: #c1c1c1;
+    border: solid .5em maroon;
+  }
+
+  &__bar {
+    border: solid .5em teal;
   }
 }
 
