@@ -13,7 +13,7 @@ Bartender is a library for creating accessible off-canvas bars. Any number of ba
 ## Accessibility
 
 - ARIA-attributes are being used for all relevant elements
-- After closing the bar the focus will return to the button which was used to open the bar
+- After closing the bar the focus will return to the element which was used to open the bar
 - If bar is closed, it's child elements are not focusable
 - If focus trap is enabled and bar is open, only it's child elements are focusable
 - All transitions are disabled if user prefers reduced motion
@@ -94,6 +94,7 @@ bartender.addBar('mobileNav', {
 
 // Toggle button
 document.querySelector('.toggleMobileNav').addEventListener('click', (event) => {
+  // Pass button as second argument to return focus after closing the bar.
   bartender.toggle('mobileNav', event.target)
 })
 
@@ -142,26 +143,6 @@ Type: `number` (milliseconds), Default: `150`
 If bar is opened when there's already another active bar, the open bar will be closed and the library will pause for the given time before opening the another bar.
 
 ## API
-
-### destroy()
-
-Destroy Bartender instance.
-
-```javascript
-bartender.destroy()
-```
-
-### getBar(name)
-
-Get bar instance by name.
-
-| Argument | Type | Description |
-| - | - | - |
-| name | string | Bar name |
-
-```javascript
-bartender.getBar('mobileNav')
-```
 
 ### addBar(name, options)
 
@@ -238,6 +219,18 @@ If enabled, keyboard focus will be trapped to the currently open bar.
 
 **IMPORTANT:** If you enable this, you **must** provide a way to close the bar with keyboard. Even though by default `esc` key closes the bar, adding a dedicated close button to the bar is highly recommended.
 
+### getBar(name)
+
+Get bar instance by name.
+
+| Argument | Type | Description |
+| - | - | - |
+| name | string | Bar name |
+
+```javascript
+bartender.getBar('mobileNav')
+```
+
 ### removeBar(name)
 
 Remove bar instance by name.
@@ -250,19 +243,21 @@ Remove bar instance by name.
 bartender.removeBar('mobileNav')
 ```
 
-### open(name, button?)
+### open(name, returnFocus?)
 
 Open bar by name. If you specify reference to the element as a second argument, the focus will be returned to given element after bar is closed.
 
 | Argument | Type | Description |
 | - | - | - |
 | name | string | Bar name |
-| button | HTMLElement | Optional reference to the button |
+| returnFocus | HTMLElement | Reference to the element to which focus will be restored after closing the bar |
 
 ```javascript
-const button = document.querySelector('.toggleMobileNav')
+// Open bar 'mobileNav'
+bartender.open('mobileNav')
 
-bartender.open('mobileNav', button)
+// Open bar 'mobileNav' and return focus after closing it
+bartender.open('mobileNav', document.querySelector('.toggleMobileNav'))
 ```
 
 ### close(name?)
@@ -281,19 +276,21 @@ bartender.close('mobileNav')
 bartender.close()
 ```
 
-### toggle(name, button?)
+### toggle(name, returnFocus?)
 
 Toggle bar open/closed state. If you specify reference to the element as a second argument, the focus will be returned to given element after bar is closed.
 
 | Argument | Type | Description |
 | - | - | - |
 | name | string | Bar name |
-| button | HTMLElement | Optional reference to the button |
+| returnFocus | HTMLElement | Reference to the element to which focus will be restored after closing the bar |
 
 ```javascript
-const button = document.querySelector('.toggleMobileNav')
+// Toggle bar 'mobileNav'
+bartender.toggle('mobileNav')
 
-bartender.toggle('mobileNav', button)
+// Toggle bar 'mobileNav' and return focus after closing it
+bartender.toggle('mobileNav', document.querySelector('.toggleMobileNav'))
 ```
 
 ### addPushElement(element, options?)
@@ -346,7 +343,7 @@ Type: `Array<string>`, Default: `[]`
 
 An array of [bar positions](#position).
 
-### removePushElement (el)
+### removePushElement(el)
 
 Remove pushable element by reference.
 
@@ -356,6 +353,14 @@ Remove pushable element by reference.
 
 ```javascript
 bartender.removePushElement(document.querySelector('.myFixedElement'))
+```
+
+### destroy()
+
+Destroy Bartender instance.
+
+```javascript
+bartender.destroy()
 ```
 
 ## Events
@@ -471,7 +476,7 @@ $bartender-transition-timing-function: ease !default;
 
 ### Bars
 
-Each bar will receive unique class name based on it's name and mode.
+Each bar will receive class names based on it's position and mode.
 
 ```css
 /* Styles for all bars */
@@ -479,7 +484,7 @@ Each bar will receive unique class name based on it's name and mode.
   background: #dadada;
 }
 
-/* Styles for bar named "left" */
+/* Styles for all bars with position "left" */
 .bartender__bar--left {
   background: #dadada;
 }
@@ -500,8 +505,8 @@ Each bar has it's own overlay element, so you can style overlays per bar basis.
   background-color: rgba(128, 0, 0, 0.5);
 }
 
-/* Styles for the overlay of bar named "left" */
-.bartender__overlay--left {
+/* Styles for the overlay of bar named "mobileNav" */
+.bartender__overlay--mobileNav {
   background-color: rgba(128, 0, 0, 0.5);
 }
 ```
