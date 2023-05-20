@@ -47,7 +47,7 @@ export class Bar {
   private _scrollTop = true
 
   /** @property {boolean} focusTrap - Enable focus trap? */
-  private focusTrap = false
+  private _focusTrap = false
 
   /** @property {boolean} isOpened - Is the bar currently open? */
   private isOpened = false
@@ -116,9 +116,22 @@ export class Bar {
   }
 
   /** @type {string} */
-  set name (name: string) {
-    this._name = name
-    this.overlayObj.name = name
+  set name (val: string) {
+    this._name = val
+    this.overlayObj.name = val
+
+    if (this.initialized === false) return
+
+    this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
+      bubbles: true,
+      detail: {
+        bar: this,
+        property: 'name',
+        value: val,
+      },
+    }))
+
+    if (this.debug) console.debug('Updated bar name', this)
   }
 
   /** @type {string} */
@@ -130,9 +143,9 @@ export class Bar {
    * @type {string}
    * @throws {BartenderError}
    */
-  set position (position: BartenderBarPosition) {
+  set position (val: BartenderBarPosition) {
     // Validate position
-    if (!position) throw new BartenderError(`Position is required for bar '${this.name}'`)
+    if (!val) throw new BartenderError(`Position is required for bar '${this.name}'`)
 
     const validPositions = [
       'left',
@@ -141,38 +154,37 @@ export class Bar {
       'bottom',
     ]
 
-    if (!validPositions.includes(position)) throw new BartenderError(`Invalid position '${position}' for bar '${this.name}'. Use one of the following: ${validPositions.join(', ')}.`)
-    if (this.initialized === true && this.position === position) return
+    if (!validPositions.includes(val)) throw new BartenderError(`Invalid position '${val}' for bar '${this.name}'. Use one of the following: ${validPositions.join(', ')}.`)
 
     // Temporarily disable transition
     this.el.classList.add('bartender-disable-transition')
 
     // Update element classes
-    this.el.classList.remove(`bartender__bar--${this.position}`)
-    this.el.classList.add(`bartender__bar--${position}`)
+    this.el.classList.remove(`bartender__bar--${this._position}`)
+    this.el.classList.add(`bartender__bar--${val}`)
 
     // Set new position
-    this._position = position
+    this._position = val
 
     // Return transition
     setTimeout(() => {
       this.el.classList.remove('bartender-disable-transition')
     })
 
+    if (this.initialized === false) return
+
     // If position was changed after bar was created,
     // dispatch event to update pushable elements
-    if (this.initialized === true) {
-      this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
-        bubbles: true,
-        detail: {
-          bar: this,
-          property: 'position',
-          value: position,
-        },
-      }))
+    this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
+      bubbles: true,
+      detail: {
+        bar: this,
+        property: 'position',
+        value: val,
+      },
+    }))
 
-      if (this.debug) console.debug('Updated bar position', this)
-    }
+    if (this.debug) console.debug('Updated bar position', this)
   }
 
   /** @type {string} */
@@ -184,9 +196,9 @@ export class Bar {
    * @type {string}
    * @throws {BartenderError}
    */
-  set mode (mode: BartenderBarMode) {
+  set mode (val: BartenderBarMode) {
     // Validate mode
-    if (!mode) throw new BartenderError(`Mode is required for bar '${this.name}'`)
+    if (!val) throw new BartenderError(`Mode is required for bar '${this.name}'`)
 
     const validModes = [
       'float',
@@ -194,38 +206,37 @@ export class Bar {
       'reveal',
     ]
 
-    if (!validModes.includes(mode)) throw new BartenderError(`Invalid mode '${mode}' for bar '${this.name}'. Use one of the following: ${validModes.join(', ')}.`)
-    if (this.initialized === true && this.mode === mode) return
+    if (!validModes.includes(val)) throw new BartenderError(`Invalid mode '${val}' for bar '${this.name}'. Use one of the following: ${validModes.join(', ')}.`)
 
     // Temporarily disable transition
     this.el.classList.add('bartender-disable-transition')
 
     // Update element classes
-    this.el.classList.remove(`bartender__bar--${this.mode}`)
-    this.el.classList.add(`bartender__bar--${mode}`)
+    this.el.classList.remove(`bartender__bar--${this._mode}`)
+    this.el.classList.add(`bartender__bar--${val}`)
 
     // Set new mode
-    this._mode = mode
+    this._mode = val
 
     // Return transition
     setTimeout(() => {
       this.el.classList.remove('bartender-disable-transition')
     })
 
+    if (this.initialized === false) return
+
     // If mode was changed after bar was created,
     // dispatch event to update pushable elements
-    if (this.initialized === true) {
-      this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
-        bubbles: true,
-        detail: {
-          bar: this,
-          property: 'mode',
-          value: mode,
-        },
-      }))
+    this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
+      bubbles: true,
+      detail: {
+        bar: this,
+        property: 'mode',
+        value: this._mode,
+      },
+    }))
 
-      if (this.debug) console.debug('Updated bar mode', this)
-    }
+    if (this.debug) console.debug('Updated bar mode', this)
   }
 
   /** @type {boolean} */
@@ -235,23 +246,21 @@ export class Bar {
 
   /** @type {boolean} */
   set overlay (val: boolean) {
-    if (this.initialized === true && this.overlay === val) return
-
-    this.overlayObj.enabled = val
     this._overlay = val
+    this.overlayObj.enabled = val
 
-    if (this.initialized === true) {
-      this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
-        bubbles: true,
-        detail: {
-          bar: this,
-          property: 'overlay',
-          value: val,
-        },
-      }))
+    if (this.initialized === false) return
 
-      if (this.debug) console.debug('Updated bar overlay', this, this.overlayObj)
-    }
+    this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
+      bubbles: true,
+      detail: {
+        bar: this,
+        property: 'overlay',
+        value: val,
+      },
+    }))
+
+    if (this.debug) console.debug('Updated bar overlay', this, this.overlayObj)
   }
 
   /** @type {boolean} */
@@ -263,7 +272,9 @@ export class Bar {
   set permanent (val: boolean) {
     this._permanent = val
 
-    if (this.initialized === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
+    if (this.initialized === false) return
+
+    this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
       bubbles: true,
       detail: {
         bar: this,
@@ -271,6 +282,8 @@ export class Bar {
         value: val,
       },
     }))
+
+    if (this.debug) console.debug('Updated bar permanence', this)
   }
 
   /** @type {boolean} */
@@ -282,7 +295,9 @@ export class Bar {
   set scrollTop (val: boolean) {
     this._scrollTop = val
 
-    if (this.initialized === true) this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
+    if (this.initialized === false) return
+
+    this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
       bubbles: true,
       detail: {
         bar: this,
@@ -290,6 +305,39 @@ export class Bar {
         value: val,
       },
     }))
+
+    if (this.debug) console.debug('Updated bar scrollTop', this)
+  }
+
+  /** @type {boolean} */
+  get focusTrap () {
+    return this._focusTrap
+  }
+
+  /** @type {boolean} */
+  set focusTrap (val: boolean) {
+    this._focusTrap = val
+
+    if (this.initialized === false) return
+
+    this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
+      bubbles: true,
+      detail: {
+        bar: this,
+        property: 'focusTrap',
+        value: val,
+      },
+    }))
+
+    if (this.debug) console.debug('Updated bar focusTrap', this)
+    if (this.isOpened === false) return
+
+    if (val === true) {
+      this.trap.activate()
+      return
+    }
+
+    this.trap.deactivate()
   }
 
   /**
