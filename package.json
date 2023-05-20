@@ -1,6 +1,6 @@
 {
   "name": "@fokke-/bartender.js",
-  "version": "2.0.0-beta.10",
+  "version": "2.0.0",
   "description": "Accessible off-canvas bars",
   "author": "Ville Fokke Saarivaara",
   "license": "MIT",
