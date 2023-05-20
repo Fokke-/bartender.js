@@ -1,12 +1,12 @@
-var w = Object.defineProperty;
-var v = Object.getOwnPropertySymbols;
-var g = Object.prototype.hasOwnProperty, y = Object.prototype.propertyIsEnumerable;
-var m = (r, e, t) => e in r ? w(r, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : r[e] = t, c = (r, e) => {
+var v = Object.defineProperty;
+var g = Object.getOwnPropertySymbols;
+var y = Object.prototype.hasOwnProperty, E = Object.prototype.propertyIsEnumerable;
+var m = (r, e, t) => e in r ? v(r, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : r[e] = t, c = (r, e) => {
   for (var t in e || (e = {}))
-    g.call(e, t) && m(r, t, e[t]);
-  if (v)
-    for (var t of v(e))
-      y.call(e, t) && m(r, t, e[t]);
+    y.call(e, t) && m(r, t, e[t]);
+  if (g)
+    for (var t of g(e))
+      E.call(e, t) && m(r, t, e[t]);
   return r;
 };
 var i = (r, e, t) => (m(r, typeof e != "symbol" ? e + "" : e, t), t);
@@ -26,10 +26,10 @@ var l = (r, e, t) => new Promise((s, a) => {
   }, u = (o) => o.done ? s(o.value) : Promise.resolve(o.value).then(h, d);
   u((t = t.apply(r, e)).next());
 });
-import { Queue as E } from "async-await-queue";
-import { debounce as _ } from "ts-debounce";
+import { Queue as _ } from "async-await-queue";
+import { debounce as T } from "ts-debounce";
 import * as B from "focus-trap";
-const p = (r, e = document, t = !1) => r ? r instanceof Element ? r : typeof r == "string" ? t ? e.querySelector(`:scope > ${r}`) : e.querySelector(r) : null : null, f = (r = 100) => new Promise((e) => r ? setTimeout(e, r) : e());
+const p = (r, e = document, t = !1) => r ? r instanceof Element ? r : typeof r == "string" ? t ? e.querySelector(`:scope > ${r}`) : e.querySelector(r) : null : null, w = (r = 100) => new Promise((e) => r ? setTimeout(e, r) : e()), f = () => typeof window == "undefined" ? null : (document.documentElement.style.setProperty("--dvh", `${window.innerHeight * 0.01}px`), window.innerHeight * 0.01);
 class n extends Error {
   /**
    * @param {string} message - Error message
@@ -101,7 +101,7 @@ class O {
     return this.el.classList.remove("bartender__overlay--visible"), this;
   }
 }
-class T {
+class L {
   /**
    * Create a new bar
    *
@@ -131,7 +131,7 @@ class T {
     /** @property {boolean} _scrollTop - Scroll to the top when bar is opened? */
     i(this, "_scrollTop", !0);
     /** @property {boolean} focusTrap - Enable focus trap? */
-    i(this, "focusTrap", !1);
+    i(this, "_focusTrap", !1);
     /** @property {boolean} isOpened - Is the bar currently open? */
     i(this, "isOpened", !1);
     /** @property {object|null} trap - Focus trap */
@@ -167,7 +167,14 @@ class T {
   }
   /** @type {string} */
   set name(e) {
-    this._name = e, this.overlayObj.name = e;
+    this._name = e, this.overlayObj.name = e, this.initialized !== !1 && (this.el.dispatchEvent(new CustomEvent("bartender-bar-updated", {
+      bubbles: !0,
+      detail: {
+        bar: this,
+        property: "name",
+        value: e
+      }
+    })), this.debug && console.debug("Updated bar name", this));
   }
   /** @type {string} */
   get position() {
@@ -188,16 +195,16 @@ class T {
     ];
     if (!t.includes(e))
       throw new n(`Invalid position '${e}' for bar '${this.name}'. Use one of the following: ${t.join(", ")}.`);
-    this.initialized === !0 && this.position === e || (this.el.classList.add("bartender-disable-transition"), this.el.classList.remove(`bartender__bar--${this.position}`), this.el.classList.add(`bartender__bar--${e}`), this._position = e, setTimeout(() => {
+    this.el.classList.add("bartender-disable-transition"), this.el.classList.remove(`bartender__bar--${this._position}`), this.el.classList.add(`bartender__bar--${e}`), this._position = e, setTimeout(() => {
       this.el.classList.remove("bartender-disable-transition");
-    }), this.initialized === !0 && (this.el.dispatchEvent(new CustomEvent("bartender-bar-updated", {
+    }), this.initialized !== !1 && (this.el.dispatchEvent(new CustomEvent("bartender-bar-updated", {
       bubbles: !0,
       detail: {
         bar: this,
         property: "position",
         value: e
       }
-    })), this.debug && console.debug("Updated bar position", this)));
+    })), this.debug && console.debug("Updated bar position", this));
   }
   /** @type {string} */
   get mode() {
@@ -217,16 +224,16 @@ class T {
     ];
     if (!t.includes(e))
       throw new n(`Invalid mode '${e}' for bar '${this.name}'. Use one of the following: ${t.join(", ")}.`);
-    this.initialized === !0 && this.mode === e || (this.el.classList.add("bartender-disable-transition"), this.el.classList.remove(`bartender__bar--${this.mode}`), this.el.classList.add(`bartender__bar--${e}`), this._mode = e, setTimeout(() => {
+    this.el.classList.add("bartender-disable-transition"), this.el.classList.remove(`bartender__bar--${this._mode}`), this.el.classList.add(`bartender__bar--${e}`), this._mode = e, setTimeout(() => {
       this.el.classList.remove("bartender-disable-transition");
-    }), this.initialized === !0 && (this.el.dispatchEvent(new CustomEvent("bartender-bar-updated", {
+    }), this.initialized !== !1 && (this.el.dispatchEvent(new CustomEvent("bartender-bar-updated", {
       bubbles: !0,
       detail: {
         bar: this,
         property: "mode",
-        value: e
+        value: this._mode
       }
-    })), this.debug && console.debug("Updated bar mode", this)));
+    })), this.debug && console.debug("Updated bar mode", this));
   }
   /** @type {boolean} */
   get overlay() {
@@ -234,14 +241,14 @@ class T {
   }
   /** @type {boolean} */
   set overlay(e) {
-    this.initialized === !0 && this.overlay === e || (this.overlayObj.enabled = e, this._overlay = e, this.initialized === !0 && (this.el.dispatchEvent(new CustomEvent("bartender-bar-updated", {
+    this._overlay = e, this.overlayObj.enabled = e, this.initialized !== !1 && (this.el.dispatchEvent(new CustomEvent("bartender-bar-updated", {
       bubbles: !0,
       detail: {
         bar: this,
         property: "overlay",
         value: e
       }
-    })), this.debug && console.debug("Updated bar overlay", this, this.overlayObj)));
+    })), this.debug && console.debug("Updated bar overlay", this, this.overlayObj));
   }
   /** @type {boolean} */
   get permanent() {
@@ -249,14 +256,14 @@ class T {
   }
   /** @type {boolean} */
   set permanent(e) {
-    this._permanent = e, this.initialized === !0 && this.el.dispatchEvent(new CustomEvent("bartender-bar-updated", {
+    this._permanent = e, this.initialized !== !1 && (this.el.dispatchEvent(new CustomEvent("bartender-bar-updated", {
       bubbles: !0,
       detail: {
         bar: this,
         property: "permanent",
         value: e
       }
-    }));
+    })), this.debug && console.debug("Updated bar permanence", this));
   }
   /** @type {boolean} */
   get scrollTop() {
@@ -264,14 +271,35 @@ class T {
   }
   /** @type {boolean} */
   set scrollTop(e) {
-    this._scrollTop = e, this.initialized === !0 && this.el.dispatchEvent(new CustomEvent("bartender-bar-updated", {
+    this._scrollTop = e, this.initialized !== !1 && (this.el.dispatchEvent(new CustomEvent("bartender-bar-updated", {
       bubbles: !0,
       detail: {
         bar: this,
         property: "scrollTop",
         value: e
       }
-    }));
+    })), this.debug && console.debug("Updated bar scrollTop", this));
+  }
+  /** @type {boolean} */
+  get focusTrap() {
+    return this._focusTrap;
+  }
+  /** @type {boolean} */
+  set focusTrap(e) {
+    if (this._focusTrap = e, this.initialized !== !1 && (this.el.dispatchEvent(new CustomEvent("bartender-bar-updated", {
+      bubbles: !0,
+      detail: {
+        bar: this,
+        property: "focusTrap",
+        value: e
+      }
+    })), this.debug && console.debug("Updated bar focusTrap", this), this.isOpened !== !1)) {
+      if (e === !0) {
+        this.trap.activate();
+        return;
+      }
+      this.trap.deactivate();
+    }
   }
   /**
    * Is bar currently open?
@@ -302,7 +330,7 @@ class T {
       return this.debug && console.debug("Opening bar", this), this.el.dispatchEvent(new CustomEvent("bartender-bar-before-open", {
         bubbles: !0,
         detail: { bar: this }
-      })), this.scrollTop === !0 && this.el.scrollTo(0, 0), this.el.classList.remove("bartender__bar--closed"), this.el.classList.add("bartender__bar--open"), this.el.setAttribute("aria-hidden", "false"), this.el.focus(), this.overlayObj.show(), this.isOpened = !0, this.focusTrap === !0 && this.trap.activate(), yield f(this.getTransitionDuration()), this.el.dispatchEvent(new CustomEvent("bartender-bar-after-open", {
+      })), this.scrollTop === !0 && this.el.scrollTo(0, 0), this.el.classList.remove("bartender__bar--closed"), this.el.classList.add("bartender__bar--open"), this.el.setAttribute("aria-hidden", "false"), this.el.focus(), this.overlayObj.show(), this.isOpened = !0, this.focusTrap === !0 && this.trap.activate(), yield w(this.getTransitionDuration()), this.el.dispatchEvent(new CustomEvent("bartender-bar-after-open", {
         bubbles: !0,
         detail: { bar: this }
       })), this.debug && console.debug("Finished opening bar", this), Promise.resolve(this);
@@ -318,7 +346,7 @@ class T {
       return this.debug && console.debug("Closing bar", this), this.el.dispatchEvent(new CustomEvent("bartender-bar-before-close", {
         bubbles: !0,
         detail: { bar: this }
-      })), this.el.classList.remove("bartender__bar--open"), this.el.setAttribute("aria-hidden", "true"), this.overlayObj.hide(), this.isOpened = !1, this.trap && this.trap.deactivate(), yield f(this.getTransitionDuration()), this.el.classList.add("bartender__bar--closed"), this.el.dispatchEvent(new CustomEvent("bartender-bar-after-close", {
+      })), this.el.classList.remove("bartender__bar--open"), this.el.setAttribute("aria-hidden", "true"), this.overlayObj.hide(), this.isOpened = !1, this.trap && this.trap.deactivate(), yield w(this.getTransitionDuration()), this.el.classList.add("bartender__bar--closed"), this.el.dispatchEvent(new CustomEvent("bartender-bar-after-close", {
         bubbles: !0,
         detail: { bar: this }
       })), this.debug && console.debug("Finished closing bar", this), Promise.resolve(this);
@@ -346,7 +374,7 @@ class T {
     };
   }
 }
-class L {
+class $ {
   /**
    * Create a new pushable element
    *
@@ -390,7 +418,7 @@ class L {
     return this.isPushed === !1 ? this : (this.el.style.transform = "translateX(0) translateY(0)", this.el.style.transitionTimingFunction = e.transitionTimingFunction, this.el.style.transitionDuration = e.transitionDuration, this.isPushed = !1, this);
   }
 }
-class C {
+class z {
   /**
    * Create a new Bartender instance
    *
@@ -419,8 +447,8 @@ class C {
       scrollTop: !0,
       focusTrap: !1
     });
-    /** @property {HTMLElement|null} previousOpenButton - Reference to the previous open button */
-    i(this, "previousOpenButton", null);
+    /** @property {HTMLElement|null} returnFocus - Reference to the element to which focus will be restored after closing the bar */
+    i(this, "returnFocus", null);
     /** @property {PushElement[]} pushableElements - Pushable elements added to the instance */
     i(this, "pushableElements", []);
     /** @property {object} queue - Queue for actions */
@@ -434,7 +462,9 @@ class C {
     /** @property {Function} onKeydownHandler - Handler for resize event */
     i(this, "onResizeHandler");
     var h, d;
-    this.debug = (h = e.debug) != null ? h : this._debug, this.switchTimeout = (d = e.switchTimeout) != null ? d : this.switchTimeout, this.barDefaultOptions = c(c({}, this.barDefaultOptions), t);
+    f(), document.addEventListener("DOMContentLoaded", () => {
+      f();
+    }), this.debug = (h = e.debug) != null ? h : this._debug, this.switchTimeout = (d = e.switchTimeout) != null ? d : this.switchTimeout, this.barDefaultOptions = c(c({}, this.barDefaultOptions), t);
     const s = p(e.el || ".bartender");
     if (!s)
       throw new n("Main element is required");
@@ -449,8 +479,8 @@ class C {
         "push",
         "reveal"
       ]
-    }), this.queue = new E(1), this.resizeDebounce = _(() => {
-      this.pushElements(this.getOpenBar());
+    }), this.queue = new _(1), this.resizeDebounce = T(() => {
+      f(), this.pushElements(this.getOpenBar());
     }, 100), this.onBarUpdateHandler = this.onBarUpdate.bind(this), window.addEventListener("bartender-bar-updated", this.onBarUpdateHandler), this.onKeydownHandler = this.onKeydown.bind(this), window.addEventListener("keydown", this.onKeydownHandler), this.onResizeHandler = this.onResize.bind(this), window.addEventListener("resize", this.onResizeHandler), this.el.classList.add("bartender--ready"), this.el.dispatchEvent(new CustomEvent("bartender-init", {
       bubbles: !0,
       detail: { bartender: this }
@@ -513,7 +543,7 @@ class C {
       throw new n("Bar name is required");
     if (this.getBar(e))
       throw new n(`Bar with name '${e}' is already defined`);
-    const s = new T(e, c(c({}, this.barDefaultOptions), t));
+    const s = new L(e, c(c({}, this.barDefaultOptions), t));
     if (s.debug = this.debug, this.bars.some((a) => a.el === s.el))
       throw new n(`Element of bar '${s.name}' is already being used for another bar`);
     if (s.el.parentElement !== this.el)
@@ -566,20 +596,20 @@ class C {
       if (t.isOpen() === !0)
         return Promise.resolve(t);
       const s = this.getOpenBar();
-      return s && (yield this.closeBar(s.name, !0), yield f(this.switchTimeout)), this.el.classList.add("bartender--open"), this.contentEl.setAttribute("aria-hidden", "true"), this.pushElements(t), t.open();
+      return s && (yield this.closeBar(s.name, !0), yield w(this.switchTimeout)), this.el.classList.add("bartender--open"), this.contentEl.setAttribute("aria-hidden", "true"), this.pushElements(t), t.open();
     });
   }
   /**
    * Open bar
    *
    * @param {string} name - Bar name
-   * @param {HTMLElement|null} button - Reference to the element which was used to open the bar
+   * @param {HTMLElement|null} returnFocus - Reference to the element to which focus will be restored after closing the bar
    * @returns {Promise<Bar>}
    */
   open(e, t) {
     return l(this, null, function* () {
       const s = Symbol();
-      return yield this.queue.wait(s), this.previousOpenButton = t, this.openBar(e).finally(() => {
+      return yield this.queue.wait(s), this.returnFocus = t, this.openBar(e).finally(() => {
         this.queue.end(s);
       });
     });
@@ -607,7 +637,11 @@ class C {
     return l(this, null, function* () {
       const t = Symbol();
       return yield this.queue.wait(t), this.closeBar(e).finally(() => {
-        this.queue.end(t), this.previousOpenButton ? (this.previousOpenButton.focus(), this.previousOpenButton = null) : this.contentEl.focus();
+        if (this.queue.end(t), this.returnFocus) {
+          this.returnFocus.focus(), this.returnFocus = null;
+          return;
+        }
+        this.contentEl.focus();
       });
     });
   }
@@ -615,7 +649,7 @@ class C {
    * Toggle bar
    *
    * @param {string} name - Bar name
-   * @param {HTMLElement|null} button - Reference to the element which was used to toggle the bar
+   * @param {HTMLElement|null} returnFocus - Reference to the element to which focus will be restored after closing the bar
    * @throws {BartenderError}
    * @returns {Promise<Bar|null>}
    */
@@ -637,7 +671,7 @@ class C {
   addPushElement(e, t = {}) {
     if (this.pushableElements.some((a) => a.el === e))
       throw new n("This element is already defined as pushable element.");
-    const s = new L(e, t);
+    const s = new $(e, t);
     return this.pushableElements.push(s), this.debug && console.debug("Added a new pushable element", s), s;
   }
   /**
@@ -713,6 +747,6 @@ class C {
   }
 }
 export {
-  C as Bartender
+  z as Bartender
 };
 //# sourceMappingURL=Bartender.js.map

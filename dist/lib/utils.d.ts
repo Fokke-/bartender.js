@@ -15,3 +15,9 @@ export declare const resolveElement: (query: BartenderElementQuery, parent?: Doc
  * @returns {Promise<void>}
  */
 export declare const sleep: (duration?: number) => Promise<void>;
+/**
+ * Set dvh unit
+ *
+ * @returns {void}
+ */
+export declare const setDvh: () => number | null;

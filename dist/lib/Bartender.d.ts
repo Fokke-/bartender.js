@@ -17,8 +17,8 @@ export declare class Bartender {
     readonly bars: Bar[];
     /** @property {object} barDefaultOptions - Default options for the bars */
     readonly barDefaultOptions: BartenderBarOptions;
-    /** @property {HTMLElement|null} previousOpenButton - Reference to the previous open button */
-    private previousOpenButton?;
+    /** @property {HTMLElement|null} returnFocus - Reference to the element to which focus will be restored after closing the bar */
+    private returnFocus?;
     /** @property {PushElement[]} pushableElements - Pushable elements added to the instance */
     private pushableElements;
     /** @property {object} queue - Queue for actions */
@@ -91,10 +91,10 @@ export declare class Bartender {
      * Open bar
      *
      * @param {string} name - Bar name
-     * @param {HTMLElement|null} button - Reference to the element which was used to open the bar
+     * @param {HTMLElement|null} returnFocus - Reference to the element to which focus will be restored after closing the bar
      * @returns {Promise<Bar>}
      */
-    open(name: string, button?: HTMLElement | null): Promise<Bar>;
+    open(name: string, returnFocus?: HTMLElement | null): Promise<Bar>;
     /**
      * Close bar
      *
@@ -114,11 +114,11 @@ export declare class Bartender {
      * Toggle bar
      *
      * @param {string} name - Bar name
-     * @param {HTMLElement|null} button - Reference to the element which was used to toggle the bar
+     * @param {HTMLElement|null} returnFocus - Reference to the element to which focus will be restored after closing the bar
      * @throws {BartenderError}
      * @returns {Promise<Bar|null>}
      */
-    toggle(name: string, button?: HTMLElement | null): Promise<Bar | null>;
+    toggle(name: string, returnFocus?: HTMLElement | null): Promise<Bar | null>;
     /**
      * Add a new pushable element
      *

@@ -25,7 +25,7 @@ export declare class Bar {
     /** @property {boolean} _scrollTop - Scroll to the top when bar is opened? */
     private _scrollTop;
     /** @property {boolean} focusTrap - Enable focus trap? */
-    private focusTrap;
+    private _focusTrap;
     /** @property {boolean} isOpened - Is the bar currently open? */
     private isOpened;
     /** @property {object|null} trap - Focus trap */
@@ -47,21 +47,21 @@ export declare class Bar {
     /** @type {string} */
     get name(): string;
     /** @type {string} */
-    set name(name: string);
+    set name(val: string);
     /** @type {string} */
     get position(): BartenderBarPosition;
     /**
      * @type {string}
      * @throws {BartenderError}
      */
-    set position(position: BartenderBarPosition);
+    set position(val: BartenderBarPosition);
     /** @type {string} */
     get mode(): BartenderBarMode;
     /**
      * @type {string}
      * @throws {BartenderError}
      */
-    set mode(mode: BartenderBarMode);
+    set mode(val: BartenderBarMode);
     /** @type {boolean} */
     get overlay(): boolean;
     /** @type {boolean} */
@@ -74,6 +74,10 @@ export declare class Bar {
     get scrollTop(): boolean;
     /** @type {boolean} */
     set scrollTop(val: boolean);
+    /** @type {boolean} */
+    get focusTrap(): boolean;
+    /** @type {boolean} */
+    set focusTrap(val: boolean);
     /**
      * Is bar currently open?
      *
