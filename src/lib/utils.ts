@@ -39,3 +39,16 @@ export const sleep = (duration = 100): Promise<void> => {
     return setTimeout(resolve, duration)
   })
 }
+
+/**
+ * Set dvh unit
+ *
+ * @returns {void}
+ */
+export const setDvh = (): number | null => {
+  if (typeof window === 'undefined') return null
+
+  document.documentElement.style.setProperty('--dvh', `${window.innerHeight * 0.01}px`)
+
+  return window.innerHeight * 0.01
+}

@@ -9,7 +9,8 @@ import { Queue } from 'async-await-queue'
 import { debounce } from 'ts-debounce'
 import {
   resolveElement,
-  sleep
+  sleep,
+  setDvh
 } from './utils'
 import { BartenderError } from './BartenderError'
 import { Bar } from './Bar'
@@ -78,6 +79,12 @@ export class Bartender {
     options: BartenderOptions = {},
     barOptions: BartenderBarDefaultOptions = {}
   ) {
+    // Polyfill DVH units
+    setDvh()
+    document.addEventListener('DOMContentLoaded', () => {
+      setDvh()
+    })
+
     this.debug = options.debug ?? this._debug
     this.switchTimeout = options.switchTimeout ?? this.switchTimeout
     this.barDefaultOptions = {
@@ -112,6 +119,7 @@ export class Bartender {
 
     // Debouncer for resizing
     this.resizeDebounce = debounce(() => {
+      setDvh()
       this.pushElements(this.getOpenBar())
     }, 100)
 
