@@ -31,7 +31,7 @@ export class Bartender {
   readonly contentEl: HTMLElement
 
   /** @property {number} switchTimeout - Time to wait in milliseconds until another bar is opened */
-  readonly switchTimeout: number = 150
+  public switchTimeout = 150
 
   /** @property {Bar[]} bars - Bars added to the instance */
   readonly bars: Bar[] = []
