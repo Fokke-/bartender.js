@@ -12,7 +12,7 @@ export declare class Bartender {
     /** @property {HTMLElement} contentEl - Content element */
     readonly contentEl: HTMLElement;
     /** @property {number} switchTimeout - Time to wait in milliseconds until another bar is opened */
-    readonly switchTimeout: number;
+    switchTimeout: number;
     /** @property {Bar[]} bars - Bars added to the instance */
     readonly bars: Bar[];
     /** @property {object} barDefaultOptions - Default options for the bars */
