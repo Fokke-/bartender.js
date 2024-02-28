@@ -1,6 +1,6 @@
 {
   "name": "@fokke-/bartender.js",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "Accessible off-canvas bars",
   "author": "Ville Fokke Saarivaara",
   "license": "MIT",
@@ -44,26 +44,26 @@
     }
   },
   "devDependencies": {
-    "@types/node": "^20.2.1",
-    "@typescript-eslint/eslint-plugin": "^5.59.6",
-    "@typescript-eslint/parser": "^5.59.6",
-    "autoprefixer": "^10.4.14",
-    "eslint": "^8.41.0",
-    "eslint-plugin-jsdoc": "^44.2.4",
-    "sass": "^1.62.1",
-    "stylelint": "^15.6.2",
-    "stylelint-config-sass-guidelines": "^10.0.0",
-    "stylelint-config-standard": "^33.0.0",
-    "typescript": "^5.0.4",
-    "vite": "^4.3.8",
-    "vite-plugin-dts": "^2.3.0",
-    "vite-plugin-eslint": "^1.8.1",
-    "vite-plugin-static-copy": "^0.15.0",
-    "vite-plugin-stylelint": "^4.3.0"
+    "@types/node": "20.2.1",
+    "@typescript-eslint/eslint-plugin": "7.1.0",
+    "@typescript-eslint/parser": "7.1.0",
+    "autoprefixer": "10.4.14",
+    "eslint": "8.41.0",
+    "eslint-plugin-jsdoc": "48.2.0",
+    "sass": "1.62.1",
+    "stylelint": "16.2.1",
+    "stylelint-config-sass-guidelines": "11.0.0",
+    "stylelint-config-standard": "36.0.0",
+    "typescript": "5.0.4",
+    "vite": "5.1.4",
+    "vite-plugin-dts": "3.7.3",
+    "vite-plugin-eslint": "1.8.1",
+    "vite-plugin-static-copy": "1.0.1",
+    "vite-plugin-stylelint": "5.3.1"
   },
   "dependencies": {
-    "async-await-queue": "^2.1.4",
-    "focus-trap": "^7.4.3",
-    "ts-debounce": "^4.0.0"
+    "async-await-queue": "2.1.4",
+    "focus-trap": "7.4.3",
+    "ts-debounce": "4.0.0"
   }
 }
