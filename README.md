@@ -23,7 +23,6 @@ Check out the demo in [Bartender.js playground](https://bartender.fokke.fi).
 
 All major browsers are supported. Library is transpiled to ES2015.
 
-
 ## Installation
 
 ```console
