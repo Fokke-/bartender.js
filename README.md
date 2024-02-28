@@ -16,8 +16,7 @@ Check out the demo in [Bartender.js playground](https://bartender.fokke.fi).
 
 - ARIA-attributes are being used for all relevant elements
 - After closing the bar the focus will return to the element which was used to open the bar
-- If bar is closed, it's child elements are not focusable
-- If focus trap is enabled and bar is open, only it's child elements are focusable
+- If bar is open, only it's child elements are focusable, and vice versa
 - All transitions are disabled if user prefers reduced motion
 
 ## Browser support
@@ -213,14 +212,6 @@ If enabled, the bar is not closable by clicking overlay of pressing `esc` key.
 Type: `boolean`, Default: `true`
 
 If enabled, bar will be scrolled to top when opening it.
-
-#### focusTrap
-
-Type: `boolean`, Default: `false`
-
-If enabled, keyboard focus will be trapped to the currently open bar.
-
-**IMPORTANT:** If you enable this, you **must** provide a way to close the bar with keyboard. Even though by default `esc` key closes the bar, adding a dedicated close button to the bar is highly recommended.
 
 ### getBar(name)
 

@@ -4,7 +4,6 @@ import type {
   BartenderBarMode,
   BartenderPushStyles
 } from './types'
-import * as focusTrap from 'focus-trap'
 import { BartenderError } from './BartenderError'
 import { Overlay } from './Overlay'
 import {
@@ -46,14 +45,8 @@ export class Bar {
   /** @property {boolean} _scrollTop - Scroll to the top when bar is opened? */
   private _scrollTop = true
 
-  /** @property {boolean} focusTrap - Enable focus trap? */
-  private _focusTrap = false
-
   /** @property {boolean} isOpened - Is the bar currently open? */
   private isOpened = false
-
-  /** @property {object|null} trap - Focus trap */
-  private trap: focusTrap.FocusTrap
 
   /**
    * Create a new bar
@@ -81,18 +74,6 @@ export class Bar {
     this.overlay = options.overlay ?? this._overlay
     this.permanent = options.permanent ?? this._permanent
     this.scrollTop = options.scrollTop ?? this._scrollTop
-    this.focusTrap = options.focusTrap ?? this.focusTrap
-    this.trap = focusTrap.createFocusTrap(this.el, {
-      initialFocus: this.el,
-      fallbackFocus: () => {
-        return this.el
-      },
-      escapeDeactivates: false,
-      clickOutsideDeactivates: false,
-      allowOutsideClick: true,
-      returnFocusOnDeactivate: false,
-      preventScroll: true,
-    })
 
     this.initialized = true
   }
@@ -103,7 +84,6 @@ export class Bar {
    * @returns {this}
    */
   destroy (): this {
-    if (this.trap) this.trap.deactivate()
     this.overlayObj.destroy()
     this.el.classList.remove('bartender__bar', `bartender__bar--${this.position}`)
 
@@ -309,37 +289,6 @@ export class Bar {
     if (this.debug) console.debug('Updated bar scrollTop', this)
   }
 
-  /** @type {boolean} */
-  get focusTrap () {
-    return this._focusTrap
-  }
-
-  /** @type {boolean} */
-  set focusTrap (val: boolean) {
-    this._focusTrap = val
-
-    if (this.initialized === false) return
-
-    this.el.dispatchEvent(new CustomEvent('bartender-bar-updated', {
-      bubbles: true,
-      detail: {
-        bar: this,
-        property: 'focusTrap',
-        value: val,
-      },
-    }))
-
-    if (this.debug) console.debug('Updated bar focusTrap', this)
-    if (this.isOpened === false) return
-
-    if (val === true) {
-      this.trap.activate()
-      return
-    }
-
-    this.trap.deactivate()
-  }
-
   /**
    * Is bar currently open?
    *
@@ -383,8 +332,6 @@ export class Bar {
     this.overlayObj.show()
     this.isOpened = true
 
-    if (this.focusTrap === true) this.trap.activate()
-
     await sleep(this.getTransitionDuration())
 
     // Dispatch 'after open' event
@@ -415,7 +362,6 @@ export class Bar {
     this.el.setAttribute('aria-hidden', 'true')
     this.overlayObj.hide()
     this.isOpened = false
-    if (this.trap) this.trap.deactivate()
 
     await sleep(this.getTransitionDuration())
 

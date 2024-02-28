@@ -9,7 +9,6 @@ export interface BartenderOptions {
   el?: BartenderElementQuery,
   contentEl?: BartenderElementQuery,
   switchTimeout?: number,
-  focusTrap?: boolean
 }
 
 export interface BartenderBarDefaultOptions {
@@ -18,7 +17,6 @@ export interface BartenderBarDefaultOptions {
   overlay?: boolean,
   permanent?: boolean,
   scrollTop?: boolean,
-  focusTrap?: boolean
 }
 
 export interface BartenderBarOptions extends BartenderBarDefaultOptions {

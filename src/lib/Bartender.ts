@@ -44,7 +44,6 @@ export class Bartender {
     overlay: true,
     permanent: false,
     scrollTop: true,
-    focusTrap: false,
   }
 
   /** @property {HTMLElement|null} returnFocus - Reference to the element to which focus will be restored after closing the bar */
