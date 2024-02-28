@@ -109,7 +109,6 @@ export class Bartender {
     this.addPushElement(this.contentEl, {
       modes: [
         'push',
-        'reveal',
       ],
     })
 

@@ -25,7 +25,7 @@ window.bartender.addBar('right', {
 window.bartender.addBar('rightExtra', {
   el: '.bar--rightExtra',
   position: 'right',
-  mode: 'reveal',
+  mode: 'push',
   overlay: false,
 })
 
@@ -38,7 +38,7 @@ window.bartender.addBar('top', {
 window.bartender.addBar('bottom', {
   el: '.bar--bottom',
   position: 'bottom',
-  mode: 'reveal',
+  mode: 'float',
 })
 
 const fixedBarBottom = document.querySelector('.toolBar--fixed.toolBar--bottom') as HTMLElement
@@ -51,7 +51,6 @@ if (fixedBarBottom) {
     ],
     modes: [
       'push',
-      'reveal',
     ],
   })
 }

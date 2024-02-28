@@ -2,7 +2,7 @@ import { Bar } from './Bar'
 
 export type BartenderElementQuery = string | Element | null
 export type BartenderBarPosition = 'left' | 'right' | 'top' | 'bottom'
-export type BartenderBarMode = 'float' | 'push' | 'reveal'
+export type BartenderBarMode = 'float' | 'push'
 
 export interface BartenderOptions {
   debug?: boolean,

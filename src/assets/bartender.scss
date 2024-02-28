@@ -60,10 +60,6 @@ $bartender-overlay-transition: transform $bartender-transition-duration $bartend
       visibility: hidden;
     }
 
-    &--reveal {
-      z-index: 1;
-    }
-
     &--left,
     &--right {
       top: 0;
@@ -82,18 +78,11 @@ $bartender-overlay-transition: transform $bartender-transition-duration $bartend
       left: 0;
       transform: translateX(-100%);
 
-      &.bartender__bar--reveal {
-        transform: translateX(0);
-      }
     }
 
     &--right {
       right: 0;
       transform: translateX(100%);
-
-      &.bartender__bar--reveal {
-        transform: translateX(0);
-      }
     }
 
     &--top,
@@ -113,19 +102,11 @@ $bartender-overlay-transition: transform $bartender-transition-duration $bartend
     &--top {
       top: 0;
       transform: translateY(-100%);
-
-      &.bartender__bar--reveal {
-        transform: translateX(0);
-      }
     }
 
     &--bottom {
       bottom: 0;
       transform: translateY(100%);
-
-      &.bartender__bar--reveal {
-        transform: translateX(0);
-      }
     }
   }
 

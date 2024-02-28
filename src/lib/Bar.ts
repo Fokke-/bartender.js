@@ -183,7 +183,6 @@ export class Bar {
     const validModes = [
       'float',
       'push',
-      'reveal',
     ]
 
     if (!validModes.includes(val)) throw new BartenderError(`Invalid mode '${val}' for bar '${this.name}'. Use one of the following: ${validModes.join(', ')}.`)
