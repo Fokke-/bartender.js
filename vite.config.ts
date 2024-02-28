@@ -41,6 +41,8 @@ export default defineConfig({
         },
         assetFileNames: (chunkInfo) => {
           if (chunkInfo.name === 'style.css') return 'bartender.css'
+
+          return '[name]-[hash][extname]'
         },
       },
     },
@@ -64,7 +66,7 @@ export default defineConfig({
       ],
     }),
     dts({
-      skipDiagnostics: false,
+      rollupTypes: true,
       copyDtsFiles: true,
     }),
     viteStaticCopy({
