@@ -2,7 +2,8 @@ import type {
   BartenderBarOptions,
   BartenderBarPosition,
   BartenderBarMode,
-  BartenderPushStyles
+  BartenderPushStyles,
+  BartenderTransitionProperties
 } from './types'
 import { BartenderError } from './BartenderError'
 import { Overlay } from './Overlay'
@@ -297,15 +298,40 @@ export class Bar {
   }
 
   /**
-   * Get transition duration in milliseconds
+   * Get transition properties for an element
    *
-   * @returns {number}
+   * @param {Element} el - Element to get properties for
+   * @returns {BartenderTransitionProperties}
    */
-  public getTransitionDuration (): number {
-    if (!this.el) return 0
+  public getTransitionProperties (el: Element): BartenderTransitionProperties | null {
+    if (!el) return null
 
-    const duration = window.getComputedStyle(this.el).getPropertyValue('transition-duration') || '0s'
-    return parseFloat(duration) * 1000
+    const properties: BartenderTransitionProperties = {
+      timingFunction: undefined,
+      duration: 0,
+    }
+
+    const transitionProperties = window.getComputedStyle(el).getPropertyValue('transition-property') || ''
+    const transitionDurations = window.getComputedStyle(el).getPropertyValue('transition-duration') || ''
+    const transitionTimingFunctions = window.getComputedStyle(el).getPropertyValue('transition-timing-function') || ''
+
+    // Find out index for transform
+    const transformIndex = transitionProperties.split(',').map(item => item.trim()).indexOf('transform')
+    if (transformIndex < 0) return properties
+
+    // Get duration of transform
+    const duration = transitionDurations.split(',').map(item => item.trim())[transformIndex]
+    if (duration) {
+      properties.duration = parseFloat(duration) * 1000
+    }
+
+    // Get timing function of transform
+    const timingFunction = transitionTimingFunctions.split(',').map(item => item.trim())[transformIndex]
+    if (timingFunction) {
+      properties.timingFunction = timingFunction
+    }
+
+    return properties
   }
 
   /**
@@ -330,7 +356,7 @@ export class Bar {
     this.overlayObj.show()
     this.isOpened = true
 
-    await sleep(this.getTransitionDuration())
+    await sleep(this.getTransitionProperties(this.el)?.duration)
 
     // Dispatch 'after open' event
     this.el.dispatchEvent(new CustomEvent('bartender-bar-after-open', {
@@ -349,6 +375,7 @@ export class Bar {
    * @returns {Promise<this>}
    */
   public async close (): Promise<this> {
+    await sleep(this.getTransitionProperties(this.el)?.duration)
     if (this.debug) console.debug('Closing bar', this)
 
     this.el.dispatchEvent(new CustomEvent('bartender-bar-before-close', {
@@ -361,7 +388,7 @@ export class Bar {
     this.overlayObj.hide()
     this.isOpened = false
 
-    await sleep(this.getTransitionDuration())
+    await sleep(this.getTransitionProperties(this.el)?.duration)
 
     this.el.classList.add('bartender__bar--closed')
     this.el.dispatchEvent(new CustomEvent('bartender-bar-after-close', {
@@ -377,26 +404,34 @@ export class Bar {
   /**
    * Get styles for pushable elements
    *
-   * @returns {object}
+   * @returns {Promise<BartenderPushStyles>}
    */
-  getPushStyles (): BartenderPushStyles {
-    if (!this.position || !this.el) {
-      return {
-        transform: '',
-        transitionDuration: '',
-        transitionTimingFunction: '',
-      }
+  public async getPushStyles (): Promise<BartenderPushStyles> {
+    const styles: BartenderPushStyles = {
+      transform: '',
+      transitionDuration: '',
+      transitionTimingFunction: '',
     }
 
-    return {
-      transform: {
-        left: `translateX(${this.el.offsetWidth}px)`,
-        right: `translateX(-${this.el.offsetWidth}px)`,
-        top: `translateY(${this.el.offsetHeight}px)`,
-        bottom: `translateY(-${this.el.offsetHeight}px)`,
-      }[this.position] || '',
-      transitionDuration: window.getComputedStyle(this.el).getPropertyValue('transition-duration') || '',
-      transitionTimingFunction: window.getComputedStyle(this.el).getPropertyValue('transition-timing-function') || '',
+    if (!this.position || !this.el) {
+      return styles
     }
+
+    await new Promise((resolve) => requestAnimationFrame(resolve))
+
+    styles.transform = {
+      left: `translateX(${this.el.offsetWidth}px)`,
+      right: `translateX(-${this.el.offsetWidth}px)`,
+      top: `translateY(${this.el.offsetHeight}px)`,
+      bottom: `translateY(-${this.el.offsetHeight}px)`,
+    }[this.position] || ''
+
+    const transitionProperties = this.getTransitionProperties(this.el)
+    if (!transitionProperties) return styles
+
+    styles.transitionDuration = `${transitionProperties.duration}ms`
+    styles.transitionTimingFunction = transitionProperties.timingFunction || ''
+
+    return Promise.resolve(styles)
   }
 }
