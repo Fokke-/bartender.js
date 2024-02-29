@@ -126,7 +126,7 @@ export class Bartender {
     window.addEventListener('bartender-bar-updated', this.onBarUpdateHandler)
 
     this.onKeydownHandler = this.onKeydown.bind(this)
-    window.addEventListener('keydown', this.onKeydownHandler)
+    document.addEventListener('keydown', this.onKeydownHandler)
 
     this.onResizeHandler = this.onResize.bind(this)
     window.addEventListener('resize', this.onResizeHandler)
@@ -181,7 +181,7 @@ export class Bartender {
 
     // Remove event listeners
     window.removeEventListener('bartender-bar-updated', this.onBarUpdateHandler)
-    window.removeEventListener('keydown', this.onKeydownHandler)
+    document.removeEventListener('keydown', this.onKeydownHandler)
     window.removeEventListener('resize', this.onResizeHandler)
 
     this.el.dispatchEvent(new CustomEvent('bartender-destroyed', {
