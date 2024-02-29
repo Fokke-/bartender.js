@@ -303,13 +303,13 @@ export class Bar {
    * @param {Element} el - Element to get properties for
    * @returns {BartenderTransitionProperties}
    */
-  public getTransitionProperties(el: Element): BartenderTransitionProperties | null {
-    if (!el) return null
-
+  public getTransitionProperties(el: Element): BartenderTransitionProperties {
     const properties: BartenderTransitionProperties = {
       timingFunction: undefined,
       duration: 0,
     }
+
+    if (!el) return properties
 
     const transitionProperties = window.getComputedStyle(el).getPropertyValue('transition-property') || ''
     const transitionDurations = window.getComputedStyle(el).getPropertyValue('transition-duration') || ''
@@ -354,7 +354,8 @@ export class Bar {
     this.el.classList.add('bartender__bar--open')
     this.isOpened = true
 
-    await sleep(this.getTransitionProperties(this.el)?.duration)
+    const { duration } = this.getTransitionProperties(this.el)
+    await sleep(duration)
 
     // Dispatch 'after open' event
     this.el.dispatchEvent(new CustomEvent('bartender-bar-after-open', {
@@ -375,7 +376,8 @@ export class Bar {
   public async close(): Promise<this> {
     this.el.close()
 
-    await sleep(this.getTransitionProperties(this.el)?.duration)
+    const { duration } = this.getTransitionProperties(this.el)
+    await sleep(duration)
 
     return Promise.resolve(this)
   }
@@ -396,7 +398,8 @@ export class Bar {
     this.el.classList.remove('bartender__bar--open')
     this.isOpened = false
 
-    await sleep(this.getTransitionProperties(this.el)?.duration)
+    const { duration } = this.getTransitionProperties(this.el)
+    await sleep(duration)
 
     this.el.classList.add('bartender__bar--closed')
 
@@ -452,18 +455,16 @@ export class Bar {
 
     await new Promise((resolve) => requestAnimationFrame(resolve))
 
+    const { duration, timingFunction } = this.getTransitionProperties(this.el)
+
     styles.transform = {
       left: `translateX(${this.el.offsetWidth}px)`,
       right: `translateX(-${this.el.offsetWidth}px)`,
       top: `translateY(${this.el.offsetHeight}px)`,
       bottom: `translateY(-${this.el.offsetHeight}px)`,
     }[this.position] || ''
-
-    const transitionProperties = this.getTransitionProperties(this.el)
-    if (!transitionProperties) return styles
-
-    styles.transitionDuration = `${transitionProperties.duration}ms`
-    styles.transitionTimingFunction = transitionProperties.timingFunction || ''
+    styles.transitionDuration = `${duration}ms`
+    styles.transitionTimingFunction = timingFunction || ''
 
     return Promise.resolve(styles)
   }
