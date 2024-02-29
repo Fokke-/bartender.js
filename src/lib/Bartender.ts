@@ -74,7 +74,7 @@ export class Bartender {
    * @param {object} barOptions - Default options for bars
    * @throws {BartenderError}
    */
-  constructor (
+  constructor(
     options: BartenderOptions = {},
     barOptions: BartenderBarDefaultOptions = {}
   ) {
@@ -141,12 +141,12 @@ export class Bartender {
   }
 
   /** @type {boolean} */
-  public get debug () {
+  public get debug() {
     return this._debug
   }
 
   /** @type {boolean} */
-  public set debug (val: boolean) {
+  public set debug(val: boolean) {
     this._debug = val
 
     for (const bar of this.bars) {
@@ -159,7 +159,7 @@ export class Bartender {
    *
    * @returns {Promise<this>}
    */
-  public async destroy (): Promise<this> {
+  public async destroy(): Promise<this> {
     await this.close()
 
     // Get all bar names
@@ -200,7 +200,7 @@ export class Bartender {
    * @param {string} name - Bar name
    * @returns {object|null}
    */
-  public getBar (name: string): Bar | null {
+  public getBar(name: string): Bar | null {
     return this.bars.find(item => item.name === name) || null
   }
 
@@ -209,7 +209,7 @@ export class Bartender {
    *
    * @returns {object|null}
    */
-  private getOpenBar (): Bar | null {
+  private getOpenBar(): Bar | null {
     return this.bars.find(item => item.isOpen() === true) || null
   }
 
@@ -221,7 +221,7 @@ export class Bartender {
    * @throws {BartenderError}
    * @returns {object} Bar object
    */
-  public addBar (name: string, options: BartenderBarOptions = {}): Bar {
+  public addBar(name: string, options: BartenderBarOptions = {}): Bar {
     if (!name || typeof name !== 'string') throw new BartenderError('Bar name is required')
     if (this.getBar(name)) throw new BartenderError(`Bar with name '${name}' is already defined`)
 
@@ -272,7 +272,7 @@ export class Bartender {
    * @throws {BartenderError}
    * @returns {Promise<this>}
    */
-  public async removeBar (name: string): Promise<this> {
+  public async removeBar(name: string): Promise<this> {
     if (!name || typeof name !== 'string') throw new BartenderError('Bar name is required')
 
     const bar = this.getBar(name)
@@ -301,7 +301,7 @@ export class Bartender {
    * @throws {BartenderError}
    * @returns {Promise<Bar>}
    */
-  public async open (name: string): Promise<Bar> {
+  public async open(name: string): Promise<Bar> {
     const bar = this.getBar(name)
     if (!bar) throw new BartenderError(`Unknown bar '${name}'`)
     if (bar.isOpen() === true) return Promise.resolve(bar)
@@ -334,7 +334,7 @@ export class Bartender {
    * @param {boolean} switching - For internal use only. Will another bar open immediately after closing?
    * @returns {Promise<Bar|null>}
    */
-  public async close (name?: string, switching = false): Promise<Bar | null> {
+  public async close(name?: string, switching = false): Promise<Bar | null> {
     const bar = name ? this.getBar(name) : this.getOpenBar()
     if (!bar || !bar.isOpen()) return Promise.resolve(null)
 
@@ -353,7 +353,7 @@ export class Bartender {
    * @throws {BartenderError}
    * @returns {Promise<Bar|null>}
    */
-  public async toggle (name: string): Promise<Bar | null> {
+  public async toggle(name: string): Promise<Bar | null> {
     const bar = this.getBar(name)
     if (!bar) throw new BartenderError(`Unknown bar '${name}'`)
 
@@ -367,7 +367,7 @@ export class Bartender {
    * @param {object} options - Options for pushable element
    * @returns {PushElement}
    */
-  public addPushElement (el: BartenderElementQuery, options: BartenderPushElementOptions = {}): PushElement {
+  public addPushElement(el: BartenderElementQuery, options: BartenderPushElementOptions = {}): PushElement {
     if (this.pushableElements.some(item => item.el === el)) throw new BartenderError('This element is already defined as pushable element.')
 
     const pushElement = new PushElement(el, options)
@@ -385,7 +385,7 @@ export class Bartender {
    * @throws {BartenderError}
    * @returns {PushElement[]}
    */
-  public removePushElement (el: Element): PushElement[] {
+  public removePushElement(el: Element): PushElement[] {
     const index = this.pushableElements.findIndex(item => item.el === el)
     if (index === -1) throw new BartenderError('Pushable element was not found')
 
@@ -401,7 +401,7 @@ export class Bartender {
    * @param {Bar|null} bar - The bar from which the styles are fetched
    * @returns {PushElement[]}
    */
-  private async pushElements (bar: Bar | null): Promise<PushElement[]> {
+  private async pushElements(bar: Bar | null): Promise<PushElement[]> {
     if (!bar || !this.pushableElements.length) return this.pushableElements
 
     const pushStyles = await bar.getPushStyles()
@@ -419,7 +419,7 @@ export class Bartender {
    * @param {Bar|null} bar - The bar from which the styles are fetched
    * @returns {PushElement[]}
    */
-  private async pullElements (bar: Bar | null): Promise<PushElement[]> {
+  private async pullElements(bar: Bar | null): Promise<PushElement[]> {
     if (!bar || !this.pushableElements.length) return this.pushableElements
 
     const pushStyles = await bar.getPushStyles()
@@ -436,7 +436,7 @@ export class Bartender {
    *
    * @returns {void}
    */
-  private onBarUpdate (): void {
+  private onBarUpdate(): void {
     this.pushElements(this.getOpenBar())
   }
 
@@ -446,7 +446,7 @@ export class Bartender {
    * @param {KeyboardEvent} event - Keyboard event
    * @returns {void}
    */
-  private onKeydown (event: KeyboardEvent): void {
+  private onKeydown(event: KeyboardEvent): void {
     if (event.key === 'Escape') {
       const openBar = this.getOpenBar()
       if (openBar && openBar.permanent === true) {
@@ -461,7 +461,7 @@ export class Bartender {
    *
    * @returns {void}
    */
-  private onResize (): void {
+  private onResize(): void {
     this.resizeDebounce()
   }
 

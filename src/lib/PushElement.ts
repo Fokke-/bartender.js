@@ -36,7 +36,7 @@ export class PushElement {
    * @param {object} options - Options for pushable element
    * @throws {BartenderError}
    */
-  constructor (el: BartenderElementQuery, options: BartenderPushElementOptions = {}) {
+  constructor(el: BartenderElementQuery, options: BartenderPushElementOptions = {}) {
     // Get element
     const element = resolveElement(el || null)
     if (!element) throw new BartenderError('Element is required for push element')
@@ -54,7 +54,7 @@ export class PushElement {
    * @param {object} pushStyles - Push styles from the bar
    * @returns {this}
    */
-  public push (bar: Bar, pushStyles: BartenderPushStyles): this {
+  public push(bar: Bar, pushStyles: BartenderPushStyles): this {
     // If this element is not supposed to be pushed,
     // clear transition styles
     if (
@@ -84,7 +84,7 @@ export class PushElement {
    * @param {object} pushStyles - Push styles from the bar
    * @returns {this}
    */
-  public pull (pushStyles: BartenderPushStyles): this {
+  public pull(pushStyles: BartenderPushStyles): this {
     if (this.isPushed === false) return this
 
     this.el.style.transform = 'translateX(0) translateY(0)'

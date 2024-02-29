@@ -100,7 +100,11 @@ module.exports = {
     ],
     'space-before-function-paren': [
       'error',
-      'always',
+      {
+        'anonymous': 'never',
+        'named': 'never',
+        'asyncArrow': 'always',
+      },
     ],
     'space-in-parens': [
       'error',

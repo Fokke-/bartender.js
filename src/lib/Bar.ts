@@ -58,7 +58,7 @@ export class Bar {
    * @param {object} options - Bar options
    * @throws {BartenderError}
    */
-  constructor (name: string, options: BartenderBarOptions = {}) {
+  constructor(name: string, options: BartenderBarOptions = {}) {
     if (!name) throw new BartenderError('Bar name is required')
     this.name = name
 
@@ -93,7 +93,7 @@ export class Bar {
    *
    * @returns {this}
    */
-  public destroy (): this {
+  public destroy(): this {
     this.el.classList.remove('bartender__bar', `bartender__bar--${this.position}`)
 
     this.el.removeEventListener('close', this.onCloseHandler)
@@ -103,12 +103,12 @@ export class Bar {
   }
 
   /** @type {string} */
-  public get name () {
+  public get name() {
     return this._name
   }
 
   /** @type {string} */
-  public set name (val: string) {
+  public set name(val: string) {
     this._name = val
 
     if (this.initialized === false) return
@@ -126,7 +126,7 @@ export class Bar {
   }
 
   /** @type {string} */
-  public get position () {
+  public get position() {
     return this._position
   }
 
@@ -134,7 +134,7 @@ export class Bar {
    * @type {string}
    * @throws {BartenderError}
    */
-  public set position (val: BartenderBarPosition) {
+  public set position(val: BartenderBarPosition) {
     // Validate position
     if (!val) throw new BartenderError(`Position is required for bar '${this.name}'`)
 
@@ -171,7 +171,7 @@ export class Bar {
   }
 
   /** @type {string} */
-  public get mode () {
+  public get mode() {
     return this._mode
   }
 
@@ -179,7 +179,7 @@ export class Bar {
    * @type {string}
    * @throws {BartenderError}
    */
-  public set mode (val: BartenderBarMode) {
+  public set mode(val: BartenderBarMode) {
     // Validate mode
     if (!val) throw new BartenderError(`Mode is required for bar '${this.name}'`)
 
@@ -214,12 +214,12 @@ export class Bar {
   }
 
   /** @type {boolean} */
-  public get overlay () {
+  public get overlay() {
     return this._overlay
   }
 
   /** @type {boolean} */
-  public set overlay (val: boolean) {
+  public set overlay(val: boolean) {
     this._overlay = val
 
     if (val === true) {
@@ -243,12 +243,12 @@ export class Bar {
   }
 
   /** @type {boolean} */
-  public get permanent () {
+  public get permanent() {
     return this._permanent
   }
 
   /** @type {boolean} */
-  public set permanent (val: boolean) {
+  public set permanent(val: boolean) {
     this._permanent = val
 
     if (this.initialized === false) return
@@ -266,12 +266,12 @@ export class Bar {
   }
 
   /** @type {boolean} */
-  public get scrollTop () {
+  public get scrollTop() {
     return this._scrollTop
   }
 
   /** @type {boolean} */
-  public set scrollTop (val: boolean) {
+  public set scrollTop(val: boolean) {
     this._scrollTop = val
 
     if (this.initialized === false) return
@@ -293,7 +293,7 @@ export class Bar {
    *
    * @returns {boolean}
    */
-  public isOpen (): boolean {
+  public isOpen(): boolean {
     return this.isOpened
   }
 
@@ -303,7 +303,7 @@ export class Bar {
    * @param {Element} el - Element to get properties for
    * @returns {BartenderTransitionProperties}
    */
-  public getTransitionProperties (el: Element): BartenderTransitionProperties | null {
+  public getTransitionProperties(el: Element): BartenderTransitionProperties | null {
     if (!el) return null
 
     const properties: BartenderTransitionProperties = {
@@ -339,7 +339,7 @@ export class Bar {
    *
    * @returns {Promise<this>}
    */
-  public async open (): Promise<this> {
+  public async open(): Promise<this> {
     if (this.debug) console.debug('Opening bar', this)
 
     // Dispatch 'before open' event
@@ -372,7 +372,7 @@ export class Bar {
    *
    * @returns {Promise<this>}
    */
-  public async close (): Promise<this> {
+  public async close(): Promise<this> {
     this.el.close()
 
     await sleep(this.getTransitionProperties(this.el)?.duration)
@@ -385,7 +385,7 @@ export class Bar {
    *
    * @returns {Promise<this>}
    */
-  private async onClose (): Promise<this> {
+  private async onClose(): Promise<this> {
     if (this.debug) console.debug('Closing bar', this)
 
     this.el.dispatchEvent(new CustomEvent('bartender-bar-before-close', {
@@ -416,7 +416,7 @@ export class Bar {
    * @param {MouseEvent} event - Click event
    * @returns {Promise<this>}
    */
-  private onClick (event: MouseEvent): Promise<this> {
+  private onClick(event: MouseEvent): Promise<this> {
     const rect = this.el.getBoundingClientRect()
 
     // Detect clicking on backdrop
@@ -439,7 +439,7 @@ export class Bar {
    *
    * @returns {Promise<BartenderPushStyles>}
    */
-  public async getPushStyles (): Promise<BartenderPushStyles> {
+  public async getPushStyles(): Promise<BartenderPushStyles> {
     const styles: BartenderPushStyles = {
       transform: '',
       transitionDuration: '',
