@@ -25,19 +25,17 @@ export default defineConfig({
     ],
   },
   build: {
-    target: 'es2015',
+    target: 'esnext',
     sourcemap: true,
     rollupOptions: {
       external: [
         'async-await-queue',
         'ts-debounce',
-        'focus-trap',
       ],
       output: {
         globals: {
           'async-await-queue': 'asyncAwaitQueue',
           'ts-debounce': 'tsDebounce',
-          'focus-trap': 'focusTrap',
         },
         assetFileNames: (chunkInfo) => {
           if (chunkInfo.name === 'style.css') return 'bartender.css'
