@@ -28,7 +28,7 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-undef': 'off',
     'no-useless-escape': 'off',
-    'no-unused-vars': 'off',
+    'no-unused-vars': 'warn',
     'eol-last': [
       'error',
       'always',
@@ -116,8 +116,20 @@ module.exports = {
         functions: 'never',
       },
     ],
-    'jsdoc/require-param-description': 0,
+    'jsdoc/require-param-description': 1,
     'jsdoc/require-returns-description': 0,
-    'jsdoc/tag-lines': 0,
+    'jsdoc/tag-lines': [
+      'error',
+      'any',
+      { 'startLines': 1 },
+    ],
+    '@typescript-eslint/no-unused-vars': 1,
+    '@typescript-eslint/explicit-member-accessibility': [
+      1,
+      {
+        'accessibility': 'explicit',
+        'overrides': { 'constructors': 'no-public' },
+      },
+    ],
   },
 }
