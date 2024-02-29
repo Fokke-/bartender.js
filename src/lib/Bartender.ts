@@ -46,8 +46,8 @@ export class Bartender {
     scrollTop: true,
   }
 
-  /** @property {HTMLElement|null} returnFocus - Reference to the element to which focus will be restored after closing the bar */
-  private returnFocus?: HTMLElement | null = null
+  /** @property {boolean} Switching - Will another bar open immediately after the current bar is closed? */
+  private switching = false
 
   /** @property {PushElement[]} pushableElements - Pushable elements added to the instance */
   private pushableElements: PushElement[] = []
@@ -398,11 +398,11 @@ export class Bartender {
    * @throws {BartenderError}
    * @returns {Promise<Bar|null>}
    */
-  public async toggle (name: string, returnFocus?: HTMLElement | null): Promise<Bar | null> {
+  public async toggle (name: string): Promise<Bar | null> {
     const bar = this.getBar(name)
     if (!bar) throw new BartenderError(`Unknown bar '${name}'`)
 
-    return (bar.isOpen() === true) ? this.close() : this.open(name, returnFocus)
+    return (bar.isOpen() === true) ? this.close() : this.open(name)
   }
 
   /**
