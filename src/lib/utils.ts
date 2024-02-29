@@ -6,13 +6,13 @@ import type { BartenderElementQuery } from './types'
  * @param {string|Element|null} query - Selector string or element
  * @param {object} parent - Parent element
  * @param {boolean} directChild - Match only to the direct child
- * @returns {HTMLElement|null} Resolved element
+ * @returns {HTMLElement|HTMLDialogElement|null}
  */
 export const resolveElement = (
   query: BartenderElementQuery,
   parent: Document | HTMLElement = document,
   directChild = false
-): HTMLElement | null => {
+): HTMLElement | HTMLDialogElement | null => {
   if (!query) return null
   if (query instanceof Element) return query as HTMLElement
   if (typeof query === 'string') {

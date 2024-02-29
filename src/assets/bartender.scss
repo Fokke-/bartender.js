@@ -1,14 +1,13 @@
 $bartender-transition-duration: 250ms !default;
 $bartender-transition-timing-function: ease !default;
-$bartender-bar-transition: transform $bartender-transition-duration $bartender-transition-timing-function !default;
-$bartender-overlay-transition: transform $bartender-transition-duration $bartender-transition-timing-function, opacity $bartender-transition-duration $bartender-transition-timing-function, background-color $bartender-transition-duration $bartender-transition-timing-function !default;
+$bartender-bar-transition: $bartender-transition-duration $bartender-transition-timing-function !default;
 
 .bartender {
   box-sizing: border-box !important;
-  width: 100%;
-  height: 100vh;
-  height: calc(var(--dvh, 1vh) * 100);
-  height: 100dvh;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: calc(var(--dvh, 1vh) * 100) !important;
+  height: 100dvh !important;
   margin: 0 !important;
 
   &--open {
@@ -17,47 +16,77 @@ $bartender-overlay-transition: transform $bartender-transition-duration $bartend
 
   &__content {
     box-sizing: border-box !important;
-    overflow: auto;
-    z-index: 10;
+    overflow: auto !important;
+    z-index: 10 !important;
     position: relative !important;
-    width: 100%;
-    height: 100vh;
-    height: calc(var(--dvh, 1vh) * 100);
-    height: 100dvh;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: calc(var(--dvh, 1vh) * 100) !important;
+    height: 100dvh !important;
     margin: 0 !important;
     background: #fff;
-    will-change: transform;
-    transition-property: transform;
+    will-change: transform !important;
+    transition-property: transform !important;
 
     &:focus {
       outline: 0;
     }
 
     .bartender--open & {
-      overflow: hidden;
+      overflow: hidden !important;
     }
   }
 
   &__bar {
     box-sizing: border-box !important;
-    z-index: 20;
-    position: fixed !important;
     overflow: auto;
-    margin: 0 !important;
+    margin: 0;
+    padding: 0;
     background-color: #fff;
     will-change: transform;
-    transition: $bartender-bar-transition;
-
-    &:focus {
-      outline: 0;
-    }
+    transition:
+      transform $bartender-bar-transition,
+      overlay $bartender-bar-transition allow-discrete,
+      display $bartender-bar-transition allow-discrete
+    ;
 
     @media (prefers-reduced-motion) {
       transition: none !important;
     }
 
-    &--closed {
-      visibility: hidden;
+    &::backdrop {
+      opacity: 0;
+      background-color: #000;
+      will-change: opacity;
+      transition:
+        opacity $bartender-bar-transition,
+        overlay $bartender-bar-transition allow-discrete,
+        display $bartender-bar-transition allow-discrete
+      ;
+
+      @media (prefers-reduced-motion) {
+        transition: none !important;
+      }
+    }
+
+    &[open] {
+      transform: translateX(0);
+    }
+
+    &--overlay {
+      &[open] {
+        &::backdrop {
+          opacity: 0.5;
+
+          @starting-style {
+            opacity: 0;
+          }
+        }
+      }
+    }
+
+    &:focus {
+      outline: 0;
     }
 
     &--left,
@@ -68,82 +97,69 @@ $bartender-overlay-transition: transform $bartender-transition-duration $bartend
       height: 100vh;
       height: calc(var(--dvh, 1vh) * 100);
       height: 100dvh;
-
-      &.bartender__bar--open {
-        transform: translateX(0)
-      }
+      max-height: 100vh;
+      max-height: calc(var(--dvh, 1vh) * 100);
+      max-height: 100dvh;
     }
 
     &--left {
       left: 0;
+      right: auto;
       transform: translateX(-100%);
 
+      @starting-style {
+        &[open] {
+          transform: translateX(-100%);
+        }
+      }
     }
 
     &--right {
+      left: auto;
       right: 0;
       transform: translateX(100%);
+
+      @starting-style {
+        &[open] {
+          transform: translateX(100%);
+        }
+      }
     }
 
     &--top,
     &--bottom {
       left: 0;
       width: 100%;
+      max-width: 100%;
       height: 50vh;
       height: calc(var(--dvh, 1vh) * 50);
       height: 50dvh;
       max-height: 400px;
-
-      &.bartender__bar--open {
-        transform: translateY(0)
-      }
     }
 
     &--top {
       top: 0;
+      bottom: auto;
       transform: translateY(-100%);
+
+      @starting-style {
+        &[open] {
+          transform: translateY(-100%);
+        }
+      }
     }
 
     &--bottom {
+      top: auto;
       bottom: 0;
       transform: translateY(100%);
+
+      @starting-style {
+        &[open] {
+          transform: translateY(100%);
+        }
+      }
     }
-  }
-
-  &__overlay {
-    z-index: 20;
-    position: fixed !important;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    pointer-events: none;
-    opacity: 0;
-    will-change: transform, opacity, background-color;
-    transition: $bartender-overlay-transition;
-
-    @media (prefers-reduced-motion) {
-      transition: none !important;
-    }
-
-    &--transparent {
-      background-color: transparent;
-    }
-
-    &--visible {
-      pointer-events: all;
-      opacity: 1;
-    }
-  }
-
-  // Utility class for disabling scrolling
-  &-disable-scrolling {
-    overflow: hidden !important;
-  }
-
-  // Utility class for disabling transition
-  &-disable-transition {
-    transition: none !important;
   }
 }
+

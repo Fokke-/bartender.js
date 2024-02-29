@@ -6,7 +6,6 @@ import type {
   BartenderTransitionProperties
 } from './types'
 import { BartenderError } from './BartenderError'
-import { Overlay } from './Overlay'
 import {
   resolveElement,
   sleep
@@ -22,14 +21,11 @@ export class Bar {
   /** @property {boolean} initialized - Is bar initialized? */
   private initialized = false
 
-  /** @property {Overlay} overlayObj - Overlay object for the bar */
-  readonly overlayObj: Overlay
-
   /** @property {string} _name - Bar name */
   private _name = ''
 
-  /** @property {HTMLElement} el - Bar element */
-  readonly el: HTMLElement
+  /** @property {HTMLDialogElement} el - Bar element */
+  public readonly el: HTMLDialogElement
 
   /** @property {string} _position - Bar position */
   private _position: BartenderBarPosition = 'left'
@@ -49,6 +45,12 @@ export class Bar {
   /** @property {boolean} isOpened - Is the bar currently open? */
   private isOpened = false
 
+  /** @property {Function} onCloseHandler - Handler for dialog close event */
+  private onCloseHandler
+
+  /** @property {Function} onClickHandler - Handler for dialog click event */
+  private onClickHandler
+
   /**
    * Create a new bar
    *
@@ -58,23 +60,30 @@ export class Bar {
    */
   constructor (name: string, options: BartenderBarOptions = {}) {
     if (!name) throw new BartenderError('Bar name is required')
-
-    this.overlayObj = new Overlay(name, this.overlay)
     this.name = name
 
     // Get element
-    const el = resolveElement(options.el || null)
+    const el = resolveElement(options.el || null) as HTMLDialogElement
     if (!el) throw new BartenderError(`Content element for bar '${this.name}' is required`)
+
+    // Check that element is a dialog
+    if (el.tagName !== 'DIALOG') throw new BartenderError(`Bar element for '${this.name}' must be a <dialog> element`)
+
     this.el = el
     this.el.classList.add('bartender__bar', 'bartender__bar--closed')
-    this.el.setAttribute('tabindex', '-1')
-    this.el.setAttribute('aria-hidden', 'true')
 
     this.position = options.position ?? this._position
     this.mode = options.mode ?? this._mode
     this.overlay = options.overlay ?? this._overlay
     this.permanent = options.permanent ?? this._permanent
     this.scrollTop = options.scrollTop ?? this._scrollTop
+
+    // Event listeners
+    this.onCloseHandler = this.onClose.bind(this)
+    this.el.addEventListener('close', this.onCloseHandler)
+
+    this.onClickHandler = this.onClick.bind(this)
+    this.el.addEventListener('click', this.onClickHandler)
 
     this.initialized = true
   }
@@ -87,6 +96,9 @@ export class Bar {
   public destroy (): this {
     this.el.classList.remove('bartender__bar', `bartender__bar--${this.position}`)
 
+    this.el.removeEventListener('close', this.onCloseHandler)
+    this.el.removeEventListener('click', this.onClickHandler)
+
     return this
   }
 
@@ -98,7 +110,6 @@ export class Bar {
   /** @type {string} */
   public set name (val: string) {
     this._name = val
-    this.overlayObj.name = val
 
     if (this.initialized === false) return
 
@@ -127,7 +138,7 @@ export class Bar {
     // Validate position
     if (!val) throw new BartenderError(`Position is required for bar '${this.name}'`)
 
-    const validPositions = [
+    const validPositions: BartenderBarPosition[] = [
       'left',
       'right',
       'top',
@@ -136,20 +147,12 @@ export class Bar {
 
     if (!validPositions.includes(val)) throw new BartenderError(`Invalid position '${val}' for bar '${this.name}'. Use one of the following: ${validPositions.join(', ')}.`)
 
-    // Temporarily disable transition
-    this.el.classList.add('bartender-disable-transition')
-
     // Update element classes
     this.el.classList.remove(`bartender__bar--${this._position}`)
     this.el.classList.add(`bartender__bar--${val}`)
 
     // Set new position
     this._position = val
-
-    // Return transition
-    setTimeout(() => {
-      this.el.classList.remove('bartender-disable-transition')
-    })
 
     if (this.initialized === false) return
 
@@ -180,15 +183,12 @@ export class Bar {
     // Validate mode
     if (!val) throw new BartenderError(`Mode is required for bar '${this.name}'`)
 
-    const validModes = [
+    const validModes: BartenderBarMode[] = [
       'float',
       'push',
     ]
 
     if (!validModes.includes(val)) throw new BartenderError(`Invalid mode '${val}' for bar '${this.name}'. Use one of the following: ${validModes.join(', ')}.`)
-
-    // Temporarily disable transition
-    this.el.classList.add('bartender-disable-transition')
 
     // Update element classes
     this.el.classList.remove(`bartender__bar--${this._mode}`)
@@ -196,11 +196,6 @@ export class Bar {
 
     // Set new mode
     this._mode = val
-
-    // Return transition
-    setTimeout(() => {
-      this.el.classList.remove('bartender-disable-transition')
-    })
 
     if (this.initialized === false) return
 
@@ -226,7 +221,12 @@ export class Bar {
   /** @type {boolean} */
   public set overlay (val: boolean) {
     this._overlay = val
-    this.overlayObj.enabled = val
+
+    if (val === true) {
+      this.el.classList.add('bartender__bar--overlay')
+    } else {
+      this.el.classList.remove('bartender__bar--overlay')
+    }
 
     if (this.initialized === false) return
 
@@ -239,7 +239,7 @@ export class Bar {
       },
     }))
 
-    if (this.debug) console.debug('Updated bar overlay', this, this.overlayObj)
+    if (this.debug) console.debug('Updated bar overlay', this)
   }
 
   /** @type {boolean} */
@@ -348,12 +348,10 @@ export class Bar {
       detail: { bar: this },
     }))
 
+    this.el.showModal()
     if (this.scrollTop === true) this.el.scrollTo(0, 0)
     this.el.classList.remove('bartender__bar--closed')
     this.el.classList.add('bartender__bar--open')
-    this.el.setAttribute('aria-hidden', 'false')
-    this.el.focus()
-    this.overlayObj.show()
     this.isOpened = true
 
     await sleep(this.getTransitionProperties(this.el)?.duration)
@@ -375,7 +373,19 @@ export class Bar {
    * @returns {Promise<this>}
    */
   public async close (): Promise<this> {
+    this.el.close()
+
     await sleep(this.getTransitionProperties(this.el)?.duration)
+
+    return Promise.resolve(this)
+  }
+
+  /**
+   * Handler for dialog close event
+   *
+   * @returns {Promise<this>}
+   */
+  private async onClose (): Promise<this> {
     if (this.debug) console.debug('Closing bar', this)
 
     this.el.dispatchEvent(new CustomEvent('bartender-bar-before-close', {
@@ -384,19 +394,42 @@ export class Bar {
     }))
 
     this.el.classList.remove('bartender__bar--open')
-    this.el.setAttribute('aria-hidden', 'true')
-    this.overlayObj.hide()
     this.isOpened = false
 
     await sleep(this.getTransitionProperties(this.el)?.duration)
 
     this.el.classList.add('bartender__bar--closed')
+
     this.el.dispatchEvent(new CustomEvent('bartender-bar-after-close', {
       bubbles: true,
       detail: { bar: this },
     }))
 
     if (this.debug) console.debug('Finished closing bar', this)
+
+    return Promise.resolve(this)
+  }
+
+  /**
+   * Handler for dialog click event
+   *
+   * @param {MouseEvent} event - Click event
+   * @returns {Promise<this>}
+   */
+  private onClick (event: MouseEvent): Promise<this> {
+    const rect = this.el.getBoundingClientRect()
+
+    // Detect clicking on backdrop
+    if (
+      this.permanent === false && (
+        rect.left > event.clientX ||
+        rect.right < event.clientX ||
+        rect.top > event.clientY ||
+        rect.bottom < event.clientY
+      )
+    ) {
+      this.close()
+    }
 
     return Promise.resolve(this)
   }

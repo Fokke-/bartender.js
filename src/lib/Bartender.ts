@@ -240,19 +240,17 @@ export class Bartender {
     // Check that bar element is a direct child on main element
     if (bar.el.parentElement !== this.el) throw new BartenderError(`Element of bar '${bar.name}' must be a direct child of the Bartender main element`)
 
-    // Insert overlay element
-    this.el.appendChild(bar.overlayObj.el)
-    bar.overlayObj.el.addEventListener('click', () => {
-      if (bar.permanent === true) return
-
-      this.close()
+    // Handlers for close events
+    bar.el.addEventListener('bartender-bar-before-close', () => {
+      this.pullElements(bar)
     })
 
-    // Set overlay as pushable element
-    this.addPushElement(bar.overlayObj.el, {
-      bars: [
-        bar,
-      ],
+    bar.el.addEventListener('bartender-bar-after-close', () => {
+      if (this.switching === true) {
+        this.switching = false
+      } else {
+        this.el.classList.remove('bartender--open')
+      }
     })
 
     this.bars.push(bar)
@@ -281,7 +279,6 @@ export class Bartender {
     if (!bar) throw new BartenderError(`Bar with name '${name}' was not found`)
     if (this.getOpenBar() === bar) this.close()
 
-    this.removePushElement(bar.overlayObj.el)
     bar.destroy()
 
     const barIndex = this.bars.findIndex(item => item.name === name)
@@ -309,59 +306,23 @@ export class Bartender {
     if (!bar) throw new BartenderError(`Unknown bar '${name}'`)
     if (bar.isOpen() === true) return Promise.resolve(bar)
 
+    const id = Symbol()
+    await this.queue.wait(id)
+
     // Close any open bar
     const openBar = this.getOpenBar()
 
     if (openBar) {
-      await this.closeBar(openBar.name, true)
+      await this.close(openBar.name, true)
       await sleep(this.switchTimeout)
     }
 
     this.el.classList.add('bartender--open')
-    this.contentEl.setAttribute('aria-hidden', 'true')
     this.pushElements(bar)
 
-    return bar.open()
-  }
-
-  /**
-   * Open bar
-   *
-   * @param {string} name - Bar name
-   * @param {HTMLElement|null} returnFocus - Reference to the element to which focus will be restored after closing the bar
-   * @returns {Promise<Bar>}
-   */
-  public async open (name: string, returnFocus?: HTMLElement | null): Promise<Bar> {
-    const id = Symbol()
-    await this.queue.wait(id)
-
-    this.returnFocus = returnFocus
-
-    return this.openBar(name).finally(() => {
+    await bar.open().finally(() => {
       this.queue.end(id)
     })
-  }
-
-  /**
-   * Close bar
-   *
-   * @param {string} name - Bar name
-   * @param {boolean} switching - Will another bar open immediately after closing?
-   * @returns {Promise<Bar|null>}
-   */
-  public async close (name?: string, switching = false): Promise<Bar | null> {
-    const bar = name ? this.getBar(name) : this.getOpenBar()
-    if (!bar || !bar.isOpen()) return Promise.resolve(null)
-
-    this.pullElements(bar)
-    await bar.close()
-
-    // If we going to open another bar right after closing the current one,
-    // don't update elements yet.
-    if (switching === false) {
-      this.el.classList.remove('bartender--open')
-      this.contentEl.setAttribute('aria-hidden', 'false')
-    }
 
     return Promise.resolve(bar)
   }
@@ -369,32 +330,26 @@ export class Bartender {
   /**
    * Close bar
    *
-   * @param {string} name - Bar name
+   * @param {string|undefined} name - Bar name. Leave empty to close any open bar.
+   * @param {boolean} switching - For internal use only. Will another bar open immediately after closing?
    * @returns {Promise<Bar|null>}
    */
-  public async close (name?: string): Promise<Bar | null> {
-    const id = Symbol()
-    await this.queue.wait(id)
+  public async close (name?: string, switching = false): Promise<Bar | null> {
+    const bar = name ? this.getBar(name) : this.getOpenBar()
+    if (!bar || !bar.isOpen()) return Promise.resolve(null)
 
-    return this.closeBar(name).finally(() => {
-      this.queue.end(id)
+    // Store switching state. The event handler will use it to determine whether to remove the 'bartender--open' class.
+    this.switching = switching
 
-      // Return focus
-      if (this.returnFocus) {
-        this.returnFocus.focus()
-        this.returnFocus = null
-        return
-      }
+    await bar.close()
 
-      this.contentEl.focus()
-    })
+    return Promise.resolve(bar)
   }
 
   /**
    * Toggle bar
    *
    * @param {string} name - Bar name
-   * @param {HTMLElement|null} returnFocus - Reference to the element to which focus will be restored after closing the bar
    * @throws {BartenderError}
    * @returns {Promise<Bar|null>}
    */
@@ -446,16 +401,16 @@ export class Bartender {
    * @param {Bar|null} bar - The bar from which the styles are fetched
    * @returns {PushElement[]}
    */
-  private pushElements (bar: Bar | null): PushElement[] {
+  private async pushElements (bar: Bar | null): Promise<PushElement[]> {
     if (!bar || !this.pushableElements.length) return this.pushableElements
 
-    const pushStyles = bar.getPushStyles()
+    const pushStyles = await bar.getPushStyles()
 
     for (const item of this.pushableElements) {
       item.push(bar, pushStyles)
     }
 
-    return this.pushableElements
+    return Promise.resolve(this.pushableElements)
   }
 
   /**
@@ -464,16 +419,16 @@ export class Bartender {
    * @param {Bar|null} bar - The bar from which the styles are fetched
    * @returns {PushElement[]}
    */
-  private pullElements (bar: Bar | null): PushElement[] {
+  private async pullElements (bar: Bar | null): Promise<PushElement[]> {
     if (!bar || !this.pushableElements.length) return this.pushableElements
 
-    const pushStyles = bar.getPushStyles()
+    const pushStyles = await bar.getPushStyles()
 
     for (const item of this.pushableElements) {
       item.pull(pushStyles)
     }
 
-    return this.pushableElements
+    return Promise.resolve(this.pushableElements)
   }
 
   /**
@@ -488,15 +443,16 @@ export class Bartender {
   /**
    * Handler for keydown event
    *
-   * @param {KeyboardEvent} event
+   * @param {KeyboardEvent} event - Keyboard event
    * @returns {void}
    */
   private onKeydown (event: KeyboardEvent): void {
     if (event.key === 'Escape') {
       const openBar = this.getOpenBar()
-      if (!openBar || openBar.permanent === true) return
-
-      this.close()
+      if (openBar && openBar.permanent === true) {
+        event.preventDefault()
+        return
+      }
     }
   }
 

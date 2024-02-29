@@ -27,6 +27,7 @@ window.bartender.addBar('rightExtra', {
   position: 'right',
   mode: 'push',
   overlay: false,
+  permanent: true,
 })
 
 window.bartender.addBar('top', {
@@ -38,7 +39,7 @@ window.bartender.addBar('top', {
 window.bartender.addBar('bottom', {
   el: '.bar--bottom',
   position: 'bottom',
-  mode: 'float',
+  mode: 'push',
 })
 
 const fixedBarBottom = document.querySelector('.toolBar--fixed.toolBar--bottom') as HTMLElement
@@ -57,8 +58,15 @@ if (fixedBarBottom) {
 
 const toggleButtons = document.querySelectorAll('.toggleButton')
 for (const button of Array.from(toggleButtons)) {
-  button.addEventListener('click', (event) => {
-    window.bartender.toggle(button.getAttribute('data-bar') || '', event.target as HTMLElement)
+  button.addEventListener('click', () => {
+    window.bartender.toggle(button.getAttribute('data-bar') || '')
+  })
+}
+
+const closeButtons = document.querySelectorAll('.closeButton')
+for (const button of Array.from(closeButtons)) {
+  button.addEventListener('click', () => {
+    window.bartender.close()
   })
 }
 
