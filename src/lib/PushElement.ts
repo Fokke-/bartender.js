@@ -15,16 +15,16 @@ import { resolveElement } from './utils'
 export class PushElement {
 
   /** @property {HTMLElement} el - Element to push */
-  readonly el: HTMLElement
+  public readonly el: HTMLElement
 
   /** @property {Bar[]} bars - Matched bars */
-  readonly bars: Bar[]
+  private readonly bars: Bar[]
 
   /** @property {string[]} modes - Matched modes */
-  readonly modes: BartenderBarMode[]
+  private readonly modes: BartenderBarMode[]
 
   /** @property {string[]} positions - Matched positions */
-  readonly positions: BartenderBarPosition[]
+  private readonly positions: BartenderBarPosition[]
 
   /** @property {boolean} isPushed - Is the element currently pushed? */
   private isPushed = false

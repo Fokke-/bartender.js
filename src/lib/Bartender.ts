@@ -25,19 +25,19 @@ export class Bartender {
   private _debug = false
 
   /** @property {HTMLElement} el - Main element */
-  readonly el: HTMLElement
+  private readonly el: HTMLElement
 
   /** @property {HTMLElement} contentEl - Content element */
-  readonly contentEl: HTMLElement
+  private readonly contentEl: HTMLElement
 
   /** @property {number} switchTimeout - Time to wait in milliseconds until another bar is opened */
   public switchTimeout = 150
 
   /** @property {Bar[]} bars - Bars added to the instance */
-  readonly bars: Bar[] = []
+  public readonly bars: Bar[] = []
 
   /** @property {object} barDefaultOptions - Default options for the bars */
-  readonly barDefaultOptions: BartenderBarOptions = {
+  private readonly barDefaultOptions: BartenderBarOptions = {
     el: null,
     position: 'left',
     mode: 'float',
@@ -141,12 +141,12 @@ export class Bartender {
   }
 
   /** @type {boolean} */
-  get debug () {
+  public get debug () {
     return this._debug
   }
 
   /** @type {boolean} */
-  set debug (val: boolean) {
+  public set debug (val: boolean) {
     this._debug = val
 
     for (const bar of this.bars) {
@@ -304,7 +304,7 @@ export class Bartender {
    * @throws {BartenderError}
    * @returns {Promise<Bar>}
    */
-  private async openBar (name: string): Promise<Bar> {
+  public async open (name: string): Promise<Bar> {
     const bar = this.getBar(name)
     if (!bar) throw new BartenderError(`Unknown bar '${name}'`)
     if (bar.isOpen() === true) return Promise.resolve(bar)
@@ -349,7 +349,7 @@ export class Bartender {
    * @param {boolean} switching - Will another bar open immediately after closing?
    * @returns {Promise<Bar|null>}
    */
-  private async closeBar (name?: string, switching = false): Promise<Bar | null> {
+  public async close (name?: string, switching = false): Promise<Bar | null> {
     const bar = name ? this.getBar(name) : this.getOpenBar()
     if (!bar || !bar.isOpen()) return Promise.resolve(null)
 

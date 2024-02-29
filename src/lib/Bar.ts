@@ -83,20 +83,19 @@ export class Bar {
    *
    * @returns {this}
    */
-  destroy (): this {
-    this.overlayObj.destroy()
+  public destroy (): this {
     this.el.classList.remove('bartender__bar', `bartender__bar--${this.position}`)
 
     return this
   }
 
   /** @type {string} */
-  get name () {
+  public get name () {
     return this._name
   }
 
   /** @type {string} */
-  set name (val: string) {
+  public set name (val: string) {
     this._name = val
     this.overlayObj.name = val
 
@@ -115,7 +114,7 @@ export class Bar {
   }
 
   /** @type {string} */
-  get position () {
+  public get position () {
     return this._position
   }
 
@@ -123,7 +122,7 @@ export class Bar {
    * @type {string}
    * @throws {BartenderError}
    */
-  set position (val: BartenderBarPosition) {
+  public set position (val: BartenderBarPosition) {
     // Validate position
     if (!val) throw new BartenderError(`Position is required for bar '${this.name}'`)
 
@@ -168,7 +167,7 @@ export class Bar {
   }
 
   /** @type {string} */
-  get mode () {
+  public get mode () {
     return this._mode
   }
 
@@ -176,7 +175,7 @@ export class Bar {
    * @type {string}
    * @throws {BartenderError}
    */
-  set mode (val: BartenderBarMode) {
+  public set mode (val: BartenderBarMode) {
     // Validate mode
     if (!val) throw new BartenderError(`Mode is required for bar '${this.name}'`)
 
@@ -219,12 +218,12 @@ export class Bar {
   }
 
   /** @type {boolean} */
-  get overlay () {
+  public get overlay () {
     return this._overlay
   }
 
   /** @type {boolean} */
-  set overlay (val: boolean) {
+  public set overlay (val: boolean) {
     this._overlay = val
     this.overlayObj.enabled = val
 
@@ -243,12 +242,12 @@ export class Bar {
   }
 
   /** @type {boolean} */
-  get permanent () {
+  public get permanent () {
     return this._permanent
   }
 
   /** @type {boolean} */
-  set permanent (val: boolean) {
+  public set permanent (val: boolean) {
     this._permanent = val
 
     if (this.initialized === false) return
@@ -266,12 +265,12 @@ export class Bar {
   }
 
   /** @type {boolean} */
-  get scrollTop () {
+  public get scrollTop () {
     return this._scrollTop
   }
 
   /** @type {boolean} */
-  set scrollTop (val: boolean) {
+  public set scrollTop (val: boolean) {
     this._scrollTop = val
 
     if (this.initialized === false) return
@@ -314,7 +313,7 @@ export class Bar {
    *
    * @returns {Promise<this>}
    */
-  async open (): Promise<this> {
+  public async open (): Promise<this> {
     if (this.debug) console.debug('Opening bar', this)
 
     // Dispatch 'before open' event
@@ -349,7 +348,7 @@ export class Bar {
    *
    * @returns {Promise<this>}
    */
-  async close (): Promise<this> {
+  public async close (): Promise<this> {
     if (this.debug) console.debug('Closing bar', this)
 
     this.el.dispatchEvent(new CustomEvent('bartender-bar-before-close', {
