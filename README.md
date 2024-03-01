@@ -14,14 +14,17 @@ Check out the demo in [Bartender.js playground](https://bartender.fokke.fi).
 
 ## Accessibility
 
-- ARIA-attributes are being used for all relevant elements
-- After closing the bar the focus will return to the element which was used to open the bar
-- If bar is open, only it's child elements are focusable, and vice versa
+- The library uses [\<dialog\> elements](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog) for bars, providing native focus trap, focus return etc.
 - All transitions are disabled if user prefers reduced motion
 
-## Browser support
+**IMPORTANT**: when the bar is open, focus is trapped in the bar. It's highly recommended to provide users with a way to close the bar with a keyboard. Even though by default the bar is closeable by hitting the `esc` key, adding a dedicated close button is recommended. This holds especially true for permanent bars, which are not closeable by hitting `esc` or clicking outside the bar.
 
-All major browsers are supported. Library is transpiled to ES2015.
+## Browser requirements
+
+- [\<dialog\> element](https://caniuse.com/dialog) must be supported
+- (optional) [transition-behavior: allow-discrete](https://caniuse.com/mdn-css_properties_content-visibility_transitionable) must be supported to enable bar transitions.
+
+If you need to support older browsers, use version 2.x.
 
 ## Installation
 
@@ -33,7 +36,7 @@ npm i @fokke-/bartender.js
 
 ### Markup
 
-Note that it's highly recommended to define the following viewport meta tag to avoid quirks when using bars with `push` or `reveal` modes.
+Note that it's highly recommended to define the following viewport meta tag to avoid quirks when using bars with `push` mode.
 
 ```html
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
@@ -56,9 +59,9 @@ Note that the class names in the example below are defaults. You can use any cla
   </div>
 
   <!-- Add any number of bars -->
-  <div class="mobileNav bartender__bar">
+  <dialog class="mobileNav bartender__bar">
     <button class="closeMobileNav">Close mobile navigation</button>
-  </div>
+  </dialog>
 
   <!-- Place your fixed positioned elements here -->
 
@@ -114,7 +117,7 @@ const bartender = new Bartender({
   // main options
 }, {
   // default options for new bars
-});
+})
 ```
 
 ### Main Options
@@ -141,7 +144,7 @@ Page content element as selector string or reference to the element.
 
 Type: `number` (milliseconds), Default: `150`
 
-If bar is opened when there's already another active bar, the open bar will be closed and the library will pause for the given time before opening the another bar.
+If bar is opened when there's already another active bar, the open bar will be closed and the process will pause for the given time before opening the another bar.
 
 ## API
 
@@ -190,7 +193,6 @@ Bar mode as string. Possible values are:
 
 - `float` - The bar will slide in and float over the content.
 - `push` - The bar will slide in, and the content wrap will be pushed away from the bar.
-- `reveal` - Content wrap will be pushed away, revealing the bar underneath
 
 ##### overlay
 
@@ -202,7 +204,7 @@ Show shading overlay over content wrap when bar is open. If disabled, overlay el
 
 Type: `boolean`, Default: `false`
 
-If enabled, the bar is not closable by clicking overlay of pressing `esc` key.
+If enabled, the bar is not closeable by clicking overlay of pressing `esc` key.
 
 **IMPORTANT:** If you enable this, remember to provide a way to close the bar.
 
@@ -236,21 +238,17 @@ Remove bar instance by name.
 bartender.removeBar('mobileNav')
 ```
 
-### open(name, returnFocus?)
+### open(name)
 
-Open bar by name. If you specify reference to the element as a second argument, the focus will be returned to given element after bar is closed.
+Open bar by name.
 
 | Argument | Type | Description |
 | - | - | - |
 | name | string | Bar name |
-| returnFocus | HTMLElement | Reference to the element to which focus will be restored after closing the bar |
 
 ```javascript
 // Open bar 'mobileNav'
 bartender.open('mobileNav')
-
-// Open bar 'mobileNav' and return focus after closing it
-bartender.open('mobileNav', document.querySelector('.toggleMobileNav'))
 ```
 
 ### close(name?)
@@ -269,21 +267,17 @@ bartender.close('mobileNav')
 bartender.close()
 ```
 
-### toggle(name, returnFocus?)
+### toggle(name)
 
-Toggle bar open/closed state. If you specify reference to the element as a second argument, the focus will be returned to given element after bar is closed.
+Toggle bar open/closed state.
 
 | Argument | Type | Description |
 | - | - | - |
 | name | string | Bar name |
-| returnFocus | HTMLElement | Reference to the element to which focus will be restored after closing the bar |
 
 ```javascript
 // Toggle bar 'mobileNav'
 bartender.toggle('mobileNav')
-
-// Toggle bar 'mobileNav' and return focus after closing it
-bartender.toggle('mobileNav', document.querySelector('.toggleMobileNav'))
 ```
 
 ### addPushElement(element, options?)
@@ -301,11 +295,10 @@ By default element is pushed by all bars, modes and positions, but you can fine-
 // Always push the element, regardless of bar configuration
 bartender.addPushElement('.myFixedElement')
 
-// Push element only if bar mode is 'push' or 'reveal' AND position is 'left' or 'right'.
+// Push element only if bar mode is 'push' AND position is 'left' or 'right'.
 bartender.addPushElement('.myFixedElement', {
   modes: [
     'push',
-    'reveal',
   ],
   positions: [
     'left',
@@ -458,18 +451,20 @@ window.addEventListener('bartender-bar-after-close', (event) => {
 
 ## Styling
 
-Note that all transitions are disabled, if user prefers reduced motion. [Read more about reduced motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion).
+Note that all transitions are disabled, if the user prefers reduced motion. [Read more about reduced motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion).
 
-These scss variables will be used as defaults for all transitions:
+These css variables will be used as defaults for all transitions:
 
-```scss
-$bartender-transition-duration: 250ms !default;
-$bartender-transition-timing-function: ease !default;
+```css
+:root {
+  --bartender-transition-duration: 250ms;
+  --bartender-transition-timing-function: ease;
+}
 ```
 
 ### Bars
 
-Each bar will receive class names based on it's position and mode.
+Each bar will receive class names based on it's name, position and mode.
 
 ```css
 /* Styles for all bars */
@@ -477,12 +472,17 @@ Each bar will receive class names based on it's position and mode.
   background: #dadada;
 }
 
-/* Styles for all bars with position "left" */
+/* Styles for the bar named "mobileNav" */
+.bartender__bar--mobileNav {
+  background: #dadada;
+}
+
+/* Styles for all bars by position */
 .bartender__bar--left {
   background: #dadada;
 }
 
-/* Styles for all bars with mode "float" */
+/* Styles for all bars by mode */
 .bartender__bar--float {
   background: #dadada;
 }
@@ -490,16 +490,16 @@ Each bar will receive class names based on it's position and mode.
 
 ### Overlay shading
 
-Each bar has it's own overlay element, so you can style overlays per bar basis.
+Use `::backdrop` pseudo element to define styles for bar overlays.
 
 ```css
 /* Styles for all overlays */
-.bartender__overlay {
-  background-color: rgba(128, 0, 0, 0.5);
+.bartender__bar::backdrop {
+  background-color: maroon;
 }
 
 /* Styles for the overlay of bar named "mobileNav" */
-.bartender__overlay--mobileNav {
-  background-color: rgba(128, 0, 0, 0.5);
+.bartender__bar--mobileNav::backdrop {
+  background-color: teal;
 }
 ```
