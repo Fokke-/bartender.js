@@ -1,6 +1,7 @@
-$bartender-transition-duration: 250ms !default;
-$bartender-transition-timing-function: ease !default;
-$bartender-bar-transition: $bartender-transition-duration $bartender-transition-timing-function !default;
+:root {
+  --bartender-transition-duration: 250ms;
+  --bartender-transition-timing-function: ease;
+}
 
 .bartender {
   box-sizing: border-box !important;
@@ -45,9 +46,9 @@ $bartender-bar-transition: $bartender-transition-duration $bartender-transition-
     background-color: #fff;
     will-change: transform;
     transition:
-      transform $bartender-bar-transition,
-      overlay $bartender-bar-transition allow-discrete,
-      display $bartender-bar-transition allow-discrete
+      transform var(--bartender-transition-duration) var(--bartender-transition-timing-function),
+      overlay var(--bartender-transition-duration) var(--bartender-transition-timing-function) allow-discrete,
+      display var(--bartender-transition-duration) var(--bartender-transition-timing-function) allow-discrete
     ;
 
     @media (prefers-reduced-motion) {
@@ -59,9 +60,9 @@ $bartender-bar-transition: $bartender-transition-duration $bartender-transition-
       background-color: #000;
       will-change: opacity;
       transition:
-        opacity $bartender-bar-transition,
-        overlay $bartender-bar-transition allow-discrete,
-        display $bartender-bar-transition allow-discrete
+        opacity var(--bartender-transition-duration) var(--bartender-transition-timing-function),
+        overlay var(--bartender-transition-duration) var(--bartender-transition-timing-function) allow-discrete,
+        display var(--bartender-transition-duration) var(--bartender-transition-timing-function) allow-discrete
       ;
 
       @media (prefers-reduced-motion) {
