@@ -22,8 +22,8 @@ window.bartender.addBar('right', {
   mode: 'float',
 })
 
-window.bartender.addBar('rightExtra', {
-  el: '.bar--rightExtra',
+window.bartender.addBar('rightPermanent', {
+  el: '.bar--rightPermanent',
   position: 'right',
   mode: 'push',
   overlay: false,

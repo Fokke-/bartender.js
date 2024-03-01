@@ -15,6 +15,16 @@ body {
 
   &__bar {
     border: solid .5em teal;
+
+    &::backdrop {
+      background-color: maroon;
+    }
+
+    &--left {
+      &::backdrop {
+        background-color: teal;
+      }
+    }
   }
 }
 
