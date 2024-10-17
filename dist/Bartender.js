@@ -451,8 +451,6 @@ class v {
     });
     if (s.debug = this.debug, this.bars.some((n) => n.el === s.el))
       throw new i(`Element of bar '${s.name}' is already being used for another bar`);
-    if (s.el.parentElement !== this.el)
-      throw new i(`Element of bar '${s.name}' must be a direct child of the Bartender main element`);
     return s.el.addEventListener("bartender-bar-before-close", () => {
       this.pullElements(s);
     }), s.el.addEventListener("bartender-bar-after-close", () => {
