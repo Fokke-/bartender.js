@@ -237,9 +237,6 @@ export class Bartender {
     // Check that element is not assigned to another bar
     if (this.bars.some(item => item.el === bar.el)) throw new BartenderError(`Element of bar '${bar.name}' is already being used for another bar`)
 
-    // Check that bar element is a direct child on main element
-    if (bar.el.parentElement !== this.el) throw new BartenderError(`Element of bar '${bar.name}' must be a direct child of the Bartender main element`)
-
     // Handlers for close events
     bar.el.addEventListener('bartender-bar-before-close', () => {
       this.pullElements(bar)
