@@ -10,7 +10,7 @@ import { resolveElement, sleep } from './utils'
 /**
  * Bartender bar
  */
-export class Bar {
+export class BartenderBar {
   /** @property {boolean} debug - Enable debug mode? */
   public debug = false
 

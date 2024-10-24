@@ -9,7 +9,7 @@ import { Queue } from 'async-await-queue'
 import { debounce } from 'ts-debounce'
 import { sleep, setDvh } from './utils'
 import { BartenderError } from './BartenderError'
-import { Bar } from './Bar'
+import { BartenderBar } from './BartenderBar'
 import { PushElement } from './PushElement'
 
 /**
@@ -23,7 +23,7 @@ export class Bartender {
   public switchTimeout = 150
 
   /** @property {Bar[]} bars - Bars added to the instance */
-  public readonly bars: Bar[] = []
+  public readonly bars: BartenderBar[] = []
 
   /** @property {object} barDefaultOptions - Default options for the bars */
   private readonly barDefaultOptions: BartenderBarOptions = {
@@ -170,7 +170,7 @@ export class Bartender {
    * @param {string} name - Bar name
    * @returns {object|null}
    */
-  public getBar(name: string): Bar | null {
+  public getBar(name: string): BartenderBar | null {
     return this.bars.find((item) => item.name === name) || null
   }
 
@@ -179,7 +179,7 @@ export class Bartender {
    *
    * @returns {object|null}
    */
-  private getOpenBar(): Bar | null {
+  private getOpenBar(): BartenderBar | null {
     return this.bars.find((item) => item.isOpen() === true) || null
   }
 
@@ -191,7 +191,7 @@ export class Bartender {
    * @throws {BartenderError}
    * @returns {object} Bar object
    */
-  public addBar(name: string, options: BartenderBarOptions = {}): Bar {
+  public addBar(name: string, options: BartenderBarOptions = {}): BartenderBar {
     if (!name || typeof name !== 'string') {
       throw new BartenderError('Bar name is required')
     }
@@ -201,7 +201,7 @@ export class Bartender {
     }
 
     // Create a new bar
-    const bar = new Bar(name, {
+    const bar = new BartenderBar(name, {
       ...this.barDefaultOptions,
       ...options,
     })
@@ -282,7 +282,7 @@ export class Bartender {
    * @throws {BartenderError}
    * @returns {Promise<Bar>}
    */
-  public async open(name: string): Promise<Bar> {
+  public async open(name: string): Promise<BartenderBar> {
     const bar = this.getBar(name)
     if (!bar) throw new BartenderError(`Unknown bar '${name}'`)
     if (bar.isOpen() === true) return Promise.resolve(bar)
@@ -315,7 +315,10 @@ export class Bartender {
    * @param {boolean} _switching - For internal use only. Will another bar open immediately after closing?
    * @returns {Promise<Bar|null>}
    */
-  public async close(name?: string, _switching = false): Promise<Bar | null> {
+  public async close(
+    name?: string,
+    _switching = false,
+  ): Promise<BartenderBar | null> {
     const bar = name ? this.getBar(name) : this.getOpenBar()
     if (!bar || !bar.isOpen()) return Promise.resolve(null)
 
@@ -334,7 +337,7 @@ export class Bartender {
    * @throws {BartenderError}
    * @returns {Promise<Bar|null>}
    */
-  public async toggle(name: string): Promise<Bar | null> {
+  public async toggle(name: string): Promise<BartenderBar | null> {
     const bar = this.getBar(name)
     if (!bar) throw new BartenderError(`Unknown bar '${name}'`)
 
@@ -389,7 +392,7 @@ export class Bartender {
    * @param {Bar|null} bar - The bar from which the styles are fetched
    * @returns {PushElement[]}
    */
-  private async pushElements(bar: Bar | null): Promise<PushElement[]> {
+  private async pushElements(bar: BartenderBar | null): Promise<PushElement[]> {
     if (!bar || !this.pushableElements.length) return this.pushableElements
 
     const pushStyles = await bar.getPushStyles()
@@ -404,10 +407,10 @@ export class Bartender {
   /**
    * Pull elements and return them to the original position
    *
-   * @param {Bar|null} bar - The bar from which the styles are fetched
+   * @param {BartenderBar|null} bar - The bar from which the styles are fetched
    * @returns {PushElement[]}
    */
-  private async pullElements(bar: Bar | null): Promise<PushElement[]> {
+  private async pullElements(bar: BartenderBar | null): Promise<PushElement[]> {
     if (!bar || !this.pushableElements.length) return this.pushableElements
 
     const pushStyles = await bar.getPushStyles()
