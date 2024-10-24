@@ -1,4 +1,4 @@
-import { Bar } from './Bar'
+import { BartenderBar } from './BartenderBar'
 
 export type BartenderElementQuery = string | Element | null
 export type BartenderBarPosition = 'left' | 'right' | 'top' | 'bottom'
@@ -22,7 +22,7 @@ export interface BartenderBarOptions extends BartenderBarDefaultOptions {
 }
 
 export interface BartenderPushElementOptions {
-  bars?: Bar[]
+  bars?: BartenderBar[]
   positions?: BartenderBarPosition[]
 }
 

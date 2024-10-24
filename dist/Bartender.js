@@ -543,7 +543,7 @@ class y {
   /**
    * Pull elements and return them to the original position
    *
-   * @param {Bar|null} bar - The bar from which the styles are fetched
+   * @param {BartenderBar|null} bar - The bar from which the styles are fetched
    * @returns {PushElement[]}
    */
   async pullElements(e) {
@@ -586,6 +586,7 @@ class y {
   }
 }
 export {
-  y as Bartender
+  y as Bartender,
+  f as BartenderBar
 };
 //# sourceMappingURL=Bartender.js.map

@@ -5,7 +5,7 @@ import type {
   BartenderBarPosition,
 } from './types'
 import { BartenderError } from './BartenderError'
-import { Bar } from './Bar'
+import { BartenderBar } from './BartenderBar'
 import { resolveElement } from './utils'
 
 /**
@@ -16,7 +16,7 @@ export class PushElement {
   public readonly el: HTMLElement
 
   /** @property {Bar[]} bars - Matched bars */
-  private readonly bars: Bar[]
+  private readonly bars: BartenderBar[]
 
   /** @property {string[]} positions - Matched positions */
   private readonly positions: BartenderBarPosition[]
@@ -52,7 +52,7 @@ export class PushElement {
    * @param {object} pushStyles - Push styles from the bar
    * @returns {this}
    */
-  public push(bar: Bar, pushStyles: BartenderPushStyles): this {
+  public push(bar: BartenderBar, pushStyles: BartenderPushStyles): this {
     // If this element is not supposed to be pushed,
     // clear transition styles
     if (

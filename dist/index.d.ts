@@ -1,7 +1,156 @@
 /**
+ * Class for creating accessible off-canvas bars.
+ */
+export declare class Bartender {
+    /** @property {boolean} debug - Enable debug mode? */
+    private _debug;
+    /** @property {number} switchTimeout - Time to wait in milliseconds until another bar is opened */
+    switchTimeout: number;
+    /** @property {Bar[]} bars - Bars added to the instance */
+    readonly bars: BartenderBar[];
+    /** @property {object} barDefaultOptions - Default options for the bars */
+    private readonly barDefaultOptions;
+    /** @property {boolean} Switching - Will another bar open immediately after the current bar is closed? */
+    private switching;
+    /** @property {PushElement[]} pushableElements - Pushable elements added to the instance */
+    private pushableElements;
+    /** @property {object} queue - Queue for actions */
+    private queue;
+    /** @property {Function} resizeDebounce - Debouncer for resizing */
+    private resizeDebounce;
+    /** @property {Function} resizeDebounce - Debouncer for resizing */
+    private onBarUpdateHandler;
+    /** @property {Function} onKeydownHandler - Handler for keydown event */
+    private onKeydownHandler;
+    /** @property {Function} onKeydownHandler - Handler for resize event */
+    private onResizeHandler;
+    /**
+     * Create a new Bartender instance
+     *
+     * @param {object} options - Instance options
+     * @param {object} barOptions - Default options for bars
+     * @throws {BartenderError}
+     */
+    constructor(options?: BartenderOptions, barOptions?: BartenderBarDefaultOptions);
+    /** @type {boolean} */
+    get debug(): boolean;
+    /** @type {boolean} */
+    set debug(val: boolean);
+    /**
+     * Destroy Bartender instance
+     *
+     * @returns {Promise<this>}
+     */
+    destroy(): Promise<this>;
+    /**
+     * Get bar by name
+     *
+     * @param {string} name - Bar name
+     * @returns {object|null}
+     */
+    getBar(name: string): BartenderBar | null;
+    /**
+     * Get currently open bar
+     *
+     * @returns {object|null}
+     */
+    private getOpenBar;
+    /**
+     * Add a new bar
+     *
+     * @param {string} name - Unique name for the bar
+     * @param {object} options - Bar options
+     * @throws {BartenderError}
+     * @returns {object} Bar object
+     */
+    addBar(name: string, options?: BartenderBarOptions): BartenderBar;
+    /**
+     * Remove bar
+     *
+     * @param {string} name - Bar name
+     * @throws {BartenderError}
+     * @returns {this}
+     */
+    removeBar(name: string): this;
+    /**
+     * Open bar
+     *
+     * @param {string} name - Bar name
+     * @throws {BartenderError}
+     * @returns {Promise<Bar>}
+     */
+    open(name: string): Promise<BartenderBar>;
+    /**
+     * Close bar
+     *
+     * @param {string|undefined} name - Bar name. Leave empty to close any open bar.
+     * @param {boolean} _switching - For internal use only. Will another bar open immediately after closing?
+     * @returns {Promise<Bar|null>}
+     */
+    close(name?: string, _switching?: boolean): Promise<BartenderBar | null>;
+    /**
+     * Toggle bar
+     *
+     * @param {string} name - Bar name
+     * @throws {BartenderError}
+     * @returns {Promise<Bar|null>}
+     */
+    toggle(name: string): Promise<BartenderBar | null>;
+    /**
+     * Add a new pushable element
+     *
+     * @param {BartenderElementQuery} el - Pushable element
+     * @param {object} options - Options for pushable element
+     * @returns {PushElement}
+     */
+    addPushElement(el: BartenderElementQuery, options?: BartenderPushElementOptions): PushElement;
+    /**
+     * Remove pushable element
+     *
+     * @param {Element} el - Element to remove
+     * @throws {BartenderError}
+     * @returns {PushElement[]}
+     */
+    removePushElement(el: Element): PushElement[];
+    /**
+     * Push elements
+     *
+     * @param {Bar|null} bar - The bar from which the styles are fetched
+     * @returns {PushElement[]}
+     */
+    private pushElements;
+    /**
+     * Pull elements and return them to the original position
+     *
+     * @param {BartenderBar|null} bar - The bar from which the styles are fetched
+     * @returns {PushElement[]}
+     */
+    private pullElements;
+    /**
+     * Handler for bartender-bar-updated event
+     *
+     * @returns {void}
+     */
+    private onBarUpdate;
+    /**
+     * Handler for keydown event
+     *
+     * @param {KeyboardEvent} event - Keyboard event
+     * @returns {void}
+     */
+    private onKeydown;
+    /**
+     * Handler for resize event
+     *
+     * @returns {void}
+     */
+    private onResize;
+}
+
+/**
  * Bartender bar
  */
-declare class Bar {
+export declare class BartenderBar {
     /** @property {boolean} debug - Enable debug mode? */
     debug: boolean;
     /** @property {boolean} initialized - Is bar initialized? */
@@ -107,155 +256,6 @@ declare class Bar {
     getPushStyles(): Promise<BartenderPushStyles>;
 }
 
-/**
- * Class for creating accessible off-canvas bars.
- */
-export declare class Bartender {
-    /** @property {boolean} debug - Enable debug mode? */
-    private _debug;
-    /** @property {number} switchTimeout - Time to wait in milliseconds until another bar is opened */
-    switchTimeout: number;
-    /** @property {Bar[]} bars - Bars added to the instance */
-    readonly bars: Bar[];
-    /** @property {object} barDefaultOptions - Default options for the bars */
-    private readonly barDefaultOptions;
-    /** @property {boolean} Switching - Will another bar open immediately after the current bar is closed? */
-    private switching;
-    /** @property {PushElement[]} pushableElements - Pushable elements added to the instance */
-    private pushableElements;
-    /** @property {object} queue - Queue for actions */
-    private queue;
-    /** @property {Function} resizeDebounce - Debouncer for resizing */
-    private resizeDebounce;
-    /** @property {Function} resizeDebounce - Debouncer for resizing */
-    private onBarUpdateHandler;
-    /** @property {Function} onKeydownHandler - Handler for keydown event */
-    private onKeydownHandler;
-    /** @property {Function} onKeydownHandler - Handler for resize event */
-    private onResizeHandler;
-    /**
-     * Create a new Bartender instance
-     *
-     * @param {object} options - Instance options
-     * @param {object} barOptions - Default options for bars
-     * @throws {BartenderError}
-     */
-    constructor(options?: BartenderOptions, barOptions?: BartenderBarDefaultOptions);
-    /** @type {boolean} */
-    get debug(): boolean;
-    /** @type {boolean} */
-    set debug(val: boolean);
-    /**
-     * Destroy Bartender instance
-     *
-     * @returns {Promise<this>}
-     */
-    destroy(): Promise<this>;
-    /**
-     * Get bar by name
-     *
-     * @param {string} name - Bar name
-     * @returns {object|null}
-     */
-    getBar(name: string): Bar | null;
-    /**
-     * Get currently open bar
-     *
-     * @returns {object|null}
-     */
-    private getOpenBar;
-    /**
-     * Add a new bar
-     *
-     * @param {string} name - Unique name for the bar
-     * @param {object} options - Bar options
-     * @throws {BartenderError}
-     * @returns {object} Bar object
-     */
-    addBar(name: string, options?: BartenderBarOptions): Bar;
-    /**
-     * Remove bar
-     *
-     * @param {string} name - Bar name
-     * @throws {BartenderError}
-     * @returns {this}
-     */
-    removeBar(name: string): this;
-    /**
-     * Open bar
-     *
-     * @param {string} name - Bar name
-     * @throws {BartenderError}
-     * @returns {Promise<Bar>}
-     */
-    open(name: string): Promise<Bar>;
-    /**
-     * Close bar
-     *
-     * @param {string|undefined} name - Bar name. Leave empty to close any open bar.
-     * @param {boolean} _switching - For internal use only. Will another bar open immediately after closing?
-     * @returns {Promise<Bar|null>}
-     */
-    close(name?: string, _switching?: boolean): Promise<Bar | null>;
-    /**
-     * Toggle bar
-     *
-     * @param {string} name - Bar name
-     * @throws {BartenderError}
-     * @returns {Promise<Bar|null>}
-     */
-    toggle(name: string): Promise<Bar | null>;
-    /**
-     * Add a new pushable element
-     *
-     * @param {BartenderElementQuery} el - Pushable element
-     * @param {object} options - Options for pushable element
-     * @returns {PushElement}
-     */
-    addPushElement(el: BartenderElementQuery, options?: BartenderPushElementOptions): PushElement;
-    /**
-     * Remove pushable element
-     *
-     * @param {Element} el - Element to remove
-     * @throws {BartenderError}
-     * @returns {PushElement[]}
-     */
-    removePushElement(el: Element): PushElement[];
-    /**
-     * Push elements
-     *
-     * @param {Bar|null} bar - The bar from which the styles are fetched
-     * @returns {PushElement[]}
-     */
-    private pushElements;
-    /**
-     * Pull elements and return them to the original position
-     *
-     * @param {Bar|null} bar - The bar from which the styles are fetched
-     * @returns {PushElement[]}
-     */
-    private pullElements;
-    /**
-     * Handler for bartender-bar-updated event
-     *
-     * @returns {void}
-     */
-    private onBarUpdate;
-    /**
-     * Handler for keydown event
-     *
-     * @param {KeyboardEvent} event - Keyboard event
-     * @returns {void}
-     */
-    private onKeydown;
-    /**
-     * Handler for resize event
-     *
-     * @returns {void}
-     */
-    private onResize;
-}
-
 export declare interface BartenderBarDefaultOptions {
     position?: BartenderBarPosition
     overlay?: boolean
@@ -279,7 +279,7 @@ export declare interface BartenderOptions {
 }
 
 export declare interface BartenderPushElementOptions {
-    bars?: Bar[]
+    bars?: BartenderBar[]
     positions?: BartenderBarPosition[]
 }
 
@@ -321,7 +321,7 @@ declare class PushElement {
      * @param {object} pushStyles - Push styles from the bar
      * @returns {this}
      */
-    push(bar: Bar, pushStyles: BartenderPushStyles): this;
+    push(bar: BartenderBar, pushStyles: BartenderPushStyles): this;
     /**
      * Pull element and return it to the original position
      *

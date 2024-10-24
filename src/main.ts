@@ -55,7 +55,7 @@ for (const button of Array.from(closeButtons)) {
 }
 
 const spamToggle = document.querySelector('.spamToggle')
-spamToggle?.addEventListener('click', async () => {
+spamToggle?.addEventListener('click', () => {
   // Get array of bars in random order
   const barStack = Array.from({ length: 10 }, () => {
     return bartender.bars[Math.floor(Math.random() * bartender.bars.length)]
@@ -71,7 +71,7 @@ spamToggle?.addEventListener('click', async () => {
 })
 
 const spamOpen = document.querySelector('.spamOpen')
-spamOpen?.addEventListener('click', async () => {
+spamOpen?.addEventListener('click', () => {
   // Get array of bars in random order
   const barStack = Array.from({ length: 10 }, () => {
     return bartender.bars[Math.floor(Math.random() * bartender.bars.length)]
