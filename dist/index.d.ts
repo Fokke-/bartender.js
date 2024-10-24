@@ -12,8 +12,6 @@ declare class Bar {
     readonly el: HTMLDialogElement;
     /** @property {string} _position - Bar position */
     private _position;
-    /** @property {string} _mode - Bar mode */
-    private _mode;
     /** @property {boolean} _overlay - Enable overlay? */
     private _overlay;
     /** @property {boolean} _permanent - Enable permanent mode? */
@@ -51,13 +49,6 @@ declare class Bar {
      * @throws {BartenderError}
      */
     set position(val: BartenderBarPosition);
-    /** @type {string} */
-    get mode(): BartenderBarMode;
-    /**
-     * @type {string}
-     * @throws {BartenderError}
-     */
-    set mode(val: BartenderBarMode);
     /** @type {boolean} */
     get overlay(): boolean;
     /** @type {boolean} */
@@ -122,10 +113,6 @@ declare class Bar {
 export declare class Bartender {
     /** @property {boolean} debug - Enable debug mode? */
     private _debug;
-    /** @property {HTMLElement} el - Main element */
-    private readonly el;
-    /** @property {HTMLElement} contentEl - Content element */
-    private readonly contentEl;
     /** @property {number} switchTimeout - Time to wait in milliseconds until another bar is opened */
     switchTimeout: number;
     /** @property {Bar[]} bars - Bars added to the instance */
@@ -191,9 +178,9 @@ export declare class Bartender {
      *
      * @param {string} name - Bar name
      * @throws {BartenderError}
-     * @returns {Promise<this>}
+     * @returns {this}
      */
-    removeBar(name: string): Promise<this>;
+    removeBar(name: string): this;
     /**
      * Open bar
      *
@@ -206,10 +193,10 @@ export declare class Bartender {
      * Close bar
      *
      * @param {string|undefined} name - Bar name. Leave empty to close any open bar.
-     * @param {boolean} switching - For internal use only. Will another bar open immediately after closing?
+     * @param {boolean} _switching - For internal use only. Will another bar open immediately after closing?
      * @returns {Promise<Bar|null>}
      */
-    close(name?: string, switching?: boolean): Promise<Bar | null>;
+    close(name?: string, _switching?: boolean): Promise<Bar | null>;
     /**
      * Toggle bar
      *
@@ -270,17 +257,14 @@ export declare class Bartender {
 }
 
 export declare interface BartenderBarDefaultOptions {
-    position?: BartenderBarPosition,
-    mode?: BartenderBarMode,
-    overlay?: boolean,
-    permanent?: boolean,
-    scrollTop?: boolean,
+    position?: BartenderBarPosition
+    overlay?: boolean
+    permanent?: boolean
+    scrollTop?: boolean
 }
 
-export declare type BartenderBarMode = 'float' | 'push'
-
 export declare interface BartenderBarOptions extends BartenderBarDefaultOptions {
-    el?: BartenderElementQuery,
+    el?: BartenderElementQuery
 }
 
 export declare type BartenderBarPosition = 'left' | 'right' | 'top' | 'bottom'
@@ -288,27 +272,26 @@ export declare type BartenderBarPosition = 'left' | 'right' | 'top' | 'bottom'
 export declare type BartenderElementQuery = string | Element | null
 
 export declare interface BartenderOptions {
-    debug?: boolean,
-    el?: BartenderElementQuery,
-    contentEl?: BartenderElementQuery,
-    switchTimeout?: number,
+    debug?: boolean
+    el?: BartenderElementQuery
+    contentEl?: BartenderElementQuery
+    switchTimeout?: number
 }
 
 export declare interface BartenderPushElementOptions {
-    bars?: Bar[],
-    modes?: BartenderBarMode[]
+    bars?: Bar[]
     positions?: BartenderBarPosition[]
 }
 
 export declare interface BartenderPushStyles {
-    transform: string,
-    transitionDuration: string,
-    transitionTimingFunction: string,
+    transform: string
+    transitionDuration: string
+    transitionTimingFunction: string
 }
 
 export declare interface BartenderTransitionProperties {
-    timingFunction?: string,
-    duration: number,
+    timingFunction?: string
+    duration: number
 }
 
 /**
@@ -319,8 +302,6 @@ declare class PushElement {
     readonly el: HTMLElement;
     /** @property {Bar[]} bars - Matched bars */
     private readonly bars;
-    /** @property {string[]} modes - Matched modes */
-    private readonly modes;
     /** @property {string[]} positions - Matched positions */
     private readonly positions;
     /** @property {boolean} isPushed - Is the element currently pushed? */

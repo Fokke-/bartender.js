@@ -1,37 +1,31 @@
-import eslint from 'vite-plugin-eslint'
-import stylelint from 'vite-plugin-stylelint'
+import eslint from '@nabla/vite-plugin-eslint'
+// import stylelint from 'vite-plugin-stylelint'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 import dts from 'vite-plugin-dts'
 
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
-import {
-  fileURLToPath, URL
-} from 'node:url'
+import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   define: { 'process.env': {} },
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
-    extensions: [
-      '.js',
-      '.json',
-      '.jsx',
-      '.mjs',
-      '.ts',
-      '.tsx',
-      '.vue',
-    ],
+    extensions: ['.js', '.json', '.jsx', '.mjs', '.ts', '.tsx', '.vue'],
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler',
+      },
+    },
   },
   build: {
     target: 'esnext',
     sourcemap: true,
     rollupOptions: {
-      external: [
-        'async-await-queue',
-        'ts-debounce',
-      ],
+      external: ['async-await-queue', 'ts-debounce'],
       output: {
         globals: {
           'async-await-queue': 'asyncAwaitQueue',
@@ -48,21 +42,21 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'Bartender',
       fileName: 'Bartender',
-      formats: [
-        'es',
-      ],
+      formats: ['es'],
     },
   },
   plugins: [
-    eslint({ fix: false }),
-    stylelint({
-      fix: false,
-      dev: true,
-      build: true,
-      include: [
-        'src/**/*.{css,scss,sass,less,styl,vue,svelte}',
-      ],
+    eslint({
+      eslintOptions: {
+        fix: false,
+      },
     }),
+    // stylelint({
+    //   fix: false,
+    //   dev: true,
+    //   build: true,
+    //   include: ['src/**/*.{css,scss,sass,less,styl,vue,svelte}'],
+    // }),
     dts({
       rollupTypes: true,
       copyDtsFiles: true,

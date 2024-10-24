@@ -2,40 +2,37 @@ import { Bar } from './Bar'
 
 export type BartenderElementQuery = string | Element | null
 export type BartenderBarPosition = 'left' | 'right' | 'top' | 'bottom'
-export type BartenderBarMode = 'float' | 'push'
 
 export interface BartenderOptions {
-  debug?: boolean,
-  el?: BartenderElementQuery,
-  contentEl?: BartenderElementQuery,
-  switchTimeout?: number,
+  debug?: boolean
+  el?: BartenderElementQuery
+  contentEl?: BartenderElementQuery
+  switchTimeout?: number
 }
 
 export interface BartenderBarDefaultOptions {
-  position?: BartenderBarPosition,
-  mode?: BartenderBarMode,
-  overlay?: boolean,
-  permanent?: boolean,
-  scrollTop?: boolean,
+  position?: BartenderBarPosition
+  overlay?: boolean
+  permanent?: boolean
+  scrollTop?: boolean
 }
 
 export interface BartenderBarOptions extends BartenderBarDefaultOptions {
-  el?: BartenderElementQuery,
+  el?: BartenderElementQuery
 }
 
 export interface BartenderPushElementOptions {
-  bars?: Bar[],
-  modes?: BartenderBarMode[]
+  bars?: Bar[]
   positions?: BartenderBarPosition[]
 }
 
 export interface BartenderPushStyles {
-  transform: string,
-  transitionDuration: string,
-  transitionTimingFunction: string,
+  transform: string
+  transitionDuration: string
+  transitionTimingFunction: string
 }
 
 export interface BartenderTransitionProperties {
-  timingFunction?: string,
-  duration: number,
+  timingFunction?: string
+  duration: number
 }

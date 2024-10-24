@@ -59,7 +59,7 @@ Note that the class names in the example below are defaults. You can use any cla
   </div>
 
   <!-- Add any number of bars -->
-  <dialog class="mobileNav bartender__bar">
+  <dialog class="mobileNav bartender-bar">
     <button class="closeMobileNav">Close mobile navigation</button>
   </dialog>
 

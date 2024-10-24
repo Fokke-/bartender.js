@@ -3,15 +3,11 @@ import type {
   BartenderBarDefaultOptions,
   BartenderBarOptions,
   BartenderElementQuery,
-  BartenderPushElementOptions
+  BartenderPushElementOptions,
 } from './types'
 import { Queue } from 'async-await-queue'
 import { debounce } from 'ts-debounce'
-import {
-  resolveElement,
-  sleep,
-  setDvh
-} from './utils'
+import { sleep, setDvh } from './utils'
 import { BartenderError } from './BartenderError'
 import { Bar } from './Bar'
 import { PushElement } from './PushElement'
@@ -20,15 +16,8 @@ import { PushElement } from './PushElement'
  * Class for creating accessible off-canvas bars.
  */
 export class Bartender {
-
   /** @property {boolean} debug - Enable debug mode? */
   private _debug = false
-
-  /** @property {HTMLElement} el - Main element */
-  private readonly el: HTMLElement
-
-  /** @property {HTMLElement} contentEl - Content element */
-  private readonly contentEl: HTMLElement
 
   /** @property {number} switchTimeout - Time to wait in milliseconds until another bar is opened */
   public switchTimeout = 150
@@ -40,7 +29,6 @@ export class Bartender {
   private readonly barDefaultOptions: BartenderBarOptions = {
     el: null,
     position: 'left',
-    mode: 'float',
     overlay: true,
     permanent: false,
     scrollTop: true,
@@ -76,13 +64,13 @@ export class Bartender {
    */
   constructor(
     options: BartenderOptions = {},
-    barOptions: BartenderBarDefaultOptions = {}
+    barOptions: BartenderBarDefaultOptions = {},
   ) {
     // Polyfill DVH units
-    setDvh()
-    document.addEventListener('DOMContentLoaded', () => {
-      setDvh()
-    })
+    // setDvh()
+    // document.addEventListener('DOMContentLoaded', () => {
+    //   setDvh()
+    // })
 
     this.debug = options.debug ?? this._debug
     this.switchTimeout = options.switchTimeout ?? this.switchTimeout
@@ -90,27 +78,6 @@ export class Bartender {
       ...this.barDefaultOptions,
       ...barOptions,
     }
-
-    // Main element
-    const el = resolveElement(options.el || '.bartender')
-    if (!el) throw new BartenderError('Main element is required')
-    this.el = el
-    this.el.classList.add('bartender')
-
-    // Content element
-    const contentEl = resolveElement(options.contentEl || '.bartender__content')
-    if (!contentEl) throw new BartenderError('Content element is required')
-    if (contentEl.parentElement !== this.el) throw new BartenderError('Content element must be a direct child of the main element')
-    this.contentEl = contentEl
-    this.contentEl.classList.add('bartender__content')
-    this.contentEl.setAttribute('tabindex', '-1')
-
-    // Register content element as pushable element
-    this.addPushElement(this.contentEl, {
-      modes: [
-        'push',
-      ],
-    })
 
     // Queue for actions
     this.queue = new Queue(1)
@@ -131,11 +98,13 @@ export class Bartender {
     this.onResizeHandler = this.onResize.bind(this)
     window.addEventListener('resize', this.onResizeHandler)
 
-    this.el.classList.add('bartender--ready')
-    this.el.dispatchEvent(new CustomEvent('bartender-init', {
-      bubbles: true,
-      detail: { bartender: this },
-    }))
+    document.body.classList.add('bartender-ready')
+    window.dispatchEvent(
+      new CustomEvent('bartender-init', {
+        bubbles: true,
+        detail: { bartender: this },
+      }),
+    )
 
     if (this.debug) console.debug('Bartender initialized', this)
   }
@@ -176,18 +145,19 @@ export class Bartender {
     }
 
     // Remove classes
-    this.el.classList.remove('bartender', 'bartender--ready')
-    this.contentEl.classList.remove('bartender__content')
+    document.body.classList.remove('bartender', 'bartender-ready')
 
     // Remove event listeners
     window.removeEventListener('bartender-bar-updated', this.onBarUpdateHandler)
     document.removeEventListener('keydown', this.onKeydownHandler)
     window.removeEventListener('resize', this.onResizeHandler)
 
-    this.el.dispatchEvent(new CustomEvent('bartender-destroyed', {
-      bubbles: true,
-      detail: { bartender: this },
-    }))
+    window.dispatchEvent(
+      new CustomEvent('bartender-destroyed', {
+        bubbles: true,
+        detail: { bartender: this },
+      }),
+    )
 
     if (this.debug) console.debug('Bartender destroyed', this)
 
@@ -201,7 +171,7 @@ export class Bartender {
    * @returns {object|null}
    */
   public getBar(name: string): Bar | null {
-    return this.bars.find(item => item.name === name) || null
+    return this.bars.find((item) => item.name === name) || null
   }
 
   /**
@@ -210,7 +180,7 @@ export class Bartender {
    * @returns {object|null}
    */
   private getOpenBar(): Bar | null {
-    return this.bars.find(item => item.isOpen() === true) || null
+    return this.bars.find((item) => item.isOpen() === true) || null
   }
 
   /**
@@ -222,8 +192,13 @@ export class Bartender {
    * @returns {object} Bar object
    */
   public addBar(name: string, options: BartenderBarOptions = {}): Bar {
-    if (!name || typeof name !== 'string') throw new BartenderError('Bar name is required')
-    if (this.getBar(name)) throw new BartenderError(`Bar with name '${name}' is already defined`)
+    if (!name || typeof name !== 'string') {
+      throw new BartenderError('Bar name is required')
+    }
+
+    if (this.getBar(name)) {
+      throw new BartenderError(`Bar with name '${name}' is already defined`)
+    }
 
     // Create a new bar
     const bar = new Bar(name, {
@@ -235,7 +210,11 @@ export class Bartender {
     bar.debug = this.debug
 
     // Check that element is not assigned to another bar
-    if (this.bars.some(item => item.el === bar.el)) throw new BartenderError(`Element of bar '${bar.name}' is already being used for another bar`)
+    if (this.bars.some((item) => item.el === bar.el)) {
+      throw new BartenderError(
+        `Element of bar '${bar.name}' is already being used for another bar`,
+      )
+    }
 
     // Handlers for close events
     bar.el.addEventListener('bartender-bar-before-close', () => {
@@ -246,16 +225,18 @@ export class Bartender {
       if (this.switching === true) {
         this.switching = false
       } else {
-        this.el.classList.remove('bartender--open')
+        document.body.classList.remove('bartender-open')
       }
     })
 
     this.bars.push(bar)
 
-    this.el.dispatchEvent(new CustomEvent('bartender-bar-added', {
-      bubbles: true,
-      detail: { bar },
-    }))
+    window.dispatchEvent(
+      new CustomEvent('bartender-bar-added', {
+        bubbles: true,
+        detail: { bar },
+      }),
+    )
 
     if (this.debug) console.debug('Added a new bar', bar)
 
@@ -267,10 +248,11 @@ export class Bartender {
    *
    * @param {string} name - Bar name
    * @throws {BartenderError}
-   * @returns {Promise<this>}
+   * @returns {this}
    */
-  public async removeBar(name: string): Promise<this> {
-    if (!name || typeof name !== 'string') throw new BartenderError('Bar name is required')
+  public removeBar(name: string): this {
+    if (!name || typeof name !== 'string')
+      throw new BartenderError('Bar name is required')
 
     const bar = this.getBar(name)
     if (!bar) throw new BartenderError(`Bar with name '${name}' was not found`)
@@ -278,17 +260,19 @@ export class Bartender {
 
     bar.destroy()
 
-    const barIndex = this.bars.findIndex(item => item.name === name)
+    const barIndex = this.bars.findIndex((item) => item.name === name)
     this.bars.splice(barIndex, 1)
 
-    this.el.dispatchEvent(new CustomEvent('bartender-bar-removed', {
-      bubbles: true,
-      detail: { name },
-    }))
+    window.dispatchEvent(
+      new CustomEvent('bartender-bar-removed', {
+        bubbles: true,
+        detail: { name },
+      }),
+    )
 
     if (this.debug) console.debug(`Removed bar '${name}'`)
 
-    return Promise.resolve(this)
+    return this
   }
 
   /**
@@ -314,29 +298,29 @@ export class Bartender {
       await sleep(this.switchTimeout)
     }
 
-    this.el.classList.add('bartender--open')
+    document.body.classList.add('bartender-open')
     this.pushElements(bar)
 
     await bar.open().finally(() => {
       this.queue.end(id)
     })
 
-    return Promise.resolve(bar)
+    return bar
   }
 
   /**
    * Close bar
    *
    * @param {string|undefined} name - Bar name. Leave empty to close any open bar.
-   * @param {boolean} switching - For internal use only. Will another bar open immediately after closing?
+   * @param {boolean} _switching - For internal use only. Will another bar open immediately after closing?
    * @returns {Promise<Bar|null>}
    */
-  public async close(name?: string, switching = false): Promise<Bar | null> {
+  public async close(name?: string, _switching = false): Promise<Bar | null> {
     const bar = name ? this.getBar(name) : this.getOpenBar()
     if (!bar || !bar.isOpen()) return Promise.resolve(null)
 
     // Store switching state. The event handler will use it to determine whether to remove the 'bartender--open' class.
-    this.switching = switching
+    this.switching = _switching
 
     await bar.close()
 
@@ -354,7 +338,7 @@ export class Bartender {
     const bar = this.getBar(name)
     if (!bar) throw new BartenderError(`Unknown bar '${name}'`)
 
-    return (bar.isOpen() === true) ? this.close() : this.open(name)
+    return bar.isOpen() === true ? await this.close() : await this.open(name)
   }
 
   /**
@@ -364,8 +348,14 @@ export class Bartender {
    * @param {object} options - Options for pushable element
    * @returns {PushElement}
    */
-  public addPushElement(el: BartenderElementQuery, options: BartenderPushElementOptions = {}): PushElement {
-    if (this.pushableElements.some(item => item.el === el)) throw new BartenderError('This element is already defined as pushable element.')
+  public addPushElement(
+    el: BartenderElementQuery,
+    options: BartenderPushElementOptions = {},
+  ): PushElement {
+    if (this.pushableElements.some((item) => item.el === el))
+      throw new BartenderError(
+        'This element is already defined as pushable element.',
+      )
 
     const pushElement = new PushElement(el, options)
     this.pushableElements.push(pushElement)
@@ -383,10 +373,11 @@ export class Bartender {
    * @returns {PushElement[]}
    */
   public removePushElement(el: Element): PushElement[] {
-    const index = this.pushableElements.findIndex(item => item.el === el)
+    const index = this.pushableElements.findIndex((item) => item.el === el)
     if (index === -1) throw new BartenderError('Pushable element was not found')
 
-    if (this.debug) console.debug('Removed pushable element', this.pushableElements[index])
+    if (this.debug)
+      console.debug('Removed pushable element', this.pushableElements[index])
     this.pushableElements.splice(index, 1)
 
     return this.pushableElements
@@ -461,5 +452,4 @@ export class Bartender {
   private onResize(): void {
     this.resizeDebounce()
   }
-
 }

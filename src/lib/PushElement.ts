@@ -1,9 +1,8 @@
 import type {
   BartenderElementQuery,
   BartenderPushElementOptions,
-  BartenderBarMode,
   BartenderPushStyles,
-  BartenderBarPosition
+  BartenderBarPosition,
 } from './types'
 import { BartenderError } from './BartenderError'
 import { Bar } from './Bar'
@@ -13,15 +12,11 @@ import { resolveElement } from './utils'
  * Bartender pushable element
  */
 export class PushElement {
-
   /** @property {HTMLElement} el - Element to push */
   public readonly el: HTMLElement
 
   /** @property {Bar[]} bars - Matched bars */
   private readonly bars: Bar[]
-
-  /** @property {string[]} modes - Matched modes */
-  private readonly modes: BartenderBarMode[]
 
   /** @property {string[]} positions - Matched positions */
   private readonly positions: BartenderBarPosition[]
@@ -36,14 +31,17 @@ export class PushElement {
    * @param {object} options - Options for pushable element
    * @throws {BartenderError}
    */
-  constructor(el: BartenderElementQuery, options: BartenderPushElementOptions = {}) {
+  constructor(
+    el: BartenderElementQuery,
+    options: BartenderPushElementOptions = {},
+  ) {
     // Get element
     const element = resolveElement(el || null)
-    if (!element) throw new BartenderError('Element is required for push element')
+    if (!element)
+      throw new BartenderError('Element is required for push element')
 
     this.el = element
     this.bars = options.bars || []
-    this.modes = options.modes || []
     this.positions = options.positions || []
   }
 
@@ -59,7 +57,6 @@ export class PushElement {
     // clear transition styles
     if (
       (this.bars.length && !this.bars.includes(bar)) ||
-      (this.modes.length && !this.modes.includes(bar.mode)) ||
       (this.positions.length && !this.positions.includes(bar.position))
     ) {
       this.el.style.transform = ''
@@ -94,5 +91,4 @@ export class PushElement {
 
     return this
   }
-
 }
