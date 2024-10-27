@@ -17,13 +17,15 @@ import { PushElement } from './PushElement'
  */
 export class Bartender {
   /** @property {boolean} debug - Enable debug mode? */
-  private _debug = false
+  private _debug: boolean = false
 
   /** @property {number} switchTimeout - Time to wait in milliseconds until another bar is opened */
-  public switchTimeout = 150
+  public switchTimeout: number = 150
 
   /** @property {Bar[]} bars - Bars added to the instance */
   public readonly bars: BartenderBar[] = []
+
+  public readonly openBars: BartenderBar[] = []
 
   /** @property {object} barDefaultOptions - Default options for the bars */
   private readonly barDefaultOptions: BartenderBarOptions = {
@@ -34,9 +36,6 @@ export class Bartender {
     scrollTop: true,
   }
 
-  /** @property {boolean} Switching - Will another bar open immediately after the current bar is closed? */
-  private switching = false
-
   /** @property {PushElement[]} pushableElements - Pushable elements added to the instance */
   private pushableElements: PushElement[] = []
 
@@ -46,7 +45,7 @@ export class Bartender {
   /** @property {Function} resizeDebounce - Debouncer for resizing */
   private resizeDebounce
 
-  /** @property {Function} resizeDebounce - Debouncer for resizing */
+  /** @property {Function} onBarUpdateHandler - Bandler for bar update evet */
   private onBarUpdateHandler
 
   /** @property {Function} onKeydownHandler - Handler for keydown event */
@@ -180,7 +179,13 @@ export class Bartender {
    * @returns {object|null}
    */
   private getOpenBar(): BartenderBar | null {
-    return this.bars.find((item) => item.isOpen() === true) || null
+    if (!this.openBars.length) {
+      return null
+    }
+
+    return this.openBars[this.openBars.length - 1]
+
+    // return this.bars.find((item) => item.isOpen() === true) || null
   }
 
   /**
@@ -219,14 +224,15 @@ export class Bartender {
     // Handlers for close events
     bar.el.addEventListener('bartender-bar-before-close', () => {
       this.pullElements(bar)
+      this.openBars.splice(this.openBars.indexOf(bar), 1)
     })
 
     bar.el.addEventListener('bartender-bar-after-close', () => {
-      if (this.switching === true) {
-        this.switching = false
-      } else {
-        document.body.classList.remove('bartender-open')
+      if (this.openBars.length) {
+        return
       }
+
+      document.body.classList.remove('bartender-open')
     })
 
     this.bars.push(bar)
@@ -290,13 +296,15 @@ export class Bartender {
     const id = Symbol()
     await this.queue.wait(id)
 
-    // Close any open bar
-    const openBar = this.getOpenBar()
+    this.openBars.push(bar)
 
-    if (openBar) {
-      await this.close(openBar.name, true)
-      await sleep(this.switchTimeout)
-    }
+    // Close any open bar
+    // const openBar = this.getOpenBar()
+
+    // if (openBar) {
+    //   await this.close(openBar.name, true)
+    //   await sleep(this.switchTimeout)
+    // }
 
     document.body.classList.add('bartender-open')
     this.pushElements(bar)
@@ -310,24 +318,16 @@ export class Bartender {
 
   /**
    * Close bar
-   *
-   * @param {string|undefined} name - Bar name. Leave empty to close any open bar.
-   * @param {boolean} _switching - For internal use only. Will another bar open immediately after closing?
-   * @returns {Promise<Bar|null>}
    */
-  public async close(
-    name?: string,
-    _switching = false,
-  ): Promise<BartenderBar | null> {
+  public async close(name?: string): Promise<BartenderBar | null> {
     const bar = name ? this.getBar(name) : this.getOpenBar()
-    if (!bar || !bar.isOpen()) return Promise.resolve(null)
-
-    // Store switching state. The event handler will use it to determine whether to remove the 'bartender--open' class.
-    this.switching = _switching
+    if (!bar || !bar.isOpen()) {
+      return null
+    }
 
     await bar.close()
 
-    return Promise.resolve(bar)
+    return bar
   }
 
   /**

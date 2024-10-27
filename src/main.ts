@@ -2,7 +2,8 @@ import { Bartender } from './lib/Bartender'
 import './assets/bartender.scss'
 import './assets/styles.scss'
 
-const bartender = new Bartender({ debug: true })
+const bartender = new Bartender({ debug: false })
+window.bartender = bartender
 
 bartender.addBar('left', {
   el: '.bar--left',
@@ -14,10 +15,9 @@ bartender.addBar('right', {
   position: 'right',
 })
 
-bartender.addBar('rightPermanent', {
-  el: '.bar--rightPermanent',
+bartender.addBar('right2', {
+  el: '.bar--right2',
   position: 'right',
-  overlay: false,
   permanent: true,
 })
 

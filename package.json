@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@nabla/vite-plugin-eslint": "2.0.4",
-    "@types/node": "22.7.9",
+    "@types/node": "22.8.1",
     "eslint": "9.13.0",
     "sass": "1.80.4",
     "stylelint": "16.10.0",

@@ -419,6 +419,7 @@ export class BartenderBar {
         rect.top > event.clientY ||
         rect.bottom < event.clientY)
     ) {
+      event.stopPropagation()
       this.close()
     }
 

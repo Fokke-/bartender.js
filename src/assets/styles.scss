@@ -7,6 +7,14 @@ body {
   font-family: sans-serif;
 }
 
+.bar {
+  padding: 2rem;
+
+  &--right2 {
+    max-width: 300px;
+  }
+}
+
 /*
 
 .bartender {

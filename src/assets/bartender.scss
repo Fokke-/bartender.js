@@ -3,6 +3,10 @@
   --bartender-transition-timing-function: ease;
 }
 
+.bartender-open {
+  overflow: hidden;
+}
+
 .bartender-bar {
   box-sizing: border-box;
   overflow: auto;
