@@ -177,7 +177,7 @@ Remove bar instance by name.
 bartender.removeBar('mobileNav')
 ```
 
-### open(bar: BartenderBar | string, options: BartenderOpenOptions = {}): Promise\<BartenderBar\>
+### async open(bar: BartenderBar | string, options: BartenderOpenOptions = {}): Promise\<BartenderBar\>
 
 Open bar. Resolves after bar has opened.
 
@@ -214,7 +214,7 @@ bartender.open('mobileNav', {
 })
 ```
 
-### close(bar?: BartenderBar | string): Promise<BartenderBar | null>
+### async close(bar?: BartenderBar | string): Promise<BartenderBar | null>
 
 Close bar. If bar is undefined, the topmost bar will be closed. Resolves after the bar has closed.
 
@@ -230,7 +230,7 @@ bartender.close('mobileNav')
 bartender.close()
 ```
 
-### closeAll(closeNonModalBars: boolean = false): Promise<this>
+### async closeAll(closeNonModalBars: boolean = false): Promise<this>
 
 Close all bars. Resolves after all the bars have been closed.
 
@@ -246,7 +246,7 @@ bartender.closeAll()
 bartender.closeAll(true)
 ```
 
-### toggle(bar?: BartenderBar | string, options: BartenderOpenOptions = {}): Promise<BartenderBar | null>
+### async toggle(bar?: BartenderBar | string, options: BartenderOpenOptions = {}): Promise<BartenderBar | null>
 
 Toggle bar open/closed state. Resolves after the bar has opened or closed.
 
