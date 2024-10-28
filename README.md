@@ -94,7 +94,7 @@ document.querySelector('.closeMobileNav').addEventListener('click', (event) => {
 
 ## API
 
-### Bartender.constructor(options: BartenderOptions = {}, barDefaultOptions: BartenderBarDefaultOptions = {})
+### constructor(options: BartenderOptions = {}, barDefaultOptions: BartenderBarDefaultOptions = {})
 
 #### Interface BartenderOptions
 
@@ -123,7 +123,7 @@ const bartender = new Bartender(
 )
 ```
 
-### Bartender.getBar(name: string): BartenderBar | null
+### getBar(name: string): BartenderBar | null
 
 Get bar instance by name.
 
@@ -135,7 +135,7 @@ Get bar instance by name.
 bartender.getBar('mobileNav')
 ```
 
-### Bartender.getOpenBar(): BartenderBar | null
+### getOpenBar(): BartenderBar | null
 
 Get the topmost open bar instance
 
@@ -143,7 +143,7 @@ Get the topmost open bar instance
 bartender.getOpenBar()
 ```
 
-### Bartender.addBar(name: string, options: BartenderBarOptions = {}): BartenderBar
+### addBar(name: string, options: BartenderBarOptions = {}): BartenderBar
 
 Add a new bar.
 
@@ -165,7 +165,7 @@ Bar options can be modified on the fly, except for the `el` property.
 bartender.getBar('mobileNav').position = 'right'
 ```
 
-### Bartender.removeBar(name: string): this
+### removeBar(name: string): this
 
 Remove bar instance by name.
 
@@ -177,7 +177,7 @@ Remove bar instance by name.
 bartender.removeBar('mobileNav')
 ```
 
-### async Bartender.open(bar: BartenderBar | string, options: BartenderOpenOptions = {}): Promise\<BartenderBar\>
+### open(bar: BartenderBar | string, options: BartenderOpenOptions = {}): Promise\<BartenderBar\>
 
 Open bar. Resolves after bar has opened.
 
@@ -214,7 +214,7 @@ bartender.open('mobileNav', {
 })
 ```
 
-### async Bartender.close(bar?: BartenderBar | string): Promise<BartenderBar | null>
+### close(bar?: BartenderBar | string): Promise<BartenderBar | null>
 
 Close bar. If bar is undefined, the topmost bar will be closed. Resolves after the bar has closed.
 
@@ -230,7 +230,7 @@ bartender.close('mobileNav')
 bartender.close()
 ```
 
-### async Bartender.closeAll(closeNonModalBars: boolean = false): Promise<this>
+### closeAll(closeNonModalBars: boolean = false): Promise<this>
 
 Close all bars. Resolves after all the bars have been closed.
 
@@ -246,7 +246,7 @@ bartender.closeAll()
 bartender.closeAll(true)
 ```
 
-### async Bartender.toggle(bar?: BartenderBar | string, options: BartenderOpenOptions = {}): Promise<BartenderBar | null>
+### toggle(bar?: BartenderBar | string, options: BartenderOpenOptions = {}): Promise<BartenderBar | null>
 
 Toggle bar open/closed state. Resolves after the bar has opened or closed.
 
@@ -265,7 +265,7 @@ bartender.toggle('mobileNav', {
 })
 ```
 
-### Bartender.destroy(): this
+### destroy(): this
 
 Destroy Bartender instance.
 
