@@ -7,8 +7,8 @@ Check out the demo in [Bartender.js playground](https://bartender.fokke.fi).
 ## Features
 
 - Add any number of bars to any side of the viewport
-- Bar properties, such as position or mode can be changed on the fly
-- Fully stylable
+- Multiple bars can be open simultaneously
+- Bar properties, such as position can be changed on the fly
 - TypeScript is supported
 - Comprehesive API, integrable to frameworks
 
@@ -36,39 +36,28 @@ npm i @fokke-/bartender.js
 
 ### Markup
 
-Note that it's highly recommended to define the following viewport meta tag to avoid quirks when using bars with `push` mode.
-
 ```html
-<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+<html lang="en">
+  <head>
+    <!-- Note that it's highly recommended to define the following viewport meta tag -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+    />
+  </head>
+  <body>
+    <!-- Button for opening the bar -->
+    <button class="openMobileNav">Open mobile navigation</button>
+
+    <!-- Add any number of bars as dialog elements -->
+    <dialog class="mobileNav">
+      <button class="closeMobileNav">Close mobile navigation</button>
+    </dialog>
+  </body>
+</html>
 ```
 
-1. Create main wrap for Bartender. Ideally it would be your `<body>` element.
-2. Create wrap element for your page content as a direct child of the Bartender main element.
-3. Add any number of bar elements as a direct children of the Bartender main element.
-4. If you need to use fixed positioned elements in your page content, add them as direct children of the bartender main element.
-
-Note that the class names in the example below are defaults. You can use any classes as they are configurable when you initialize the library later. However, using default classes in addition to your own classes is recommended to avoid FOUC.
-
-```html
-<!-- Main wrap for bartender -->
-<body class="bartender">
-
-  <!-- Wrap for page content -->
-  <div class="bartender__content">
-    <button class="toggleMobileNav">Toggle mobile navigation</button>
-  </div>
-
-  <!-- Add any number of bars -->
-  <dialog class="mobileNav bartender-bar">
-    <button class="closeMobileNav">Close mobile navigation</button>
-  </dialog>
-
-  <!-- Place your fixed positioned elements here -->
-
-</body>
-```
-
-### Include (S)CSS
+### Include CSS
 
 ```scss
 @import '@fokke-/bartender.js/dist/bartender.scss';
@@ -84,84 +73,89 @@ Note that the class names in the example below are defaults. You can use any cla
 import { Bartender } from '@fokke-/bartender.js'
 
 // Create main instance
-const bartender = new Bartender({
-  el: '.bartender',
-  contentEl: '.bartender__content',
-})
+const bartender = new Bartender()
 
 // Add a new bar
 bartender.addBar('mobileNav', {
   el: '.mobileNav',
   position: 'left',
-  mode: 'float',
 })
 
-// Toggle button
-document.querySelector('.toggleMobileNav').addEventListener('click', (event) => {
-  // Pass button as second argument to return focus after closing the bar.
-  bartender.toggle('mobileNav', event.target)
+// Handle open button
+document.querySelector('.openMobileNav').addEventListener('click', (event) => {
+  bartender.open('mobileNav')
 })
 
-// Close button
+// Handle close button
 document.querySelector('.closeMobileNav').addEventListener('click', (event) => {
   bartender.close()
 })
 ```
 
-## Configuration
-
-Bartender constructor accepts two object arguments. The first argument defines main options. The second argument allows you to override [default options for new bars](#bar-options).
-
-```javascript
-const bartender = new Bartender({
-  // main options
-}, {
-  // default options for new bars
-})
-```
-
-### Main Options
-
-#### debug
-
-Type: `boolean`, Default: `false`
-
-If enabled, Bartender will log it's activity to console. Note that these messages will be outputted at debug log level and you need to configure your console to show these messages.
-
-#### el
-
-Type: `string | Element`, Default: `'.bartender'`
-
-Main element as selector string or reference to the element.
-
-#### contentEl
-
-Type: `string | Element`, Default: `'.bartender__content'`
-
-Page content element as selector string or reference to the element.
-
-#### switchTimeout
-
-Type: `number` (milliseconds), Default: `150`
-
-If bar is opened when there's already another active bar, the open bar will be closed and the process will pause for the given time before opening the another bar.
-
 ## API
 
-### addBar(name, options)
+### Bartender.constructor(options: BartenderOptions = {}, barDefaultOptions: BartenderBarDefaultOptions = {})
+
+#### Interface BartenderOptions
+
+| Property | Type    | Default | Description                                                                 |
+| -------- | ------- | ------- | --------------------------------------------------------------------------- |
+| debug    | boolean | false   | If enabled, Bartender will log it's activity to console at debug log level. |
+
+#### Interface BartenderBarOptions
+
+| Property  | Type                                   | Default | Description                                                     |
+| --------- | -------------------------------------- | ------- | --------------------------------------------------------------- |
+| el        | string \| element                      |         | Bar element as selector string or reference to the element.     |
+| position  | 'left' \| 'right' \| 'top' \| 'bottom' | 'left'  | Bar position                                                    |
+| overlay   | boolean                                | true    | Show shading overlay over content wrap when bar is open.        |
+| permanent | boolean                                | false   | Bar is not closeable by clicking overlay of pressing `esc` key. |
+| scrollTop | boolean                                | true    | Bar will be scrolled to top after opening it.                   |
+
+```javascript
+const bartender = new Bartender(
+  {
+    debug: true,
+  },
+  {
+    // default options for new bars
+  },
+)
+```
+
+### Bartender.getBar(name: string): BartenderBar | null
+
+Get bar instance by name.
+
+| Argument | Type   | Default | Description |
+| -------- | ------ | ------- | ----------- |
+| name     | string |         | Bar name    |
+
+```javascript
+bartender.getBar('mobileNav')
+```
+
+### Bartender.getOpenBar(): BartenderBar | null
+
+Get the topmost open bar instance
+
+```javascript
+bartender.getOpenBar()
+```
+
+### Bartender.addBar(name: string, options: BartenderBarOptions = {}): BartenderBar
 
 Add a new bar.
 
-| Argument | Type | Description |
-| - | - | - |
-| name | string | Unique name for the bar |
-| options | object | Bar options. Available options are listed below. |
+| Argument | Type                | Default | Description                                   |
+| -------- | ------------------- | ------- | --------------------------------------------- |
+| name     | string              |         | Unique name for the bar                       |
+| options  | BartenderBarOptions | {}      | [Bar options](#interface-bartenderbaroptions) |
 
 ```javascript
 bartender.addBar('mobileNav', {
   el: '.mobileNav',
   position: 'left',
-  mode: 'float',
 })
 ```
 
@@ -171,177 +165,107 @@ Bar options can be modified on the fly, except for the `el` property.
 bartender.getBar('mobileNav').position = 'right'
 ```
 
-#### Bar options
-
-##### el
-
-Type: `string | Element`
-
-Bar element as selector string or reference to the element.
-
-##### position
-
-Type: `string`, Default: `'left'`
-
-Bar position as string. Possible values are `'left'`, `'right'`, `'top'` and `'bottom'`.
-
-##### mode
-
-Type: `string`, Default: `'float'`
-
-Bar mode as string. Possible values are:
-
-- `float` - The bar will slide in and float over the content.
-- `push` - The bar will slide in, and the content wrap will be pushed away from the bar.
-
-##### overlay
-
-Type: `boolean`, Default: `true`
-
-Show shading overlay over content wrap when bar is open. If disabled, overlay element will still be rendered, but it will be transparent.
-
-##### permanent
-
-Type: `boolean`, Default: `false`
-
-If enabled, the bar is not closeable by clicking overlay of pressing `esc` key.
-
-**IMPORTANT:** If you enable this, remember to provide a way to close the bar.
-
-##### scrollTop
-
-Type: `boolean`, Default: `true`
-
-If enabled, bar will be scrolled to top when opening it.
-
-### getBar(name)
-
-Get bar instance by name.
-
-| Argument | Type | Description |
-| - | - | - |
-| name | string | Bar name |
-
-```javascript
-bartender.getBar('mobileNav')
-```
-
-### removeBar(name)
+### Bartender.removeBar(name: string): this
 
 Remove bar instance by name.
 
-| Argument | Type | Description |
-| - | - | - |
-| name | string | Bar name |
+| Argument | Type   | Default | Description |
+| -------- | ------ | ------- | ----------- |
+| name     | string |         | Bar name    |
 
 ```javascript
 bartender.removeBar('mobileNav')
 ```
 
-### open(name)
+### async Bartender.open(bar: BartenderBar | string, options: BartenderOpenOptions = {}): Promise\<BartenderBar\>
 
-Open bar by name.
+Open bar.
 
-| Argument | Type | Description |
-| - | - | - |
-| name | string | Bar name |
+| Argument | Type                   | Default | Description                                           |
+| -------- | ---------------------- | ------- | ----------------------------------------------------- |
+| bar      | BartenderBar \| string |         | Bar instance or name                                  |
+| options  | BartenderOpenOptions   | {}      | [Additional options](#interface-bartenderopenoptions) |
+
+#### Interface BartenderOpenOptions
+
+Bar can be opened as a modal (default) or as a standard dialog.
+
+**In modal mode** focus will be trapped to the bar and interaction with elements outside the bar will be disabled.
+
+**In standard dialog mode** bar will open as a fixed element and interaction with elements outside the bar is allowed. This mode can be useful if you plan to keep the bar as a permanent component of your layout. Note that in standard dialog mode the following exceptions will take place:
+
+- Overlay shading will not be rendered.
+- Bar is not closeable by hitting `esc` key, regardless of the `permanent` setting of the bar.
+- Bar will not be closed when another bar is opened with `closeOtherBars: true`.
+- Bar will not be closed when `Bartender.closeAll()` is called without any arguments.
+
+| Property       | Type    | Default | Description        |
+| -------------- | ------- | ------- | ------------------ |
+| closeOtherBars | boolean | true    | Close other bars?  |
+| modal          | boolean | true    | Open bar as modal? |
 
 ```javascript
-// Open bar 'mobileNav'
+// Open bar with default options, as modal
 bartender.open('mobileNav')
+
+// Open bar as a standard dialog
+bartender.open('mobileNav', {
+  modal: false,
+})
 ```
 
-### close(name?)
+### async Bartender.close(bar?: BartenderBar | string): Promise<BartenderBar | null>
 
-Close bar by name. If name is undefined, any open bar will be closed.
+Close bar. If bar is undefined, the topmost bar will be closed.
 
-| Argument | Type | Description |
-| - | - | - |
-| name | string | Bar name |
+| Argument | Type                                | Default | Description          |
+| -------- | ----------------------------------- | ------- | -------------------- |
+| bar      | BartenderBar \| string \| undefined |         | Bar instance or name |
 
 ```javascript
 // Close bar 'mobileNav'
 bartender.close('mobileNav')
 
-// Close any open bar
+// Close the topmost open bar
 bartender.close()
 ```
 
-### toggle(name)
+### async Bartender.closeAll(closeNonModalBars: boolean = false): Promise<this>
+
+Close all bars.
+
+| Argument          | Type    | Default | Description                                         |
+| ----------------- | ------- | ------- | --------------------------------------------------- |
+| closeNonModalBars | boolean | false   | Close non-modal bars in addition to the modal bars? |
+
+```javascript
+// Close all non-modal bars
+bartender.closeAll()
+
+// Close all bars, including the non-modal
+bartender.closeAll(true)
+```
+
+### async Bartender.toggle(bar?: BartenderBar | string, options: BartenderOpenOptions = {}): Promise<BartenderBar | null>
 
 Toggle bar open/closed state.
 
-| Argument | Type | Description |
-| - | - | - |
-| name | string | Bar name |
+| Argument | Type                   | Default | Description                                           |
+| -------- | ---------------------- | ------- | ----------------------------------------------------- |
+| bar      | BartenderBar \| string |         | Bar instance or name                                  |
+| options  | BartenderOpenOptions   | {}      | [Additional options](#interface-bartenderopenoptions) |
 
 ```javascript
-// Toggle bar 'mobileNav'
+// Toggle bar with default options, as modal
 bartender.toggle('mobileNav')
-```
 
-### addPushElement(element, options?)
-
-Specify additional element you want to be pushed when bar is opened. This can be useful for fixed elements.
-
-By default element is pushed by all bars, modes and positions, but you can fine-tune this behaviour by options.
-
-| Argument | Type | Description |
-| - | - | - |
-| el | string \| Element | Element as selector string or reference to the element. |
-| options | object | Pushable element options. Available options are listed below. |
-
-```javascript
-// Always push the element, regardless of bar configuration
-bartender.addPushElement('.myFixedElement')
-
-// Push element only if bar mode is 'push' AND position is 'left' or 'right'.
-bartender.addPushElement('.myFixedElement', {
-  modes: [
-    'push',
-  ],
-  positions: [
-    'left',
-    'right',
-  ],
+// Toggle bar as a standard dialog
+bartender.toggle('mobileNav', {
+  modal: false,
 })
 ```
 
-#### Pushable element options
-
-Note that if you specify multiple options, they all have to match to the bar being opened.
-
-##### bars
-
-Type: `Array<Bar>`, Default: `[]`
-
-An array of bar instances.
-
-##### modes
-
-Type: `Array<string>`, Default: `[]`
-
-An array of [bar modes](#mode).
-
-##### positions
-
-Type: `Array<string>`, Default: `[]`
-
-An array of [bar positions](#position).
-
-### removePushElement(el)
-
-Remove pushable element by reference.
-
-| Argument | Type | Description |
-| - | - | - |
-| el | Element | Reference to the element. |
-
-```javascript
-bartender.removePushElement(document.querySelector('.myFixedElement'))
-```
-
-### destroy()
+### Bartender.destroy(): this
 
 Destroy Bartender instance.
 
@@ -396,7 +320,6 @@ window.addEventListener('bartender-bar-removed', (event) => {
 This event is dispatched when one of the following bar properties change:
 
 - position
-- mode
 - overlay
 - permanent
 - scrollTop
@@ -405,7 +328,9 @@ Bar, updated property name and property value will be included in `detail` objec
 
 ```javascript
 window.addEventListener('bartender-bar-updated', (event) => {
-  console.log(`Updated bar '${event.detail.bar.name}' property '${event.detail.property}' to '${event.detail.value}'`)
+  console.log(
+    `Updated bar '${event.detail.bar.name}' property '${event.detail.property}' to '${event.detail.value}'`,
+  )
 })
 ```
 
@@ -447,59 +372,4 @@ Bar is closed. Bar will be included in `detail` object.
 window.addEventListener('bartender-bar-after-close', (event) => {
   console.log(event.detail.bar)
 })
-```
-
-## Styling
-
-Note that all transitions are disabled, if the user prefers reduced motion. [Read more about reduced motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion).
-
-These css variables will be used as defaults for all transitions:
-
-```css
-:root {
-  --bartender-transition-duration: 250ms;
-  --bartender-transition-timing-function: ease;
-}
-```
-
-### Bars
-
-Each bar will receive class names based on it's name, position and mode.
-
-```css
-/* Styles for all bars */
-.bartender__bar {
-  background: #dadada;
-}
-
-/* Styles for the bar named "mobileNav" */
-.bartender__bar--mobileNav {
-  background: #dadada;
-}
-
-/* Styles for all bars by position */
-.bartender__bar--left {
-  background: #dadada;
-}
-
-/* Styles for all bars by mode */
-.bartender__bar--float {
-  background: #dadada;
-}
-```
-
-### Overlay shading
-
-Use `::backdrop` pseudo element to define styles for bar overlays.
-
-```css
-/* Styles for all overlays */
-.bartender__bar::backdrop {
-  background-color: maroon;
-}
-
-/* Styles for the overlay of bar named "mobileNav" */
-.bartender__bar--mobileNav::backdrop {
-  background-color: teal;
-}
 ```

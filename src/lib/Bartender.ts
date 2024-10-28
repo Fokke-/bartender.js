@@ -139,64 +139,14 @@ export class Bartender {
   }
 
   /**
-   * Destroy Bartender instance
-   */
-  public destroy(): this {
-    this.closeAll()
-
-    // Get all bar names
-    const barNames = this.bars.flatMap((item) => item.name)
-    for (const name of barNames) {
-      if (!this.getBar(name)) {
-        continue
-      }
-
-      this.removeBar(name)
-    }
-
-    // Remove classes
-    document.body.classList.remove('bartender', 'bartender-ready')
-
-    // Remove event listeners
-    document.removeEventListener(
-      'keydown',
-      this.onKeydownHandler as EventListener,
-    )
-    document.removeEventListener(
-      'bartender-bar-before-open',
-      this.onBarBeforeOpenHandler as EventListener,
-    )
-    document.removeEventListener(
-      'bartender-bar-before-close',
-      this.onBarBeforeCloseHandler as EventListener,
-    )
-    document.removeEventListener(
-      'bartender-bar-backdrop-click',
-      this.onBarBackdropClickHandler as EventListener,
-    )
-
-    window.dispatchEvent(
-      new CustomEvent('bartender-destroyed', {
-        detail: { bartender: this },
-      }),
-    )
-
-    if (this.debug) {
-      console.debug('Bartender destroyed', this)
-    }
-
-    return this
-  }
-
-  /**
-   * Get bar by name
+   * Get bar instance by name
    */
   public getBar(name: string): BartenderBar | null {
     return this.bars.find((item) => item.name === name) || null
   }
 
   /**
-   * Get currently open bar
+   * Get the topmost open bar instance
    */
   private getOpenBar(): BartenderBar | null {
     if (!this.openBars.length) {
@@ -250,7 +200,7 @@ export class Bartender {
   }
 
   /**
-   * Remove bar
+   * Remove bar instance by name
    */
   public removeBar(name: string): this {
     if (!name) {
@@ -328,6 +278,8 @@ export class Bartender {
 
   /**
    * Close bar
+   *
+   * If bar is undefined, the topmost bar will be closed.
    */
   public async close(
     bar?: BartenderBar | string,
@@ -379,9 +331,9 @@ export class Bartender {
   }
 
   /**
-   * Toggle bar
+   * Toggle bar open/closed state.
    */
-  public toggle(
+  public async toggle(
     bar?: BartenderBar | string,
     options: BartenderOpenOptions = {},
   ): Promise<BartenderBar | null> {
@@ -402,7 +354,57 @@ export class Bartender {
     }
 
     return targetBar.isOpen() === true
-      ? this.close(targetBar)
-      : this.open(targetBar, options)
+      ? await this.close(targetBar)
+      : await this.open(targetBar, options)
+  }
+
+  /**
+   * Destroy Bartender instance
+   */
+  public destroy(): this {
+    this.closeAll()
+
+    // Get all bar names
+    const barNames = this.bars.flatMap((item) => item.name)
+    for (const name of barNames) {
+      if (!this.getBar(name)) {
+        continue
+      }
+
+      this.removeBar(name)
+    }
+
+    // Remove classes
+    document.body.classList.remove('bartender', 'bartender-ready')
+
+    // Remove event listeners
+    document.removeEventListener(
+      'keydown',
+      this.onKeydownHandler as EventListener,
+    )
+    document.removeEventListener(
+      'bartender-bar-before-open',
+      this.onBarBeforeOpenHandler as EventListener,
+    )
+    document.removeEventListener(
+      'bartender-bar-before-close',
+      this.onBarBeforeCloseHandler as EventListener,
+    )
+    document.removeEventListener(
+      'bartender-bar-backdrop-click',
+      this.onBarBackdropClickHandler as EventListener,
+    )
+
+    window.dispatchEvent(
+      new CustomEvent('bartender-destroyed', {
+        detail: { bartender: this },
+      }),
+    )
+
+    if (this.debug) {
+      console.debug('Bartender destroyed', this)
+    }
+
+    return this
   }
 }
