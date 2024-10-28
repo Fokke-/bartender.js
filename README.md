@@ -37,7 +37,7 @@ npm i @fokke-/bartender.js
 ### Markup
 
 ```html
-<html lang="en">
+<html>
   <head>
     <!-- Note that it's highly recommended to define the following viewport meta tag -->
     <meta
