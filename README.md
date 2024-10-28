@@ -102,11 +102,10 @@ document.querySelector('.closeMobileNav').addEventListener('click', (event) => {
 | -------- | ------- | ------- | --------------------------------------------------------------------------- |
 | debug    | boolean | false   | If enabled, Bartender will log it's activity to console at debug log level. |
 
-#### Interface BartenderBarOptions
+#### Interface BartenderBarDefaultOptions
 
 | Property  | Type                                   | Default | Description                                                     |
 | --------- | -------------------------------------- | ------- | --------------------------------------------------------------- |
-| el        | string \| element                      |         | Bar element as selector string or reference to the element.     |
 | position  | 'left' \| 'right' \| 'top' \| 'bottom' | 'left'  | Bar position                                                    |
 | overlay   | boolean                                | true    | Show shading overlay over content wrap when bar is open.        |
 | permanent | boolean                                | false   | Bar is not closeable by clicking overlay of pressing `esc` key. |
@@ -151,6 +150,16 @@ Add a new bar.
 | -------- | ------------------- | ------- | --------------------------------------------- |
 | name     | string              |         | Unique name for the bar                       |
 | options  | BartenderBarOptions | {}      | [Bar options](#interface-bartenderbaroptions) |
+
+#### Interface BartenderBarOptions
+
+| Property  | Type                                   | Default | Description                                                     |
+| --------- | -------------------------------------- | ------- | --------------------------------------------------------------- |
+| el        | string \| element                      |         | Bar element as selector string or reference to the element.     |
+| position  | 'left' \| 'right' \| 'top' \| 'bottom' | 'left'  | Bar position                                                    |
+| overlay   | boolean                                | true    | Show shading overlay over content wrap when bar is open.        |
+| permanent | boolean                                | false   | Bar is not closeable by clicking overlay of pressing `esc` key. |
+| scrollTop | boolean                                | true    | Bar will be scrolled to top after opening it.                   |
 
 ```javascript
 bartender.addBar('mobileNav', {
