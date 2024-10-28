@@ -57,7 +57,7 @@
   border: 0;
 
   @media (prefers-reduced-motion) {
-    transition: none !important;
+    transition-duration: 0ms !important;
   }
 
   &:focus {

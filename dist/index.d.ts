@@ -10,8 +10,14 @@ export declare class Bartender {
     readonly openBars: BartenderBar[];
     /** Default options for the bars */
     private readonly barDefaultOptions;
-    /** Handler for keydown event */
+    /** Handler for keydown events */
     private onKeydownHandler;
+    /** Handler for bartender-bar-before-open events */
+    private onBarBeforeOpenHandler;
+    /** Handler for bartender-bar-before-close events */
+    private onBarBeforeCloseHandler;
+    /** Handler for bartender-bar-backdrop-click events */
+    private onBarBackdropClickHandler;
     /**
      * Create a new Bartender instance
      */
@@ -20,15 +26,11 @@ export declare class Bartender {
     get debug(): boolean;
     set debug(val: boolean);
     /**
-     * Destroy Bartender instance
-     */
-    destroy(): this;
-    /**
-     * Get bar by name
+     * Get bar instance by name
      */
     getBar(name: string): BartenderBar | null;
     /**
-     * Get currently open bar
+     * Get the topmost open bar instance
      */
     private getOpenBar;
     /**
@@ -36,29 +38,37 @@ export declare class Bartender {
      */
     addBar(name: string, options?: BartenderBarOptions): BartenderBar;
     /**
-     * Remove bar
+     * Remove bar instance by name
      */
     removeBar(name: string): this;
     /**
      * Open bar
+     *
+     * Resolves after the bar has opened.
      */
-    open(bar: BartenderBar | string, options?: BartenderOpenOptions): BartenderBar;
+    open(bar: BartenderBar | string, options?: BartenderOpenOptions): Promise<BartenderBar>;
     /**
      * Close bar
+     *
+     * If bar is undefined, the topmost bar will be closed. Resolves after the bar has closed.
      */
-    close(bar?: BartenderBar | string): BartenderBar | null;
+    close(bar?: BartenderBar | string): Promise<BartenderBar | null>;
     /**
      * Close all bars
+     *
+     * Resolves after all the bars have been closed.
      */
-    closeAll(closeNonModalBars?: boolean): this;
+    closeAll(closeNonModalBars?: boolean): Promise<this>;
     /**
-     * Toggle bar
+     * Toggle bar open/closed state.
+     *
+     * Resolves after the bar has opened or closed.
      */
-    toggle(bar?: BartenderBar | string, options?: BartenderOpenOptions): BartenderBar | null;
+    toggle(bar?: BartenderBar | string, options?: BartenderOpenOptions): Promise<BartenderBar | null>;
     /**
-     * Handler for keydown event
+     * Destroy Bartender instance
      */
-    private onKeydown;
+    destroy(): this;
 }
 
 /**
@@ -133,19 +143,31 @@ export declare class BartenderBar {
      */
     scrollToTop(): this;
     /**
+     * Get transition duration in milliseconds
+     */
+    getTransitionDuration(): number;
+    /**
      * Handler for dialog click event
      */
     private onClick;
 }
 
 export declare interface BartenderBarDefaultOptions {
+    /** Bar position */
     position?: BartenderBarPosition
+
+    /** Show shading overlay over content wrap when bar is open. */
     overlay?: boolean
+
+    /** Bar is not closeable by clicking overlay of pressing esc key. */
     permanent?: boolean
+
+    /** Bar will be scrolled to top after opening it. */
     scrollTop?: boolean
 }
 
 export declare interface BartenderBarOptions extends BartenderBarDefaultOptions {
+    /** Bar element as selector string or reference to the element. */
     el?: BartenderElementQuery
 }
 
@@ -153,6 +175,7 @@ export declare type BartenderBarPosition = 'left' | 'right' | 'top' | 'bottom'
 
 export declare type BartenderElementQuery = string | Element | null
 
+/** Additional options for opening the bar */
 export declare interface BartenderOpenOptions {
     /** Close other bars? */
     closeOtherBars?: boolean
@@ -162,9 +185,8 @@ export declare interface BartenderOpenOptions {
 }
 
 export declare interface BartenderOptions {
+    /** Enable debug mode? */
     debug?: boolean
-    el?: BartenderElementQuery
-    contentEl?: BartenderElementQuery
 }
 
 export { }
