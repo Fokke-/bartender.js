@@ -96,6 +96,11 @@ document.querySelector('.closeMobileNav').addEventListener('click', (event) => {
 
 ### constructor(options: BartenderOptions = {}, barDefaultOptions: BartenderBarDefaultOptions = {})
 
+| Argument          | Type                       | Default | Description                                                           |
+| ----------------- | -------------------------- | ------- | --------------------------------------------------------------------- |
+| options           | BartenderOptions           | {}      | [Main options](#interface-bartenderoptions)                           |
+| barDefaultOptions | BartenderBarDefaultOptions | {}      | [Default options for new bars](#interface-bartenderbardefaultoptions) |
+
 #### Interface BartenderOptions
 
 | Property | Type    | Default | Description                                                                 |
