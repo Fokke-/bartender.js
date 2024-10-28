@@ -1,5 +1,4 @@
 import eslint from '@nabla/vite-plugin-eslint'
-// import stylelint from 'vite-plugin-stylelint'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 import dts from 'vite-plugin-dts'
 
@@ -25,12 +24,7 @@ export default defineConfig({
     target: 'esnext',
     sourcemap: true,
     rollupOptions: {
-      external: ['async-await-queue', 'ts-debounce'],
       output: {
-        globals: {
-          'async-await-queue': 'asyncAwaitQueue',
-          'ts-debounce': 'tsDebounce',
-        },
         assetFileNames: (chunkInfo) => {
           if (chunkInfo.name === 'style.css') return 'bartender.css'
 
@@ -41,8 +35,8 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'Bartender',
-      fileName: 'Bartender',
-      formats: ['es'],
+      fileName: 'bartender',
+      formats: ['es', 'umd'],
     },
   },
   plugins: [
@@ -51,12 +45,6 @@ export default defineConfig({
         fix: false,
       },
     }),
-    // stylelint({
-    //   fix: false,
-    //   dev: true,
-    //   build: true,
-    //   include: ['src/**/*.{css,scss,sass,less,styl,vue,svelte}'],
-    // }),
     dts({
       rollupTypes: true,
       copyDtsFiles: true,

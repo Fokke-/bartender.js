@@ -32,7 +32,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/Bartender.js"
+      "import": "./dist/Bartender.js",
+      "require": "./dist/Bartender.umd.cjs"
     },
     "./dist/bartender.scss": {
       "import": "./dist/bartender.scss",
@@ -48,18 +49,10 @@
     "@types/node": "22.8.1",
     "eslint": "9.13.0",
     "sass": "1.80.4",
-    "stylelint": "16.10.0",
-    "stylelint-config-sass-guidelines": "12.1.0",
-    "stylelint-config-standard": "36.0.1",
     "typescript": "5.4.2",
     "typescript-eslint": "8.11.0",
     "vite": "5.4.10",
     "vite-plugin-dts": "4.3.0",
-    "vite-plugin-static-copy": "2.0.0",
-    "vite-plugin-stylelint": "6.0.0-beta.1"
-  },
-  "dependencies": {
-    "async-await-queue": "2.1.4",
-    "ts-debounce": "4.0.0"
+    "vite-plugin-static-copy": "2.0.0"
   }
 }

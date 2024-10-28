@@ -1,8 +1,7 @@
 import type {
   BartenderBarOptions,
   BartenderBarPosition,
-  BartenderPushStyles,
-  BartenderTransitionProperties,
+  BartenderOpenOptions,
 } from './types'
 import { BartenderError } from './BartenderError'
 import { resolveElement, sleep } from './utils'
@@ -11,62 +10,63 @@ import { resolveElement, sleep } from './utils'
  * Bartender bar
  */
 export class BartenderBar {
-  /** @property {boolean} debug - Enable debug mode? */
+  /** Enable debug mode? */
   public debug = false
 
-  /** @property {boolean} initialized - Is bar initialized? */
+  /** Is bar initialized? */
   private initialized = false
 
-  /** @property {string} _name - Bar name */
+  /** Bar name */
   private _name = ''
 
-  /** @property {HTMLDialogElement} el - Bar element */
+  /** Bar element */
   public readonly el: HTMLDialogElement
 
-  /** @property {string} _position - Bar position */
+  /** Bar position */
   private _position: BartenderBarPosition = 'left'
 
-  /** @property {boolean} _overlay - Enable overlay? */
+  /** Enable overlay? */
   private _overlay = true
 
-  /** @property {boolean} _permanent - Enable permanent mode? */
+  /** Enable permanent mode? */
   private _permanent = false
 
-  /** @property {boolean} _scrollTop - Scroll to the top when bar is opened? */
+  /** Scroll to the top when bar is opened? */
   private _scrollTop = true
 
-  /** @property {boolean} isOpened - Is the bar currently open? */
+  /** Is the bar currently open? */
   private isOpened = false
 
-  /** @property {Function} onCloseHandler - Handler for dialog close event */
+  /** Is the bar opened in modal mode? */
+  public isModal = true
+
+  /** Handler for dialog close event */
   private onCloseHandler
 
-  /** @property {Function} onClickHandler - Handler for dialog click event */
+  /** Handler for dialog click event */
   private onClickHandler
 
   /**
    * Create a new bar
-   *
-   * @param {string} name - Unique name of the bar
-   * @param {object} options - Bar options
-   * @throws {BartenderError}
    */
   constructor(name: string, options: BartenderBarOptions = {}) {
-    if (!name) throw new BartenderError('Bar name is required')
+    if (!name) {
+      throw new BartenderError('Bar name is required')
+    }
     this.name = name
 
     // Get element
     const el = resolveElement(options.el || null) as HTMLDialogElement
-    if (!el)
-      throw new BartenderError(
-        `Content element for bar '${this.name}' is required`,
-      )
 
-    // Check that element is a dialog
-    if (el.tagName !== 'DIALOG')
+    if (!el) {
+      throw new BartenderError(`Element for bar '${this.name}' is required`)
+    }
+
+    if (el.tagName !== 'DIALOG') {
       throw new BartenderError(
         `Bar element for '${this.name}' must be a <dialog> element`,
       )
+    }
 
     this.el = el
     this.el.classList.add('bartender-bar', 'bartender-bar--closed')
@@ -88,11 +88,12 @@ export class BartenderBar {
 
   /**
    * Destroy bar instance
-   *
-   * @returns {this}
    */
   public destroy(): this {
-    this.el.classList.remove('bartender-bar', `bartender-bar--${this.position}`)
+    this.el.classList.remove(
+      'bartender-bar',
+      `bartender-bar--position-${this.position}`,
+    )
 
     this.el.removeEventListener('close', this.onCloseHandler)
     this.el.removeEventListener('click', this.onClickHandler)
@@ -100,16 +101,17 @@ export class BartenderBar {
     return this
   }
 
-  /** @type {string} */
+  /** Bar name */
   public get name() {
     return this._name
   }
 
-  /** @type {string} */
   public set name(val: string) {
     this._name = val
 
-    if (this.initialized === false) return
+    if (this.initialized === false) {
+      return
+    }
 
     this.el.dispatchEvent(
       new CustomEvent('bartender-bar-updated', {
@@ -122,22 +124,21 @@ export class BartenderBar {
       }),
     )
 
-    if (this.debug) console.debug('Updated bar name', this)
+    if (this.debug) {
+      console.debug('Updated bar name', this)
+    }
   }
 
-  /** @type {string} */
+  /** Bar position */
   public get position() {
     return this._position
   }
 
-  /**
-   * @type {string}
-   * @throws {BartenderError}
-   */
   public set position(val: BartenderBarPosition) {
     // Validate position
-    if (!val)
+    if (!val) {
       throw new BartenderError(`Position is required for bar '${this.name}'`)
+    }
 
     const validPositions: BartenderBarPosition[] = [
       'left',
@@ -146,19 +147,22 @@ export class BartenderBar {
       'bottom',
     ]
 
-    if (!validPositions.includes(val))
+    if (!validPositions.includes(val)) {
       throw new BartenderError(
         `Invalid position '${val}' for bar '${this.name}'. Use one of the following: ${validPositions.join(', ')}.`,
       )
+    }
 
     // Update element classes
-    this.el.classList.remove(`bartender-bar--${this._position}`)
-    this.el.classList.add(`bartender-bar--${val}`)
+    this.el.classList.remove(`bartender-bar--position-${this._position}`)
+    this.el.classList.add(`bartender-bar--position-${val}`)
 
     // Set new position
     this._position = val
 
-    if (this.initialized === false) return
+    if (this.initialized === false) {
+      return
+    }
 
     // If position was changed after bar was created,
     // dispatch event to update pushable elements
@@ -173,25 +177,28 @@ export class BartenderBar {
       }),
     )
 
-    if (this.debug) console.debug('Updated bar position', this)
+    if (this.debug) {
+      console.debug('Updated bar position', this)
+    }
   }
 
-  /** @type {boolean} */
+  /** Enable overlay? */
   public get overlay() {
     return this._overlay
   }
 
-  /** @type {boolean} */
   public set overlay(val: boolean) {
     this._overlay = val
 
     if (val === true) {
-      this.el.classList.add('bartender-bar--overlay')
+      this.el.classList.add('bartender-bar--has-overlay')
     } else {
-      this.el.classList.remove('bartender-bar--overlay')
+      this.el.classList.remove('bartender-bar--has-overlay')
     }
 
-    if (this.initialized === false) return
+    if (this.initialized === false) {
+      return
+    }
 
     this.el.dispatchEvent(
       new CustomEvent('bartender-bar-updated', {
@@ -204,15 +211,16 @@ export class BartenderBar {
       }),
     )
 
-    if (this.debug) console.debug('Updated bar overlay', this)
+    if (this.debug) {
+      console.debug('Updated bar overlay', this)
+    }
   }
 
-  /** @type {boolean} */
+  /** Enable permanent mode? */
   public get permanent() {
     return this._permanent
   }
 
-  /** @type {boolean} */
   public set permanent(val: boolean) {
     this._permanent = val
 
@@ -229,15 +237,16 @@ export class BartenderBar {
       }),
     )
 
-    if (this.debug) console.debug('Updated bar permanence', this)
+    if (this.debug) {
+      console.debug('Updated bar permanence', this)
+    }
   }
 
-  /** @type {boolean} */
+  /** Scroll to the top when bar is opened? */
   public get scrollTop() {
     return this._scrollTop
   }
 
-  /** @type {boolean} */
   public set scrollTop(val: boolean) {
     this._scrollTop = val
 
@@ -254,74 +263,33 @@ export class BartenderBar {
       }),
     )
 
-    if (this.debug) console.debug('Updated bar scrollTop', this)
+    if (this.debug) {
+      console.debug('Updated bar scrollTop', this)
+    }
   }
 
   /**
    * Is bar currently open?
-   *
-   * @returns {boolean}
    */
   public isOpen(): boolean {
     return this.isOpened
   }
 
   /**
-   * Get transition properties for an element
-   *
-   * @param {Element} el - Element to get properties for
-   * @returns {BartenderTransitionProperties}
-   */
-  public getTransitionProperties(el: Element): BartenderTransitionProperties {
-    const properties: BartenderTransitionProperties = {
-      timingFunction: undefined,
-      duration: 0,
-    }
-
-    if (!el) return properties
-
-    const transitionProperties =
-      window.getComputedStyle(el).getPropertyValue('transition-property') || ''
-    const transitionDurations =
-      window.getComputedStyle(el).getPropertyValue('transition-duration') || ''
-    const transitionTimingFunctions =
-      window
-        .getComputedStyle(el)
-        .getPropertyValue('transition-timing-function') || ''
-
-    // Find out index for transform
-    const transformIndex = transitionProperties
-      .split(',')
-      .map((item) => item.trim())
-      .indexOf('transform')
-    if (transformIndex < 0) return properties
-
-    // Get duration of transform
-    const duration = transitionDurations.split(',').map((item) => item.trim())[
-      transformIndex
-    ]
-    if (duration) {
-      properties.duration = parseFloat(duration) * 1000
-    }
-
-    // Get timing function of transform
-    const timingFunction = transitionTimingFunctions
-      .split(',')
-      .map((item) => item.trim())[transformIndex]
-    if (timingFunction) {
-      properties.timingFunction = timingFunction
-    }
-
-    return properties
-  }
-
-  /**
    * Open bar
-   *
-   * @returns {Promise<this>}
    */
-  public async open(): Promise<this> {
-    if (this.debug) console.debug('Opening bar', this)
+  public async open(options: BartenderOpenOptions = {}): Promise<this> {
+    if (this.debug) {
+      console.debug('Opening bar', this)
+    }
+
+    if (options.modal === true) {
+      this.isModal = true
+      this.el.showModal()
+    } else {
+      this.isModal = false
+      this.el.show()
+    }
 
     // Dispatch 'before open' event
     this.el.dispatchEvent(
@@ -331,14 +299,15 @@ export class BartenderBar {
       }),
     )
 
-    this.el.showModal()
-    if (this.scrollTop === true) this.el.scrollTo(0, 0)
+    if (this.scrollTop === true) {
+      this.scrollToTop()
+    }
+
     this.el.classList.remove('bartender-bar--closed')
     this.el.classList.add('bartender-bar--open')
     this.isOpened = true
 
-    const { duration } = this.getTransitionProperties(this.el)
-    await sleep(duration)
+    await sleep(this.getTransitionDuration())
 
     // Dispatch 'after open' event
     this.el.dispatchEvent(
@@ -348,32 +317,31 @@ export class BartenderBar {
       }),
     )
 
-    if (this.debug) console.debug('Finished opening bar', this)
+    if (this.debug) {
+      console.debug('Finished opening bar', this)
+    }
 
-    return Promise.resolve(this)
+    return this
   }
 
   /**
    * Close bar
-   *
-   * @returns {Promise<this>}
    */
   public async close(): Promise<this> {
     this.el.close()
 
-    const { duration } = this.getTransitionProperties(this.el)
-    await sleep(duration)
+    await sleep(this.getTransitionDuration())
 
-    return Promise.resolve(this)
+    return this
   }
 
   /**
    * Handler for dialog close event
-   *
-   * @returns {Promise<this>}
    */
   private async onClose(): Promise<this> {
-    if (this.debug) console.debug('Closing bar', this)
+    if (this.debug) {
+      console.debug('Closing bar', this)
+    }
 
     this.el.dispatchEvent(
       new CustomEvent('bartender-bar-before-close', {
@@ -385,9 +353,7 @@ export class BartenderBar {
     this.el.classList.remove('bartender-bar--open')
     this.isOpened = false
 
-    const { duration } = this.getTransitionProperties(this.el)
-    await sleep(duration)
-
+    await sleep(this.getTransitionDuration())
     this.el.classList.add('bartender-bar--closed')
 
     this.el.dispatchEvent(
@@ -397,18 +363,36 @@ export class BartenderBar {
       }),
     )
 
-    if (this.debug) console.debug('Finished closing bar', this)
+    if (this.debug) {
+      console.debug('Finished closing bar', this)
+    }
 
-    return Promise.resolve(this)
+    return this
+  }
+
+  /**
+   * Scroll bar to the top
+   */
+  public scrollToTop(): this {
+    this.el.scrollTo(0, 0)
+
+    return this
+  }
+
+  /**
+   * Get transition duration in milliseconds
+   */
+  public getTransitionDuration(): number {
+    return (
+      parseFloat(window.getComputedStyle(this.el).transitionDuration || '0') *
+      1000
+    )
   }
 
   /**
    * Handler for dialog click event
-   *
-   * @param {MouseEvent} event - Click event
-   * @returns {Promise<this>}
    */
-  private onClick(event: MouseEvent): Promise<this> {
+  private onClick(event: MouseEvent): this {
     const rect = this.el.getBoundingClientRect()
 
     // Detect clicking on backdrop
@@ -420,42 +404,17 @@ export class BartenderBar {
         rect.bottom < event.clientY)
     ) {
       event.stopPropagation()
-      this.close()
+
+      this.el.dispatchEvent(
+        new CustomEvent('bartender-bar-backdrop-click', {
+          bubbles: true,
+          detail: {
+            bar: this,
+          },
+        }),
+      )
     }
 
-    return Promise.resolve(this)
-  }
-
-  /**
-   * Get styles for pushable elements
-   *
-   * @returns {Promise<BartenderPushStyles>}
-   */
-  public async getPushStyles(): Promise<BartenderPushStyles> {
-    const styles: BartenderPushStyles = {
-      transform: '',
-      transitionDuration: '',
-      transitionTimingFunction: '',
-    }
-
-    if (!this.position || !this.el) {
-      return styles
-    }
-
-    await new Promise((resolve) => requestAnimationFrame(resolve))
-
-    const { duration, timingFunction } = this.getTransitionProperties(this.el)
-
-    styles.transform =
-      {
-        left: `translateX(${this.el.offsetWidth}px)`,
-        right: `translateX(-${this.el.offsetWidth}px)`,
-        top: `translateY(${this.el.offsetHeight}px)`,
-        bottom: `translateY(-${this.el.offsetHeight}px)`,
-      }[this.position] || ''
-    styles.transitionDuration = `${duration}ms`
-    styles.transitionTimingFunction = timingFunction || ''
-
-    return Promise.resolve(styles)
+    return this
   }
 }

@@ -2,7 +2,13 @@ import { Bartender } from './lib/Bartender'
 import './assets/bartender.scss'
 import './assets/styles.scss'
 
-const bartender = new Bartender({ debug: false })
+declare global {
+  interface Window {
+    bartender: Bartender
+  }
+}
+
+const bartender = new Bartender({ debug: true })
 window.bartender = bartender
 
 bartender.addBar('left', {
@@ -15,10 +21,9 @@ bartender.addBar('right', {
   position: 'right',
 })
 
-bartender.addBar('right2', {
-  el: '.bar--right2',
+bartender.addBar('right-sub', {
+  el: '.bar--right-sub',
   position: 'right',
-  permanent: true,
 })
 
 bartender.addBar('top', {
@@ -31,19 +36,13 @@ bartender.addBar('bottom', {
   position: 'bottom',
 })
 
-const fixedBarBottom = document.querySelector(
-  '.toolBar--fixed.toolBar--bottom',
-) as HTMLElement
-if (fixedBarBottom) {
-  bartender.addPushElement(fixedBarBottom, {
-    positions: ['left', 'bottom'],
-  })
-}
-
-const toggleButtons = document.querySelectorAll('.toggleButton')
-for (const button of Array.from(toggleButtons)) {
+const openButtons = document.querySelectorAll('.openButton')
+for (const button of Array.from(openButtons) as HTMLButtonElement[]) {
   button.addEventListener('click', () => {
-    bartender.toggle(button.getAttribute('data-bar') || '')
+    bartender.open(button.getAttribute('data-bar') || '', {
+      closeOtherBars: button.dataset.closeOtherBars === 'true',
+      modal: !button.dataset.modal || button.dataset.modal === 'true',
+    })
   })
 }
 
@@ -54,34 +53,24 @@ for (const button of Array.from(closeButtons)) {
   })
 }
 
-const spamToggle = document.querySelector('.spamToggle')
-spamToggle?.addEventListener('click', () => {
-  // Get array of bars in random order
-  const barStack = Array.from({ length: 10 }, () => {
-    return bartender.bars[Math.floor(Math.random() * bartender.bars.length)]
-  })
+const openAll = document.querySelector('.openAll')
+openAll?.addEventListener('click', async () => {
+  console.table(bartender.bars)
 
-  console.table(barStack)
-
-  for (const bar of barStack) {
-    bartender.toggle(bar.name)
+  for (const bar of bartender.bars) {
+    await bartender.open(bar.name, {
+      closeOtherBars: false,
+    })
   }
-
-  bartender.close()
 })
 
-const spamOpen = document.querySelector('.spamOpen')
-spamOpen?.addEventListener('click', () => {
-  // Get array of bars in random order
-  const barStack = Array.from({ length: 10 }, () => {
-    return bartender.bars[Math.floor(Math.random() * bartender.bars.length)]
-  })
+const toggleAll = document.querySelector('.toggleAll')
+toggleAll?.addEventListener('click', async () => {
+  console.table(bartender.bars)
 
-  console.table(barStack)
-
-  for (const bar of barStack) {
-    bartender.open(bar.name)
+  for (const bar of bartender.bars) {
+    await bartender.toggle(bar.name, {
+      closeOtherBars: false,
+    })
   }
-
-  bartender.close()
 })
