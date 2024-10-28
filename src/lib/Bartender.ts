@@ -237,6 +237,8 @@ export class Bartender {
 
   /**
    * Open bar
+   *
+   * Resolves after the bar has opened.
    */
   public async open(
     bar: BartenderBar | string,
@@ -279,7 +281,7 @@ export class Bartender {
   /**
    * Close bar
    *
-   * If bar is undefined, the topmost bar will be closed.
+   * If bar is undefined, the topmost bar will be closed. Resolves after the bar has closed.
    */
   public async close(
     bar?: BartenderBar | string,
@@ -310,6 +312,8 @@ export class Bartender {
 
   /**
    * Close all bars
+   *
+   * Resolves after all the bars have been closed.
    */
   public async closeAll(closeNonModalBars: boolean = false): Promise<this> {
     const barNames = this.openBars.reduce((acc, item) => {
@@ -332,6 +336,8 @@ export class Bartender {
 
   /**
    * Toggle bar open/closed state.
+   *
+   * Resolves after the bar has opened or closed.
    */
   public async toggle(
     bar?: BartenderBar | string,
