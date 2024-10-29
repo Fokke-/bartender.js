@@ -171,7 +171,17 @@ export class Bartender {
     // Create a new bar
     const bar = new BartenderBar(name, {
       ...this.barDefaultOptions,
-      ...options,
+      ...Object.entries(options).reduce(
+        (acc, [key, value]) => {
+          if (typeof value === 'undefined') {
+            return acc
+          }
+
+          acc[key] = value
+          return acc
+        },
+        {} as Record<string, any>,
+      ),
     })
 
     // Set debug mode
