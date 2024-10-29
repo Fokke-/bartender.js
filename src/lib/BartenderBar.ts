@@ -279,17 +279,7 @@ export class BartenderBar {
    * Open bar
    */
   public async open(options: BartenderOpenOptions = {}): Promise<this> {
-    if (this.debug) {
-      console.debug('Opening bar', this)
-    }
-
-    if (options.modal === true) {
-      this.isModal = true
-      this.el.showModal()
-    } else {
-      this.isModal = false
-      this.el.show()
-    }
+    this.isModal = !!options.modal
 
     // Dispatch 'before open' event
     this.el.dispatchEvent(
@@ -298,6 +288,16 @@ export class BartenderBar {
         detail: { bar: this },
       }),
     )
+
+    if (this.debug) {
+      console.debug('Opening bar', this)
+    }
+
+    if (this.isModal === true) {
+      this.el.showModal()
+    } else {
+      this.el.show()
+    }
 
     if (this.scrollTop === true) {
       this.scrollToTop()
@@ -309,6 +309,10 @@ export class BartenderBar {
 
     await sleep(this.getTransitionDuration())
 
+    if (this.debug) {
+      console.debug('Finished opening bar', this)
+    }
+
     // Dispatch 'after open' event
     this.el.dispatchEvent(
       new CustomEvent('bartender-bar-after-open', {
@@ -316,10 +320,6 @@ export class BartenderBar {
         detail: { bar: this },
       }),
     )
-
-    if (this.debug) {
-      console.debug('Finished opening bar', this)
-    }
 
     return this
   }
