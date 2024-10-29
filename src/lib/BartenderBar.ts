@@ -76,12 +76,65 @@ export class BartenderBar {
     this.permanent = options.permanent ?? this._permanent
     this.scrollTop = options.scrollTop ?? this._scrollTop
 
-    // Event listeners
-    this.onCloseHandler = this.onClose.bind(this)
-    this.el.addEventListener('close', this.onCloseHandler)
+    // Handler for close events
+    this.onCloseHandler = async (_event: Event): Promise<void> => {
+      if (this.debug) {
+        console.debug('Closing bar', this)
+      }
 
-    this.onClickHandler = this.onClick.bind(this)
-    this.el.addEventListener('click', this.onClickHandler)
+      this.el.dispatchEvent(
+        new CustomEvent('bartender-bar-before-close', {
+          bubbles: true,
+          detail: { bar: this },
+        }),
+      )
+
+      this.el.classList.remove('bartender-bar--open')
+      this.isOpened = false
+
+      await sleep(this.getTransitionDuration())
+      this.el.classList.add('bartender-bar--closed')
+
+      this.el.dispatchEvent(
+        new CustomEvent('bartender-bar-after-close', {
+          bubbles: true,
+          detail: { bar: this },
+        }),
+      )
+
+      if (this.debug) {
+        console.debug('Finished closing bar', this)
+      }
+    }
+
+    // Handler for click events
+    this.onClickHandler = (event: MouseEvent): void => {
+      const rect = this.el.getBoundingClientRect()
+
+      // Detect clicking on backdrop
+      if (
+        this.permanent === false &&
+        (rect.left > event.clientX ||
+          rect.right < event.clientX ||
+          rect.top > event.clientY ||
+          rect.bottom < event.clientY)
+      ) {
+        event.stopPropagation()
+
+        this.el.dispatchEvent(
+          new CustomEvent('bartender-bar-backdrop-click', {
+            bubbles: true,
+            detail: {
+              bar: this,
+            },
+          }),
+        )
+      }
+    }
+
+    // Add event listeners
+    this.el.addEventListener('close', this.onCloseHandler as EventListener)
+    this.el.addEventListener('click', this.onClickHandler as EventListener)
 
     this.initialized = true
   }
@@ -336,41 +389,6 @@ export class BartenderBar {
   }
 
   /**
-   * Handler for dialog close event
-   */
-  private async onClose(): Promise<this> {
-    if (this.debug) {
-      console.debug('Closing bar', this)
-    }
-
-    this.el.dispatchEvent(
-      new CustomEvent('bartender-bar-before-close', {
-        bubbles: true,
-        detail: { bar: this },
-      }),
-    )
-
-    this.el.classList.remove('bartender-bar--open')
-    this.isOpened = false
-
-    await sleep(this.getTransitionDuration())
-    this.el.classList.add('bartender-bar--closed')
-
-    this.el.dispatchEvent(
-      new CustomEvent('bartender-bar-after-close', {
-        bubbles: true,
-        detail: { bar: this },
-      }),
-    )
-
-    if (this.debug) {
-      console.debug('Finished closing bar', this)
-    }
-
-    return this
-  }
-
-  /**
    * Scroll bar to the top
    */
   public scrollToTop(): this {
@@ -387,34 +405,5 @@ export class BartenderBar {
       parseFloat(window.getComputedStyle(this.el).transitionDuration || '0') *
       1000
     )
-  }
-
-  /**
-   * Handler for dialog click event
-   */
-  private onClick(event: MouseEvent): this {
-    const rect = this.el.getBoundingClientRect()
-
-    // Detect clicking on backdrop
-    if (
-      this.permanent === false &&
-      (rect.left > event.clientX ||
-        rect.right < event.clientX ||
-        rect.top > event.clientY ||
-        rect.bottom < event.clientY)
-    ) {
-      event.stopPropagation()
-
-      this.el.dispatchEvent(
-        new CustomEvent('bartender-bar-backdrop-click', {
-          bubbles: true,
-          detail: {
-            bar: this,
-          },
-        }),
-      )
-    }
-
-    return this
   }
 }
