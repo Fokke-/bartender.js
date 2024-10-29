@@ -58,7 +58,7 @@ export class Bartender {
     this.onKeydownHandler = ((event: KeyboardEvent): void => {
       if (event.key === 'Escape') {
         const openBar = this.getOpenBar()
-        if (openBar && openBar.permanent === true) {
+        if (openBar?.permanent === true) {
           event.preventDefault()
           return
         }
