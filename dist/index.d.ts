@@ -169,11 +169,11 @@ export declare type BartenderElementQuery = string | Element | null
 
 /** Additional options for opening the bar */
 export declare interface BartenderOpenOptions {
-    /** Close other bars? */
-    closeOtherBars?: boolean
+    /** Don't close other bars? */
+    keepOtherBars?: boolean
 
-    /** Open as modal? */
-    modal?: boolean
+    /** Open as a standard dialog instead of a modal? */
+    standardDialog?: boolean
 }
 
 export declare interface BartenderOptions {
