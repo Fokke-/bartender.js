@@ -332,7 +332,7 @@ export class BartenderBar {
    * Open bar
    */
   public async open(options: BartenderOpenOptions = {}): Promise<this> {
-    this.isModal = !!options.modal
+    this.isModal = options.standardDialog === false
 
     // Dispatch 'before open' event
     this.el.dispatchEvent(

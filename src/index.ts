@@ -1,3 +1,4 @@
+// TODO: export bar default options
 import './assets/bartender.scss'
 import { Bartender } from './lib/Bartender'
 import { BartenderBar } from './lib/BartenderBar'

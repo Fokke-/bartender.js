@@ -16,9 +16,6 @@ export default tseslint.config(
         extraFileExtensions: ['.vue'],
         sourceType: 'module',
       },
-      globals: {
-        google: 'readonly',
-      },
     },
     rules: {
       'no-empty-pattern': 0,

@@ -8,7 +8,7 @@ declare global {
   }
 }
 
-const bartender = new Bartender({ debug: true })
+const bartender = new Bartender({ debug: false })
 window.bartender = bartender
 
 bartender.addBar('left', {
@@ -40,8 +40,9 @@ const openButtons = document.querySelectorAll('.openButton')
 for (const button of Array.from(openButtons) as HTMLButtonElement[]) {
   button.addEventListener('click', () => {
     bartender.open(button.getAttribute('data-bar') || '', {
-      closeOtherBars: button.dataset.closeOtherBars === 'true',
-      modal: !button.dataset.modal || button.dataset.modal === 'true',
+      keepOtherBars: button.dataset.keepOtherBars === 'true' ? true : undefined,
+      standardDialog:
+        button.dataset.standardDialog === 'true' ? true : undefined,
     })
   })
 }
@@ -59,7 +60,7 @@ openAll?.addEventListener('click', async () => {
 
   for (const bar of bartender.bars) {
     await bartender.open(bar.name, {
-      closeOtherBars: false,
+      keepOtherBars: true,
     })
   }
 })
@@ -70,7 +71,7 @@ toggleAll?.addEventListener('click', async () => {
 
   for (const bar of bartender.bars) {
     await bartender.toggle(bar.name, {
-      closeOtherBars: false,
+      keepOtherBars: true,
     })
   }
 })

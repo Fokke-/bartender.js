@@ -265,12 +265,22 @@ export class Bartender {
     }
 
     options = {
-      closeOtherBars: true,
-      modal: true,
-      ...options,
+      keepOtherBars: false,
+      standardDialog: false,
+      ...Object.entries(options).reduce(
+        (acc, [key, value]) => {
+          if (typeof value === 'undefined') {
+            return acc
+          }
+
+          acc[key] = value
+          return acc
+        },
+        {} as Record<string, any>,
+      ),
     }
 
-    if (options.closeOtherBars === true) {
+    if (options.keepOtherBars === false) {
       this.closeAll()
     }
 

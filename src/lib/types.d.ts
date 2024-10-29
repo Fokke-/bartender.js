@@ -27,9 +27,9 @@ export interface BartenderBarOptions extends BartenderBarDefaultOptions {
 
 /** Additional options for opening the bar */
 export interface BartenderOpenOptions {
-  /** Close other bars? */
-  closeOtherBars?: boolean
+  /** Don't close other bars? */
+  keepOtherBars?: boolean
 
-  /** Open as modal? */
-  modal?: boolean
+  /** Open as a standard dialog instead of a modal? */
+  standardDialog?: boolean
 }

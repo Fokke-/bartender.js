@@ -210,13 +210,13 @@ Bar can be opened as a modal (default) or as a standard dialog.
 
 - Overlay shading will not be rendered.
 - Bar is not closeable by hitting `esc` key, regardless of the `permanent` setting of the bar.
-- Bar will not be closed when another bar is opened with `closeOtherBars: true`.
+- Bar will not be closed when another bar is opened with `keepOtherBars: true`.
 - Bar will not be closed when `Bartender.closeAll()` is called without any arguments.
 
-| Property       | Type    | Default | Description        |
-| -------------- | ------- | ------- | ------------------ |
-| closeOtherBars | boolean | true    | Close other bars?  |
-| modal          | boolean | true    | Open bar as modal? |
+| Property       | Type    | Default | Description                                   |
+| -------------- | ------- | ------- | --------------------------------------------- |
+| keepOtherBars  | boolean | false   | Don't close other bars?                       |
+| standardDialog | boolean | false   | Open as a standard dialog instead of a modal? |
 
 ```javascript
 // Open bar with default options, as modal
@@ -224,7 +224,7 @@ bartender.open('mobileNav')
 
 // Open bar as a standard dialog
 bartender.open('mobileNav', {
-  modal: false,
+  standardDialog: true,
 })
 ```
 
