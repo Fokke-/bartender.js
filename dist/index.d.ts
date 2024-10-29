@@ -135,10 +135,6 @@ export declare class BartenderBar {
      */
     close(): Promise<this>;
     /**
-     * Handler for dialog close event
-     */
-    private onClose;
-    /**
      * Scroll bar to the top
      */
     scrollToTop(): this;
@@ -146,10 +142,6 @@ export declare class BartenderBar {
      * Get transition duration in milliseconds
      */
     getTransitionDuration(): number;
-    /**
-     * Handler for dialog click event
-     */
-    private onClick;
 }
 
 export declare interface BartenderBarDefaultOptions {
