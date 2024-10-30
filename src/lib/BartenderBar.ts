@@ -1,8 +1,4 @@
-import type {
-  BartenderBarOptions,
-  BartenderBarPosition,
-  BartenderOpenOptions,
-} from './types'
+import type { BartenderBarOptions, BartenderBarPosition } from './types'
 import { BartenderError } from './BartenderError'
 import { resolveElement, sleep } from './utils'
 
@@ -25,6 +21,9 @@ export class BartenderBar {
   /** Bar position */
   private _position: BartenderBarPosition = 'left'
 
+  /** Is the bar a modal? */
+  private _modal = true
+
   /** Enable overlay? */
   private _overlay = true
 
@@ -36,9 +35,6 @@ export class BartenderBar {
 
   /** Is the bar currently open? */
   private isOpened = false
-
-  /** Is the bar opened in modal mode? */
-  public isModal = true
 
   /** Handler for dialog close event */
   private onCloseHandler
@@ -72,6 +68,7 @@ export class BartenderBar {
     this.el.classList.add('bartender-bar', 'bartender-bar--closed')
 
     this.position = options.position ?? this._position
+    this.modal = options.modal ?? this._modal
     this.overlay = options.overlay ?? this._overlay
     this.permanent = options.permanent ?? this._permanent
     this.scrollTop = options.scrollTop ?? this._scrollTop
@@ -235,6 +232,34 @@ export class BartenderBar {
     }
   }
 
+  /** Is the bar a modal? */
+  public get modal() {
+    return this._modal
+  }
+
+  public set modal(val: boolean) {
+    this._modal = val
+
+    if (this.initialized === false) {
+      return
+    }
+
+    this.el.dispatchEvent(
+      new CustomEvent('bartender-bar-updated', {
+        bubbles: true,
+        detail: {
+          bar: this,
+          property: 'modal',
+          value: val,
+        },
+      }),
+    )
+
+    if (this.debug) {
+      console.debug('Updated bar modal setting', this)
+    }
+  }
+
   /** Enable overlay? */
   public get overlay() {
     return this._overlay
@@ -331,9 +356,7 @@ export class BartenderBar {
   /**
    * Open bar
    */
-  public async open(options: BartenderOpenOptions = {}): Promise<this> {
-    this.isModal = options.standardDialog === false
-
+  public async open(): Promise<this> {
     // Dispatch 'before open' event
     this.el.dispatchEvent(
       new CustomEvent('bartender-bar-before-open', {
@@ -346,7 +369,7 @@ export class BartenderBar {
       console.debug('Opening bar', this)
     }
 
-    if (this.isModal === true) {
+    if (this.modal === true) {
       this.el.showModal()
     } else {
       this.el.show()

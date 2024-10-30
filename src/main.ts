@@ -1,3 +1,4 @@
+import { type BartenderBarPosition } from './lib/types'
 import { Bartender } from './lib/Bartender'
 import './assets/bartender.scss'
 import './assets/styles.scss'
@@ -8,49 +9,36 @@ declare global {
   }
 }
 
-const bartender = new Bartender({ debug: false })
+const bartender = new Bartender({ debug: true })
 window.bartender = bartender
 
-bartender.addBar('left', {
-  el: '.bar--left',
-  position: 'left',
-})
-
-bartender.addBar('right', {
-  el: '.bar--right',
-  position: 'right',
-})
-
-bartender.addBar('right-sub', {
-  el: '.bar--right-sub',
-  position: 'right',
-})
-
-bartender.addBar('top', {
-  el: '.bar--top',
-  position: 'top',
-})
-
-bartender.addBar('bottom', {
-  el: '.bar--bottom',
-  position: 'bottom',
-})
-
-const openButtons = document.querySelectorAll('.openButton')
-for (const button of Array.from(openButtons) as HTMLButtonElement[]) {
-  button.addEventListener('click', () => {
-    bartender.open(button.getAttribute('data-bar') || '', {
-      keepOtherBars: button.dataset.keepOtherBars === 'true' ? true : undefined,
-      standardDialog:
-        button.dataset.standardDialog === 'true' ? true : undefined,
-    })
+const dialogEls = document.querySelectorAll('dialog')
+for (const el of Array.from(dialogEls)) {
+  bartender.addBar(el.dataset.name || '', {
+    el,
+    position: el.dataset.position as BartenderBarPosition,
+    modal: el.dataset.modal === 'true' ? true : false,
   })
 }
 
-const closeButtons = document.querySelectorAll('.closeButton')
+const openButtons = document.querySelectorAll(
+  '.openButton',
+) as NodeListOf<HTMLButtonElement>
+for (const button of Array.from(openButtons)) {
+  button.addEventListener('click', () => {
+    bartender.open(
+      button.getAttribute('data-bar') || '',
+      button.dataset.keepOtherBarsOpen === 'true' ? true : false,
+    )
+  })
+}
+
+const closeButtons = document.querySelectorAll(
+  '.closeButton',
+) as NodeListOf<HTMLButtonElement>
 for (const button of Array.from(closeButtons)) {
   button.addEventListener('click', () => {
-    bartender.close()
+    bartender.close(button.dataset.bar)
   })
 }
 
@@ -59,9 +47,7 @@ openAll?.addEventListener('click', async () => {
   console.table(bartender.bars)
 
   for (const bar of bartender.bars) {
-    await bartender.open(bar.name, {
-      keepOtherBars: true,
-    })
+    await bartender.open(bar.name, true)
   }
 })
 
@@ -70,8 +56,6 @@ toggleAll?.addEventListener('click', async () => {
   console.table(bartender.bars)
 
   for (const bar of bartender.bars) {
-    await bartender.toggle(bar.name, {
-      keepOtherBars: true,
-    })
+    await bartender.toggle(bar.name, true)
   }
 })

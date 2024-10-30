@@ -2,10 +2,10 @@ import type {
   BartenderOptions,
   BartenderBarDefaultOptions,
   BartenderBarOptions,
-  BartenderOpenOptions,
 } from './types'
 import { BartenderError } from './BartenderError'
 import { BartenderBar } from './BartenderBar'
+import { parseOptions } from './utils'
 
 /**
  * Class for creating accessible off-canvas bars.
@@ -57,7 +57,7 @@ export class Bartender {
     // Handler for keydown events
     this.onKeydownHandler = ((event: KeyboardEvent): void => {
       if (event.key === 'Escape') {
-        const openBar = this.getOpenBar()
+        const openBar = this.getOpenBar(true)
         if (openBar?.permanent === true) {
           event.preventDefault()
           return
@@ -69,7 +69,7 @@ export class Bartender {
     this.onBarBeforeOpenHandler = (event: CustomEvent): void => {
       this.openBars.push(event.detail.bar)
 
-      if (this.openBars.some((bar) => bar.isModal === true)) {
+      if (this.openBars.some((bar) => bar.modal === true)) {
         document.body.classList.add('bartender-disable-scroll')
       }
 
@@ -84,14 +84,14 @@ export class Bartender {
         document.body.classList.remove('bartender-open')
       }
 
-      if (!this.openBars.some((bar) => bar.isModal === true)) {
+      if (!this.openBars.some((bar) => bar.modal === true)) {
         document.body.classList.remove('bartender-disable-scroll')
       }
     }
 
     // Handler for bartender-bar-backdrop-click events
     this.onBarBackdropClickHandler = (event: CustomEvent): void => {
-      if (this.getOpenBar()?.name !== event.detail.bar.name) {
+      if (this.getOpenBar(true)?.name !== event.detail.bar.name) {
         return
       }
 
@@ -139,21 +139,27 @@ export class Bartender {
   }
 
   /**
-   * Get bar instance by name
+   * Get bar instance by name.
    */
   public getBar(name: string): BartenderBar | null {
     return this.bars.find((item) => item.name === name) || null
   }
 
   /**
-   * Get the topmost open bar instance
+   * Get the topmost open bar instance.
    */
-  private getOpenBar(): BartenderBar | null {
-    if (!this.openBars.length) {
+  private getOpenBar(
+    modal: boolean | undefined = undefined,
+  ): BartenderBar | null {
+    const openBars =
+      typeof modal === 'boolean'
+        ? this.openBars.filter((bar) => bar.modal === modal)
+        : this.openBars
+    if (!openBars.length) {
       return null
     }
 
-    return this.openBars[this.openBars.length - 1]
+    return openBars[openBars.length - 1]
   }
 
   /**
@@ -171,17 +177,7 @@ export class Bartender {
     // Create a new bar
     const bar = new BartenderBar(name, {
       ...this.barDefaultOptions,
-      ...Object.entries(options).reduce(
-        (acc, [key, value]) => {
-          if (typeof value === 'undefined') {
-            return acc
-          }
-
-          acc[key] = value
-          return acc
-        },
-        {} as Record<string, any>,
-      ),
+      ...parseOptions(options),
     })
 
     // Set debug mode
@@ -252,7 +248,7 @@ export class Bartender {
    */
   public async open(
     bar: BartenderBar | string,
-    options: BartenderOpenOptions = {},
+    keepOtherBarsOpen: boolean = false,
   ): Promise<BartenderBar> {
     const targetBar = (() => {
       if (bar instanceof BartenderBar) {
@@ -274,27 +270,11 @@ export class Bartender {
       return targetBar
     }
 
-    options = {
-      keepOtherBars: false,
-      standardDialog: false,
-      ...Object.entries(options).reduce(
-        (acc, [key, value]) => {
-          if (typeof value === 'undefined') {
-            return acc
-          }
-
-          acc[key] = value
-          return acc
-        },
-        {} as Record<string, any>,
-      ),
-    }
-
-    if (options.keepOtherBars === false) {
+    if (keepOtherBarsOpen === false) {
       this.closeAll()
     }
 
-    await targetBar.open(options)
+    await targetBar.open()
     return targetBar
   }
 
@@ -337,7 +317,7 @@ export class Bartender {
    */
   public async closeAll(closeNonModalBars: boolean = false): Promise<this> {
     const barNames = this.openBars.reduce((acc, item) => {
-      if (closeNonModalBars === false && item.isModal === false) {
+      if (closeNonModalBars === false && item.modal === false) {
         return acc
       }
 
@@ -361,7 +341,7 @@ export class Bartender {
    */
   public async toggle(
     bar?: BartenderBar | string,
-    options: BartenderOpenOptions = {},
+    keepOtherBarsOpen: boolean = false,
   ): Promise<BartenderBar | null> {
     const targetBar = (() => {
       if (bar instanceof BartenderBar) {
@@ -381,7 +361,7 @@ export class Bartender {
 
     return targetBar.isOpen() === true
       ? await this.close(targetBar)
-      : await this.open(targetBar, options)
+      : await this.open(targetBar, keepOtherBarsOpen)
   }
 
   /**

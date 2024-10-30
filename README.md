@@ -112,6 +112,7 @@ document.querySelector('.closeMobileNav').addEventListener('click', (event) => {
 | Property  | Type                                   | Default | Description                                                     |
 | --------- | -------------------------------------- | ------- | --------------------------------------------------------------- |
 | position  | 'left' \| 'right' \| 'top' \| 'bottom' | 'left'  | Bar position                                                    |
+| modal     | boolean                                | true    | Open bar as a modal?                                            |
 | overlay   | boolean                                | true    | Show shading overlay over content wrap when bar is open.        |
 | permanent | boolean                                | false   | Bar is not closeable by clicking overlay of pressing `esc` key. |
 | scrollTop | boolean                                | true    | Bar will be scrolled to top after opening it.                   |
@@ -139,17 +140,40 @@ Get bar instance by name.
 bartender.getBar('mobileNav')
 ```
 
-### getOpenBar(): BartenderBar | null
+### getOpenBar(modal: boolean | undefined = undefined): BartenderBar | null
 
-Get the topmost open bar instance
+Get the topmost open bar instance.
+
+| Argument | Type                 | Default | Description                                                                                                             |
+| -------- | -------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------- |
+| modal    | boolean \| undefined |         | `undefined` -> Search from all bars. `true` -> Search from modal bars only. `false` -> Search from non-modal bars only. |
 
 ```javascript
+// Get the topmost open bar, regardless of the modal state
 bartender.getOpenBar()
+
+// Get the topmost open modal bar
+bartender.getOpenBar(true)
+
+// Get the topmost open non-modal bar
+bartender.getOpenBar(false)
 ```
 
 ### addBar(name: string, options: BartenderBarOptions = {}): BartenderBar
 
 Add a new bar.
+
+Bar can be defined as modal or as a standard dialog.
+
+- **In modal mode (default)** focus will be trapped to the bar and interaction with elements outside the bar will be disabled.
+- **In standard dialog mode** bar will open as a fixed element and interaction with elements outside the bar is allowed. This mode can be useful if you plan to keep the bar as a permanent component of your layout.
+
+Note that in standard dialog mode the following exceptions will take place:
+
+- Overlay shading will not be rendered.
+- Bar is not closeable by hitting `esc` key, regardless of the `permanent` setting of the bar.
+- Bar will not be closed when another bar is opened with `keepOtherBars: true`.
+- Bar will not be closed when `Bartender.closeAll()` is called without any arguments.
 
 | Argument | Type                | Default | Description                                   |
 | -------- | ------------------- | ------- | --------------------------------------------- |
@@ -162,6 +186,7 @@ Add a new bar.
 | --------- | -------------------------------------- | ------- | --------------------------------------------------------------- |
 | el        | string \| element                      |         | Bar element as selector string or reference to the element.     |
 | position  | 'left' \| 'right' \| 'top' \| 'bottom' | 'left'  | Bar position                                                    |
+| modal     | boolean                                | true    | Open bar as a modal?                                            |
 | overlay   | boolean                                | true    | Show shading overlay over content wrap when bar is open.        |
 | permanent | boolean                                | false   | Bar is not closeable by clicking overlay of pressing `esc` key. |
 | scrollTop | boolean                                | true    | Bar will be scrolled to top after opening it.                   |
@@ -191,41 +216,21 @@ Remove bar instance by name.
 bartender.removeBar('mobileNav')
 ```
 
-### async open(bar: BartenderBar | string, options: BartenderOpenOptions = {}): Promise\<BartenderBar\>
+### async open(bar: BartenderBar | string, keepOtherBarsOpen: boolean = false): Promise\<BartenderBar\>
 
 Open bar. Resolves after bar has opened.
 
-| Argument | Type                   | Default | Description                                           |
-| -------- | ---------------------- | ------- | ----------------------------------------------------- |
-| bar      | BartenderBar \| string |         | Bar instance or name                                  |
-| options  | BartenderOpenOptions   | {}      | [Additional options](#interface-bartenderopenoptions) |
-
-#### Interface BartenderOpenOptions
-
-Bar can be opened as a modal (default) or as a standard dialog.
-
-**In modal mode** focus will be trapped to the bar and interaction with elements outside the bar will be disabled.
-
-**In standard dialog mode** bar will open as a fixed element and interaction with elements outside the bar is allowed. This mode can be useful if you plan to keep the bar as a permanent component of your layout. Note that in standard dialog mode the following exceptions will take place:
-
-- Overlay shading will not be rendered.
-- Bar is not closeable by hitting `esc` key, regardless of the `permanent` setting of the bar.
-- Bar will not be closed when another bar is opened with `keepOtherBars: true`.
-- Bar will not be closed when `Bartender.closeAll()` is called without any arguments.
-
-| Property       | Type    | Default | Description                                   |
-| -------------- | ------- | ------- | --------------------------------------------- |
-| keepOtherBars  | boolean | false   | Don't close other bars?                       |
-| standardDialog | boolean | false   | Open as a standard dialog instead of a modal? |
+| Argument          | Type                   | Default | Description                     |
+| ----------------- | ---------------------- | ------- | ------------------------------- |
+| bar               | BartenderBar \| string |         | Bar instance or name            |
+| keepOtherBarsOpen | boolean                | false   | Keep other non-modal bars open? |
 
 ```javascript
 // Open bar with default options, as modal
 bartender.open('mobileNav')
 
-// Open bar as a standard dialog
-bartender.open('mobileNav', {
-  standardDialog: true,
-})
+// Open bar, but don't close other bars
+bartender.open('mobileNav', true)
 ```
 
 ### async close(bar?: BartenderBar | string): Promise<BartenderBar | null>
@@ -260,23 +265,21 @@ bartender.closeAll()
 bartender.closeAll(true)
 ```
 
-### async toggle(bar?: BartenderBar | string, options: BartenderOpenOptions = {}): Promise<BartenderBar | null>
+### async toggle(bar?: BartenderBar | string, keepOtherBarsOpen: boolean = false): Promise<BartenderBar | null>
 
 Toggle bar open/closed state. Resolves after the bar has opened or closed.
 
-| Argument | Type                   | Default | Description                                           |
-| -------- | ---------------------- | ------- | ----------------------------------------------------- |
-| bar      | BartenderBar \| string |         | Bar instance or name                                  |
-| options  | BartenderOpenOptions   | {}      | [Additional options](#interface-bartenderopenoptions) |
+| Argument          | Type                   | Default | Description                     |
+| ----------------- | ---------------------- | ------- | ------------------------------- |
+| bar               | BartenderBar \| string |         | Bar instance or name            |
+| keepOtherBarsOpen | boolean                | false   | Keep other non-modal bars open? |
 
 ```javascript
 // Toggle bar with default options, as modal
 bartender.toggle('mobileNav')
 
-// Toggle bar as a standard dialog
-bartender.toggle('mobileNav', {
-  modal: false,
-})
+// Toggle bar, but don't close other bars
+bartender.toggle('mobileNav', true)
 ```
 
 ### destroy(): this

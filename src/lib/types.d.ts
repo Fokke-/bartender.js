@@ -10,6 +10,9 @@ export interface BartenderBarDefaultOptions {
   /** Bar position */
   position?: BartenderBarPosition
 
+  /** Open bar as a modal? */
+  modal?: boolean
+
   /** Show shading overlay over content wrap when bar is open. */
   overlay?: boolean
 
@@ -23,13 +26,4 @@ export interface BartenderBarDefaultOptions {
 export interface BartenderBarOptions extends BartenderBarDefaultOptions {
   /** Bar element as selector string or reference to the element. */
   el?: BartenderElementQuery
-}
-
-/** Additional options for opening the bar */
-export interface BartenderOpenOptions {
-  /** Don't close other bars? */
-  keepOtherBars?: boolean
-
-  /** Open as a standard dialog instead of a modal? */
-  standardDialog?: boolean
 }
