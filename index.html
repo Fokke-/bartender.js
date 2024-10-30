@@ -13,7 +13,7 @@
     <main class="main">
       <h1>Bartender.js</h1>
       <section class="section">
-        <h2>Open as a modal</h2>
+        <h2>Modal bars</h2>
         <div class="buttonList">
           <button type="button" class="button openButton" data-bar="left">
             Left
@@ -29,37 +29,33 @@
           </button>
         </div>
 
-        <h2>Open as a standard dialog</h2>
+        <h2>Non-modal bars</h2>
         <div class="buttonList">
           <button
             type="button"
             class="button openButton"
-            data-bar="left"
-            data-standard-dialog="true"
+            data-bar="left-standard"
           >
             Left
           </button>
           <button
             type="button"
             class="button openButton"
-            data-bar="right"
-            data-standard-dialog="true"
+            data-bar="right-standard"
           >
             Right
           </button>
           <button
             type="button"
             class="button openButton"
-            data-bar="top"
-            data-standard-dialog="true"
+            data-bar="top-standard"
           >
             Top
           </button>
           <button
             type="button"
             class="button openButton"
-            data-bar="bottom"
-            data-standard-dialog="true"
+            data-bar="bottom-standard"
           >
             Bottom
           </button>
@@ -195,133 +191,41 @@
     <div class="toolBar toolBar--fixed toolBar--bottom">
       Fixed toolbar <button type="button">Button</button>
     </div>
-    <dialog class="bar bar--left">
-      <button class="bar__button closeButton" type="button">Close</button>
+
+    <!-- Modal bars -->
+    <dialog
+      class="bar bar--left"
+      data-name="left"
+      data-position="left"
+      data-modal="true"
+    >
+      <h2>Left (modal)</h2>
+      <button class="bar__button closeButton" type="button" data-bar="left">
+        Close
+      </button>
       <p>
         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt dicta
         magnam temporibus rerum veniam quisquam itaque alias labore nemo, cum
         aspernatur, consequatur nam at similique molestiae. Officia at soluta
         ex.
-      </p>
-      <p>
-        Mollitia eveniet eum necessitatibus tenetur iusto? Minima, dignissimos
-        ea quod laudantium ut laborum? Saepe expedita ipsum voluptatum vitae
-        error omnis ipsa voluptas. Sunt natus vitae, perferendis corrupti minima
-        ipsa quibusdam.
-      </p>
-      <p>
-        Eos, quos corporis. Itaque quibusdam magnam cum veniam facere quod
-        similique consequuntur explicabo dolores, quas, harum consequatur fugiat
-        voluptate labore porro odit possimus provident doloribus quam
-        necessitatibus eius. Veniam, rerum!
-      </p>
-      <p>
-        Reprehenderit mollitia autem, nostrum pariatur deleniti incidunt
-        provident assumenda. Esse molestias quos quisquam voluptate repellat
-        amet deleniti laboriosam, dignissimos itaque eligendi eveniet, illo
-        velit totam ut ipsam quaerat obcaecati ducimus.
-      </p>
-      <p>
-        In quis, molestiae eos vero veritatis explicabo autem laborum possimus
-        corporis accusamus consequatur quidem asperiores nihil ipsa?
-        Perspiciatis praesentium veniam pariatur, laudantium maiores nulla
-        tenetur sit aut, animi omnis eos.
-      </p>
-      <p>
-        Odit eveniet at a assumenda harum et! Molestias aperiam officia delectus
-        veniam ex voluptas doloremque, inventore numquam nostrum laudantium
-        ratione dolore ut impedit, quaerat esse quisquam? Itaque beatae nisi
-        earum?
-      </p>
-      <p>
-        Dolorem temporibus illum alias? Vitae, cumque! Iusto culpa facere illo
-        quisquam, dolores adipisci ullam inventore praesentium et tempore.
-        Praesentium, consequuntur id! Dignissimos minima doloribus labore
-        nesciunt laboriosam rerum quam! Iure?
-      </p>
-      <p>
-        Iure veniam sunt quas dolorum, commodi, dolores dolor ducimus nam rem
-        illum facere doloribus. Possimus hic aperiam dicta. Dignissimos eaque
-        sapiente odit dolores quas nulla mollitia suscipit placeat enim iste.
-      </p>
-      <p>
-        Asperiores eius perspiciatis enim saepe autem sapiente numquam ad quo
-        facere facilis necessitatibus a, labore accusamus officiis veritatis
-        voluptate, quaerat expedita dolor odio qui totam ullam! Fugiat explicabo
-        dolor nihil.
-      </p>
-      <p>
-        Id esse praesentium quo. Voluptatem facilis, ratione sit obcaecati nulla
-        in quae velit incidunt ipsam dolores et esse quas a, ducimus ad, placeat
-        natus possimus doloribus nesciunt architecto. Nostrum, similique!
-      </p>
-      <p>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt dicta
-        magnam temporibus rerum veniam quisquam itaque alias labore nemo, cum
-        aspernatur, consequatur nam at similique molestiae. Officia at soluta
-        ex.
-      </p>
-      <p>
-        Mollitia eveniet eum necessitatibus tenetur iusto? Minima, dignissimos
-        ea quod laudantium ut laborum? Saepe expedita ipsum voluptatum vitae
-        error omnis ipsa voluptas. Sunt natus vitae, perferendis corrupti minima
-        ipsa quibusdam.
-      </p>
-      <p>
-        Eos, quos corporis. Itaque quibusdam magnam cum veniam facere quod
-        similique consequuntur explicabo dolores, quas, harum consequatur fugiat
-        voluptate labore porro odit possimus provident doloribus quam
-        necessitatibus eius. Veniam, rerum!
-      </p>
-      <p>
-        Reprehenderit mollitia autem, nostrum pariatur deleniti incidunt
-        provident assumenda. Esse molestias quos quisquam voluptate repellat
-        amet deleniti laboriosam, dignissimos itaque eligendi eveniet, illo
-        velit totam ut ipsam quaerat obcaecati ducimus.
-      </p>
-      <p>
-        In quis, molestiae eos vero veritatis explicabo autem laborum possimus
-        corporis accusamus consequatur quidem asperiores nihil ipsa?
-        Perspiciatis praesentium veniam pariatur, laudantium maiores nulla
-        tenetur sit aut, animi omnis eos.
-      </p>
-      <p>
-        Odit eveniet at a assumenda harum et! Molestias aperiam officia delectus
-        veniam ex voluptas doloremque, inventore numquam nostrum laudantium
-        ratione dolore ut impedit, quaerat esse quisquam? Itaque beatae nisi
-        earum?
-      </p>
-      <p>
-        Dolorem temporibus illum alias? Vitae, cumque! Iusto culpa facere illo
-        quisquam, dolores adipisci ullam inventore praesentium et tempore.
-        Praesentium, consequuntur id! Dignissimos minima doloribus labore
-        nesciunt laboriosam rerum quam! Iure?
-      </p>
-      <p>
-        Iure veniam sunt quas dolorum, commodi, dolores dolor ducimus nam rem
-        illum facere doloribus. Possimus hic aperiam dicta. Dignissimos eaque
-        sapiente odit dolores quas nulla mollitia suscipit placeat enim iste.
-      </p>
-      <p>
-        Asperiores eius perspiciatis enim saepe autem sapiente numquam ad quo
-        facere facilis necessitatibus a, labore accusamus officiis veritatis
-        voluptate, quaerat expedita dolor odio qui totam ullam! Fugiat explicabo
-        dolor nihil.
-      </p>
-      <p>
-        Id esse praesentium quo. Voluptatem facilis, ratione sit obcaecati nulla
-        in quae velit incidunt ipsam dolores et esse quas a, ducimus ad, placeat
-        natus possimus doloribus nesciunt architecto. Nostrum, similique!
       </p>
     </dialog>
-    <dialog class="bar bar--right">
+    <dialog
+      class="bar bar--right"
+      data-name="right"
+      data-position="right"
+      data-modal="true"
+    >
+      <h2>Right (modal)</h2>
       <div class="buttonList">
-        <button class="bar__button closeButton" type="button">Close</button>
+        <button class="bar__button closeButton" type="button" data-bar="right">
+          Close
+        </button>
         <button
           type="button"
           class="button openButton"
           data-bar="right-sub"
-          data-keep-other-bars="true"
+          data-keep-other-bars-open="true"
         >
           Right subbar
         </button>
@@ -332,474 +236,149 @@
         aspernatur, consequatur nam at similique molestiae. Officia at soluta
         ex.
       </p>
-      <p>
-        Mollitia eveniet eum necessitatibus tenetur iusto? Minima, dignissimos
-        ea quod laudantium ut laborum? Saepe expedita ipsum voluptatum vitae
-        error omnis ipsa voluptas. Sunt natus vitae, perferendis corrupti minima
-        ipsa quibusdam.
-      </p>
-      <p>
-        Eos, quos corporis. Itaque quibusdam magnam cum veniam facere quod
-        similique consequuntur explicabo dolores, quas, harum consequatur fugiat
-        voluptate labore porro odit possimus provident doloribus quam
-        necessitatibus eius. Veniam, rerum!
-      </p>
-      <p>
-        Reprehenderit mollitia autem, nostrum pariatur deleniti incidunt
-        provident assumenda. Esse molestias quos quisquam voluptate repellat
-        amet deleniti laboriosam, dignissimos itaque eligendi eveniet, illo
-        velit totam ut ipsam quaerat obcaecati ducimus.
-      </p>
-      <p>
-        In quis, molestiae eos vero veritatis explicabo autem laborum possimus
-        corporis accusamus consequatur quidem asperiores nihil ipsa?
-        Perspiciatis praesentium veniam pariatur, laudantium maiores nulla
-        tenetur sit aut, animi omnis eos.
-      </p>
-      <p>
-        Odit eveniet at a assumenda harum et! Molestias aperiam officia delectus
-        veniam ex voluptas doloremque, inventore numquam nostrum laudantium
-        ratione dolore ut impedit, quaerat esse quisquam? Itaque beatae nisi
-        earum?
-      </p>
-      <p>
-        Dolorem temporibus illum alias? Vitae, cumque! Iusto culpa facere illo
-        quisquam, dolores adipisci ullam inventore praesentium et tempore.
-        Praesentium, consequuntur id! Dignissimos minima doloribus labore
-        nesciunt laboriosam rerum quam! Iure?
-      </p>
-      <p>
-        Iure veniam sunt quas dolorum, commodi, dolores dolor ducimus nam rem
-        illum facere doloribus. Possimus hic aperiam dicta. Dignissimos eaque
-        sapiente odit dolores quas nulla mollitia suscipit placeat enim iste.
-      </p>
-      <p>
-        Asperiores eius perspiciatis enim saepe autem sapiente numquam ad quo
-        facere facilis necessitatibus a, labore accusamus officiis veritatis
-        voluptate, quaerat expedita dolor odio qui totam ullam! Fugiat explicabo
-        dolor nihil.
-      </p>
-      <p>
-        Id esse praesentium quo. Voluptatem facilis, ratione sit obcaecati nulla
-        in quae velit incidunt ipsam dolores et esse quas a, ducimus ad, placeat
-        natus possimus doloribus nesciunt architecto. Nostrum, similique!
-      </p>
-      <p>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt dicta
-        magnam temporibus rerum veniam quisquam itaque alias labore nemo, cum
-        aspernatur, consequatur nam at similique molestiae. Officia at soluta
-        ex.
-      </p>
-      <p>
-        Mollitia eveniet eum necessitatibus tenetur iusto? Minima, dignissimos
-        ea quod laudantium ut laborum? Saepe expedita ipsum voluptatum vitae
-        error omnis ipsa voluptas. Sunt natus vitae, perferendis corrupti minima
-        ipsa quibusdam.
-      </p>
-      <p>
-        Eos, quos corporis. Itaque quibusdam magnam cum veniam facere quod
-        similique consequuntur explicabo dolores, quas, harum consequatur fugiat
-        voluptate labore porro odit possimus provident doloribus quam
-        necessitatibus eius. Veniam, rerum!
-      </p>
-      <p>
-        Reprehenderit mollitia autem, nostrum pariatur deleniti incidunt
-        provident assumenda. Esse molestias quos quisquam voluptate repellat
-        amet deleniti laboriosam, dignissimos itaque eligendi eveniet, illo
-        velit totam ut ipsam quaerat obcaecati ducimus.
-      </p>
-      <p>
-        In quis, molestiae eos vero veritatis explicabo autem laborum possimus
-        corporis accusamus consequatur quidem asperiores nihil ipsa?
-        Perspiciatis praesentium veniam pariatur, laudantium maiores nulla
-        tenetur sit aut, animi omnis eos.
-      </p>
-      <p>
-        Odit eveniet at a assumenda harum et! Molestias aperiam officia delectus
-        veniam ex voluptas doloremque, inventore numquam nostrum laudantium
-        ratione dolore ut impedit, quaerat esse quisquam? Itaque beatae nisi
-        earum?
-      </p>
-      <p>
-        Dolorem temporibus illum alias? Vitae, cumque! Iusto culpa facere illo
-        quisquam, dolores adipisci ullam inventore praesentium et tempore.
-        Praesentium, consequuntur id! Dignissimos minima doloribus labore
-        nesciunt laboriosam rerum quam! Iure?
-      </p>
-      <p>
-        Iure veniam sunt quas dolorum, commodi, dolores dolor ducimus nam rem
-        illum facere doloribus. Possimus hic aperiam dicta. Dignissimos eaque
-        sapiente odit dolores quas nulla mollitia suscipit placeat enim iste.
-      </p>
-      <p>
-        Asperiores eius perspiciatis enim saepe autem sapiente numquam ad quo
-        facere facilis necessitatibus a, labore accusamus officiis veritatis
-        voluptate, quaerat expedita dolor odio qui totam ullam! Fugiat explicabo
-        dolor nihil.
-      </p>
-      <p>
-        Id esse praesentium quo. Voluptatem facilis, ratione sit obcaecati nulla
-        in quae velit incidunt ipsam dolores et esse quas a, ducimus ad, placeat
-        natus possimus doloribus nesciunt architecto. Nostrum, similique!
-      </p>
     </dialog>
-    <dialog class="bar bar--right-sub">
-      <h2>I'm a subbar</h2>
+    <dialog
+      class="bar bar--right-sub"
+      data-name="right-sub"
+      data-position="right"
+      data-modal="true"
+    >
+      <h2>Right sub-bar (modal)</h2>
 
-      <button class="bar__button closeButton" type="button">Close</button>
+      <button
+        class="bar__button closeButton"
+        type="button"
+        data-bar="right-sub"
+      >
+        Close
+      </button>
       <p>
         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt dicta
         magnam temporibus rerum veniam quisquam itaque alias labore nemo, cum
         aspernatur, consequatur nam at similique molestiae. Officia at soluta
         ex.
-      </p>
-      <p>
-        Mollitia eveniet eum necessitatibus tenetur iusto? Minima, dignissimos
-        ea quod laudantium ut laborum? Saepe expedita ipsum voluptatum vitae
-        error omnis ipsa voluptas. Sunt natus vitae, perferendis corrupti minima
-        ipsa quibusdam.
-      </p>
-      <p>
-        Eos, quos corporis. Itaque quibusdam magnam cum veniam facere quod
-        similique consequuntur explicabo dolores, quas, harum consequatur fugiat
-        voluptate labore porro odit possimus provident doloribus quam
-        necessitatibus eius. Veniam, rerum!
-      </p>
-      <p>
-        Reprehenderit mollitia autem, nostrum pariatur deleniti incidunt
-        provident assumenda. Esse molestias quos quisquam voluptate repellat
-        amet deleniti laboriosam, dignissimos itaque eligendi eveniet, illo
-        velit totam ut ipsam quaerat obcaecati ducimus.
-      </p>
-      <p>
-        In quis, molestiae eos vero veritatis explicabo autem laborum possimus
-        corporis accusamus consequatur quidem asperiores nihil ipsa?
-        Perspiciatis praesentium veniam pariatur, laudantium maiores nulla
-        tenetur sit aut, animi omnis eos.
-      </p>
-      <p>
-        Odit eveniet at a assumenda harum et! Molestias aperiam officia delectus
-        veniam ex voluptas doloremque, inventore numquam nostrum laudantium
-        ratione dolore ut impedit, quaerat esse quisquam? Itaque beatae nisi
-        earum?
-      </p>
-      <p>
-        Dolorem temporibus illum alias? Vitae, cumque! Iusto culpa facere illo
-        quisquam, dolores adipisci ullam inventore praesentium et tempore.
-        Praesentium, consequuntur id! Dignissimos minima doloribus labore
-        nesciunt laboriosam rerum quam! Iure?
-      </p>
-      <p>
-        Iure veniam sunt quas dolorum, commodi, dolores dolor ducimus nam rem
-        illum facere doloribus. Possimus hic aperiam dicta. Dignissimos eaque
-        sapiente odit dolores quas nulla mollitia suscipit placeat enim iste.
-      </p>
-      <p>
-        Asperiores eius perspiciatis enim saepe autem sapiente numquam ad quo
-        facere facilis necessitatibus a, labore accusamus officiis veritatis
-        voluptate, quaerat expedita dolor odio qui totam ullam! Fugiat explicabo
-        dolor nihil.
-      </p>
-      <p>
-        Id esse praesentium quo. Voluptatem facilis, ratione sit obcaecati nulla
-        in quae velit incidunt ipsam dolores et esse quas a, ducimus ad, placeat
-        natus possimus doloribus nesciunt architecto. Nostrum, similique!
-      </p>
-      <p>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt dicta
-        magnam temporibus rerum veniam quisquam itaque alias labore nemo, cum
-        aspernatur, consequatur nam at similique molestiae. Officia at soluta
-        ex.
-      </p>
-      <p>
-        Mollitia eveniet eum necessitatibus tenetur iusto? Minima, dignissimos
-        ea quod laudantium ut laborum? Saepe expedita ipsum voluptatum vitae
-        error omnis ipsa voluptas. Sunt natus vitae, perferendis corrupti minima
-        ipsa quibusdam.
-      </p>
-      <p>
-        Eos, quos corporis. Itaque quibusdam magnam cum veniam facere quod
-        similique consequuntur explicabo dolores, quas, harum consequatur fugiat
-        voluptate labore porro odit possimus provident doloribus quam
-        necessitatibus eius. Veniam, rerum!
-      </p>
-      <p>
-        Reprehenderit mollitia autem, nostrum pariatur deleniti incidunt
-        provident assumenda. Esse molestias quos quisquam voluptate repellat
-        amet deleniti laboriosam, dignissimos itaque eligendi eveniet, illo
-        velit totam ut ipsam quaerat obcaecati ducimus.
-      </p>
-      <p>
-        In quis, molestiae eos vero veritatis explicabo autem laborum possimus
-        corporis accusamus consequatur quidem asperiores nihil ipsa?
-        Perspiciatis praesentium veniam pariatur, laudantium maiores nulla
-        tenetur sit aut, animi omnis eos.
-      </p>
-      <p>
-        Odit eveniet at a assumenda harum et! Molestias aperiam officia delectus
-        veniam ex voluptas doloremque, inventore numquam nostrum laudantium
-        ratione dolore ut impedit, quaerat esse quisquam? Itaque beatae nisi
-        earum?
-      </p>
-      <p>
-        Dolorem temporibus illum alias? Vitae, cumque! Iusto culpa facere illo
-        quisquam, dolores adipisci ullam inventore praesentium et tempore.
-        Praesentium, consequuntur id! Dignissimos minima doloribus labore
-        nesciunt laboriosam rerum quam! Iure?
-      </p>
-      <p>
-        Iure veniam sunt quas dolorum, commodi, dolores dolor ducimus nam rem
-        illum facere doloribus. Possimus hic aperiam dicta. Dignissimos eaque
-        sapiente odit dolores quas nulla mollitia suscipit placeat enim iste.
-      </p>
-      <p>
-        Asperiores eius perspiciatis enim saepe autem sapiente numquam ad quo
-        facere facilis necessitatibus a, labore accusamus officiis veritatis
-        voluptate, quaerat expedita dolor odio qui totam ullam! Fugiat explicabo
-        dolor nihil.
-      </p>
-      <p>
-        Id esse praesentium quo. Voluptatem facilis, ratione sit obcaecati nulla
-        in quae velit incidunt ipsam dolores et esse quas a, ducimus ad, placeat
-        natus possimus doloribus nesciunt architecto. Nostrum, similique!
       </p>
     </dialog>
-    <dialog class="bar bar--top">
-      <button class="bar__button closeButton" type="button">Close</button>
+    <dialog
+      class="bar bar--top"
+      data-name="top"
+      data-position="top"
+      data-modal="true"
+    >
+      <h2>Top (modal)</h2>
+
+      <button class="bar__button closeButton" type="button" data-bar="top">
+        Close
+      </button>
       <p>
         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt dicta
         magnam temporibus rerum veniam quisquam itaque alias labore nemo, cum
         aspernatur, consequatur nam at similique molestiae. Officia at soluta
         ex.
-      </p>
-      <p>
-        Mollitia eveniet eum necessitatibus tenetur iusto? Minima, dignissimos
-        ea quod laudantium ut laborum? Saepe expedita ipsum voluptatum vitae
-        error omnis ipsa voluptas. Sunt natus vitae, perferendis corrupti minima
-        ipsa quibusdam.
-      </p>
-      <p>
-        Eos, quos corporis. Itaque quibusdam magnam cum veniam facere quod
-        similique consequuntur explicabo dolores, quas, harum consequatur fugiat
-        voluptate labore porro odit possimus provident doloribus quam
-        necessitatibus eius. Veniam, rerum!
-      </p>
-      <p>
-        Reprehenderit mollitia autem, nostrum pariatur deleniti incidunt
-        provident assumenda. Esse molestias quos quisquam voluptate repellat
-        amet deleniti laboriosam, dignissimos itaque eligendi eveniet, illo
-        velit totam ut ipsam quaerat obcaecati ducimus.
-      </p>
-      <p>
-        In quis, molestiae eos vero veritatis explicabo autem laborum possimus
-        corporis accusamus consequatur quidem asperiores nihil ipsa?
-        Perspiciatis praesentium veniam pariatur, laudantium maiores nulla
-        tenetur sit aut, animi omnis eos.
-      </p>
-      <p>
-        Odit eveniet at a assumenda harum et! Molestias aperiam officia delectus
-        veniam ex voluptas doloremque, inventore numquam nostrum laudantium
-        ratione dolore ut impedit, quaerat esse quisquam? Itaque beatae nisi
-        earum?
-      </p>
-      <p>
-        Dolorem temporibus illum alias? Vitae, cumque! Iusto culpa facere illo
-        quisquam, dolores adipisci ullam inventore praesentium et tempore.
-        Praesentium, consequuntur id! Dignissimos minima doloribus labore
-        nesciunt laboriosam rerum quam! Iure?
-      </p>
-      <p>
-        Iure veniam sunt quas dolorum, commodi, dolores dolor ducimus nam rem
-        illum facere doloribus. Possimus hic aperiam dicta. Dignissimos eaque
-        sapiente odit dolores quas nulla mollitia suscipit placeat enim iste.
-      </p>
-      <p>
-        Asperiores eius perspiciatis enim saepe autem sapiente numquam ad quo
-        facere facilis necessitatibus a, labore accusamus officiis veritatis
-        voluptate, quaerat expedita dolor odio qui totam ullam! Fugiat explicabo
-        dolor nihil.
-      </p>
-      <p>
-        Id esse praesentium quo. Voluptatem facilis, ratione sit obcaecati nulla
-        in quae velit incidunt ipsam dolores et esse quas a, ducimus ad, placeat
-        natus possimus doloribus nesciunt architecto. Nostrum, similique!
-      </p>
-      <p>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt dicta
-        magnam temporibus rerum veniam quisquam itaque alias labore nemo, cum
-        aspernatur, consequatur nam at similique molestiae. Officia at soluta
-        ex.
-      </p>
-      <p>
-        Mollitia eveniet eum necessitatibus tenetur iusto? Minima, dignissimos
-        ea quod laudantium ut laborum? Saepe expedita ipsum voluptatum vitae
-        error omnis ipsa voluptas. Sunt natus vitae, perferendis corrupti minima
-        ipsa quibusdam.
-      </p>
-      <p>
-        Eos, quos corporis. Itaque quibusdam magnam cum veniam facere quod
-        similique consequuntur explicabo dolores, quas, harum consequatur fugiat
-        voluptate labore porro odit possimus provident doloribus quam
-        necessitatibus eius. Veniam, rerum!
-      </p>
-      <p>
-        Reprehenderit mollitia autem, nostrum pariatur deleniti incidunt
-        provident assumenda. Esse molestias quos quisquam voluptate repellat
-        amet deleniti laboriosam, dignissimos itaque eligendi eveniet, illo
-        velit totam ut ipsam quaerat obcaecati ducimus.
-      </p>
-      <p>
-        In quis, molestiae eos vero veritatis explicabo autem laborum possimus
-        corporis accusamus consequatur quidem asperiores nihil ipsa?
-        Perspiciatis praesentium veniam pariatur, laudantium maiores nulla
-        tenetur sit aut, animi omnis eos.
-      </p>
-      <p>
-        Odit eveniet at a assumenda harum et! Molestias aperiam officia delectus
-        veniam ex voluptas doloremque, inventore numquam nostrum laudantium
-        ratione dolore ut impedit, quaerat esse quisquam? Itaque beatae nisi
-        earum?
-      </p>
-      <p>
-        Dolorem temporibus illum alias? Vitae, cumque! Iusto culpa facere illo
-        quisquam, dolores adipisci ullam inventore praesentium et tempore.
-        Praesentium, consequuntur id! Dignissimos minima doloribus labore
-        nesciunt laboriosam rerum quam! Iure?
-      </p>
-      <p>
-        Iure veniam sunt quas dolorum, commodi, dolores dolor ducimus nam rem
-        illum facere doloribus. Possimus hic aperiam dicta. Dignissimos eaque
-        sapiente odit dolores quas nulla mollitia suscipit placeat enim iste.
-      </p>
-      <p>
-        Asperiores eius perspiciatis enim saepe autem sapiente numquam ad quo
-        facere facilis necessitatibus a, labore accusamus officiis veritatis
-        voluptate, quaerat expedita dolor odio qui totam ullam! Fugiat explicabo
-        dolor nihil.
-      </p>
-      <p>
-        Id esse praesentium quo. Voluptatem facilis, ratione sit obcaecati nulla
-        in quae velit incidunt ipsam dolores et esse quas a, ducimus ad, placeat
-        natus possimus doloribus nesciunt architecto. Nostrum, similique!
       </p>
     </dialog>
-    <dialog class="bar bar--bottom">
-      <button class="bar__button closeButton" type="button">Close</button>
+    <dialog
+      class="bar bar--bottom"
+      data-name="bottom"
+      data-position="bottom"
+      data-modal="true"
+    >
+      <h2>Top (modal)</h2>
+
+      <button class="bar__button closeButton" type="button" data-bar="bottom">
+        Close
+      </button>
       <p>
         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt dicta
         magnam temporibus rerum veniam quisquam itaque alias labore nemo, cum
         aspernatur, consequatur nam at similique molestiae. Officia at soluta
         ex.
       </p>
-      <p>
-        Mollitia eveniet eum necessitatibus tenetur iusto? Minima, dignissimos
-        ea quod laudantium ut laborum? Saepe expedita ipsum voluptatum vitae
-        error omnis ipsa voluptas. Sunt natus vitae, perferendis corrupti minima
-        ipsa quibusdam.
-      </p>
-      <p>
-        Eos, quos corporis. Itaque quibusdam magnam cum veniam facere quod
-        similique consequuntur explicabo dolores, quas, harum consequatur fugiat
-        voluptate labore porro odit possimus provident doloribus quam
-        necessitatibus eius. Veniam, rerum!
-      </p>
-      <p>
-        Reprehenderit mollitia autem, nostrum pariatur deleniti incidunt
-        provident assumenda. Esse molestias quos quisquam voluptate repellat
-        amet deleniti laboriosam, dignissimos itaque eligendi eveniet, illo
-        velit totam ut ipsam quaerat obcaecati ducimus.
-      </p>
-      <p>
-        In quis, molestiae eos vero veritatis explicabo autem laborum possimus
-        corporis accusamus consequatur quidem asperiores nihil ipsa?
-        Perspiciatis praesentium veniam pariatur, laudantium maiores nulla
-        tenetur sit aut, animi omnis eos.
-      </p>
-      <p>
-        Odit eveniet at a assumenda harum et! Molestias aperiam officia delectus
-        veniam ex voluptas doloremque, inventore numquam nostrum laudantium
-        ratione dolore ut impedit, quaerat esse quisquam? Itaque beatae nisi
-        earum?
-      </p>
-      <p>
-        Dolorem temporibus illum alias? Vitae, cumque! Iusto culpa facere illo
-        quisquam, dolores adipisci ullam inventore praesentium et tempore.
-        Praesentium, consequuntur id! Dignissimos minima doloribus labore
-        nesciunt laboriosam rerum quam! Iure?
-      </p>
-      <p>
-        Iure veniam sunt quas dolorum, commodi, dolores dolor ducimus nam rem
-        illum facere doloribus. Possimus hic aperiam dicta. Dignissimos eaque
-        sapiente odit dolores quas nulla mollitia suscipit placeat enim iste.
-      </p>
-      <p>
-        Asperiores eius perspiciatis enim saepe autem sapiente numquam ad quo
-        facere facilis necessitatibus a, labore accusamus officiis veritatis
-        voluptate, quaerat expedita dolor odio qui totam ullam! Fugiat explicabo
-        dolor nihil.
-      </p>
-      <p>
-        Id esse praesentium quo. Voluptatem facilis, ratione sit obcaecati nulla
-        in quae velit incidunt ipsam dolores et esse quas a, ducimus ad, placeat
-        natus possimus doloribus nesciunt architecto. Nostrum, similique!
-      </p>
+    </dialog>
+
+    <!-- Non-modal bars -->
+    <dialog
+      class="bar bar--left"
+      data-name="left-standard"
+      data-position="left"
+      data-modal="false"
+    >
+      <h2>Left (non-modal)</h2>
+      <button
+        class="bar__button closeButton"
+        type="button"
+        data-bar="left-standard"
+      >
+        Close
+      </button>
       <p>
         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt dicta
         magnam temporibus rerum veniam quisquam itaque alias labore nemo, cum
         aspernatur, consequatur nam at similique molestiae. Officia at soluta
         ex.
       </p>
+    </dialog>
+    <dialog
+      class="bar bar--right"
+      data-name="right-standard"
+      data-position="right"
+      data-modal="false"
+    >
+      <h2>Right (non-modal)</h2>
+      <button
+        class="bar__button closeButton"
+        type="button"
+        data-bar="right-standard"
+      >
+        Close
+      </button>
       <p>
-        Mollitia eveniet eum necessitatibus tenetur iusto? Minima, dignissimos
-        ea quod laudantium ut laborum? Saepe expedita ipsum voluptatum vitae
-        error omnis ipsa voluptas. Sunt natus vitae, perferendis corrupti minima
-        ipsa quibusdam.
+        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt dicta
+        magnam temporibus rerum veniam quisquam itaque alias labore nemo, cum
+        aspernatur, consequatur nam at similique molestiae. Officia at soluta
+        ex.
       </p>
+    </dialog>
+    <dialog
+      class="bar bar--top"
+      data-name="top-standard"
+      data-position="top"
+      data-modal="false"
+    >
+      <h2>Top (non-modal)</h2>
+      <button
+        class="bar__button closeButton"
+        type="button"
+        data-bar="top-standard"
+      >
+        Close
+      </button>
       <p>
-        Eos, quos corporis. Itaque quibusdam magnam cum veniam facere quod
-        similique consequuntur explicabo dolores, quas, harum consequatur fugiat
-        voluptate labore porro odit possimus provident doloribus quam
-        necessitatibus eius. Veniam, rerum!
+        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt dicta
+        magnam temporibus rerum veniam quisquam itaque alias labore nemo, cum
+        aspernatur, consequatur nam at similique molestiae. Officia at soluta
+        ex.
       </p>
+    </dialog>
+    <dialog
+      class="bar bar--bottom"
+      data-name="bottom-standard"
+      data-position="bottom"
+      data-modal="false"
+    >
+      <h2>Bottom (non-modal)</h2>
+      <button
+        class="bar__button closeButton"
+        type="button"
+        data-bar="bottom-standard"
+      >
+        Close
+      </button>
       <p>
-        Reprehenderit mollitia autem, nostrum pariatur deleniti incidunt
-        provident assumenda. Esse molestias quos quisquam voluptate repellat
-        amet deleniti laboriosam, dignissimos itaque eligendi eveniet, illo
-        velit totam ut ipsam quaerat obcaecati ducimus.
-      </p>
-      <p>
-        In quis, molestiae eos vero veritatis explicabo autem laborum possimus
-        corporis accusamus consequatur quidem asperiores nihil ipsa?
-        Perspiciatis praesentium veniam pariatur, laudantium maiores nulla
-        tenetur sit aut, animi omnis eos.
-      </p>
-      <p>
-        Odit eveniet at a assumenda harum et! Molestias aperiam officia delectus
-        veniam ex voluptas doloremque, inventore numquam nostrum laudantium
-        ratione dolore ut impedit, quaerat esse quisquam? Itaque beatae nisi
-        earum?
-      </p>
-      <p>
-        Dolorem temporibus illum alias? Vitae, cumque! Iusto culpa facere illo
-        quisquam, dolores adipisci ullam inventore praesentium et tempore.
-        Praesentium, consequuntur id! Dignissimos minima doloribus labore
-        nesciunt laboriosam rerum quam! Iure?
-      </p>
-      <p>
-        Iure veniam sunt quas dolorum, commodi, dolores dolor ducimus nam rem
-        illum facere doloribus. Possimus hic aperiam dicta. Dignissimos eaque
-        sapiente odit dolores quas nulla mollitia suscipit placeat enim iste.
-      </p>
-      <p>
-        Asperiores eius perspiciatis enim saepe autem sapiente numquam ad quo
-        facere facilis necessitatibus a, labore accusamus officiis veritatis
-        voluptate, quaerat expedita dolor odio qui totam ullam! Fugiat explicabo
-        dolor nihil.
-      </p>
-      <p>
-        Id esse praesentium quo. Voluptatem facilis, ratione sit obcaecati nulla
-        in quae velit incidunt ipsam dolores et esse quas a, ducimus ad, placeat
-        natus possimus doloribus nesciunt architecto. Nostrum, similique!
+        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt dicta
+        magnam temporibus rerum veniam quisquam itaque alias labore nemo, cum
+        aspernatur, consequatur nam at similique molestiae. Officia at soluta
+        ex.
       </p>
     </dialog>
     <script type="module" src="/src/main.ts"></script>
