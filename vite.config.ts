@@ -1,5 +1,4 @@
 import eslint from '@nabla/vite-plugin-eslint'
-import { viteStaticCopy } from 'vite-plugin-static-copy'
 import dts from 'vite-plugin-dts'
 
 import { defineConfig } from 'vite'
@@ -48,14 +47,6 @@ export default defineConfig({
     dts({
       rollupTypes: true,
       copyDtsFiles: true,
-    }),
-    viteStaticCopy({
-      targets: [
-        {
-          src: './src/assets/bartender.scss',
-          dest: './',
-        },
-      ],
     }),
   ],
 })
