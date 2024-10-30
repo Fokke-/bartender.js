@@ -26,11 +26,11 @@ export declare class Bartender {
     get debug(): boolean;
     set debug(val: boolean);
     /**
-     * Get bar instance by name
+     * Get bar instance by name.
      */
     getBar(name: string): BartenderBar | null;
     /**
-     * Get the topmost open bar instance
+     * Get the topmost open bar instance.
      */
     private getOpenBar;
     /**
@@ -46,7 +46,7 @@ export declare class Bartender {
      *
      * Resolves after the bar has opened.
      */
-    open(bar: BartenderBar | string, options?: BartenderOpenOptions): Promise<BartenderBar>;
+    open(bar: BartenderBar | string, keepOtherBarsOpen?: boolean): Promise<BartenderBar>;
     /**
      * Close bar
      *
@@ -64,7 +64,7 @@ export declare class Bartender {
      *
      * Resolves after the bar has opened or closed.
      */
-    toggle(bar?: BartenderBar | string, options?: BartenderOpenOptions): Promise<BartenderBar | null>;
+    toggle(bar?: BartenderBar | string, keepOtherBarsOpen?: boolean): Promise<BartenderBar | null>;
     /**
      * Destroy Bartender instance
      */
@@ -85,6 +85,8 @@ export declare class BartenderBar {
     readonly el: HTMLDialogElement;
     /** Bar position */
     private _position;
+    /** Is the bar a modal? */
+    private _modal;
     /** Enable overlay? */
     private _overlay;
     /** Enable permanent mode? */
@@ -93,8 +95,6 @@ export declare class BartenderBar {
     private _scrollTop;
     /** Is the bar currently open? */
     private isOpened;
-    /** Is the bar opened in modal mode? */
-    isModal: boolean;
     /** Handler for dialog close event */
     private onCloseHandler;
     /** Handler for dialog click event */
@@ -113,6 +113,9 @@ export declare class BartenderBar {
     /** Bar position */
     get position(): BartenderBarPosition;
     set position(val: BartenderBarPosition);
+    /** Is the bar a modal? */
+    get modal(): boolean;
+    set modal(val: boolean);
     /** Enable overlay? */
     get overlay(): boolean;
     set overlay(val: boolean);
@@ -129,7 +132,7 @@ export declare class BartenderBar {
     /**
      * Open bar
      */
-    open(options?: BartenderOpenOptions): Promise<this>;
+    open(): Promise<this>;
     /**
      * Close bar
      */
@@ -147,6 +150,9 @@ export declare class BartenderBar {
 export declare interface BartenderBarDefaultOptions {
     /** Bar position */
     position?: BartenderBarPosition
+
+    /** Open bar as a modal? */
+    modal?: boolean
 
     /** Show shading overlay over content wrap when bar is open. */
     overlay?: boolean
@@ -166,15 +172,6 @@ export declare interface BartenderBarOptions extends BartenderBarDefaultOptions 
 export declare type BartenderBarPosition = 'left' | 'right' | 'top' | 'bottom'
 
 export declare type BartenderElementQuery = string | Element | null
-
-/** Additional options for opening the bar */
-export declare interface BartenderOpenOptions {
-    /** Don't close other bars? */
-    keepOtherBars?: boolean
-
-    /** Open as a standard dialog instead of a modal? */
-    standardDialog?: boolean
-}
 
 export declare interface BartenderOptions {
     /** Enable debug mode? */
