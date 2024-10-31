@@ -98,23 +98,35 @@ export class Bartender {
       this.close(event.detail.bar.name)
     }
 
-    // Add event listeners
-    document.addEventListener('keydown', this.onKeydownHandler as EventListener)
-    document.addEventListener(
-      'bartender-bar-before-open',
-      this.onBarBeforeOpenHandler as EventListener,
-    )
-    document.addEventListener(
-      'bartender-bar-before-close',
-      this.onBarBeforeCloseHandler as EventListener,
-    )
-    document.addEventListener(
-      'bartender-bar-backdrop-click',
-      this.onBarBackdropClickHandler as EventListener,
-    )
+    if (typeof document !== 'undefined' && typeof window !== 'undefined') {
+      // Add event listeners
+      document.addEventListener(
+        'keydown',
+        this.onKeydownHandler as EventListener,
+      )
+      document.addEventListener(
+        'bartender-bar-before-open',
+        this.onBarBeforeOpenHandler as EventListener,
+      )
+      document.addEventListener(
+        'bartender-bar-before-close',
+        this.onBarBeforeCloseHandler as EventListener,
+      )
+      document.addEventListener(
+        'bartender-bar-backdrop-click',
+        this.onBarBackdropClickHandler as EventListener,
+      )
 
-    if (this.debug) {
-      console.debug('Bartender initialized', this)
+      document.body.classList.add('bartender-ready')
+      window.dispatchEvent(
+        new CustomEvent('bartender-init', {
+          detail: { bartender: this },
+        }),
+      )
+
+      if (this.debug) {
+        console.debug('Bartender initialized', this)
+      }
     }
   }
 
