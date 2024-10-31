@@ -113,12 +113,6 @@ export class Bartender {
       this.onBarBackdropClickHandler as EventListener,
     )
 
-    window.dispatchEvent(
-      new CustomEvent('bartender-init', {
-        detail: { bartender: this },
-      }),
-    )
-
     if (this.debug) {
       console.debug('Bartender initialized', this)
     }
