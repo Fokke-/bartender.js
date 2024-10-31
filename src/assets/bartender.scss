@@ -7,8 +7,8 @@
   --bottom: auto;
   --left: auto;
   --right: auto;
-  --transform-open: translate(0, 0);
-  --transform-closed: unset;
+  --transform-enter: translate(0, 0);
+  --transform-leave: unset;
   --width: unset;
   --width-fallback: unset;
   --max-width: unset;
@@ -17,23 +17,23 @@
   --height-fallback: unset;
   --max-height: unset;
   --max-height-fallback: unset;
-  --opacity-open: 1;
-  --opacity-closed: 1;
+  --opacity-enter: 1;
+  --opacity-leave: 1;
   --transition-duration: 250ms;
   --transition-timing-function: ease;
-  --transition-duration-open: var(--transition-duration);
-  --transition-duration-closed: var(--transition-duration);
-  --transition-timing-function-open: var(--transition-timing-function);
-  --transition-timing-function-closed: var(--transition-timing-function);
+  --transition-duration-enter: var(--transition-duration);
+  --transition-duration-leave: var(--transition-duration);
+  --transition-timing-function-enter: var(--transition-timing-function);
+  --transition-timing-function-leave: var(--transition-timing-function);
   --overlay-background: #000;
   --overlay-opacity: 0.5;
-  --overlay-transition-duration-open: var(--transition-duration-open);
-  --overlay-transition-duration-closed: var(--transition-duration-closed);
-  --overlay-transition-timing-function-open: var(
-    --transition-timing-function-open
+  --overlay-transition-duration-enter: var(--transition-duration-enter);
+  --overlay-transition-duration-leave: var(--transition-duration-leave);
+  --overlay-transition-timing-function-enter: var(
+    --transition-timing-function-enter
   );
-  --overlay-transition-timing-function-closed: var(
-    --transition-timing-function-closed
+  --overlay-transition-timing-function-leave: var(
+    --transition-timing-function-leave
   );
 
   position: fixed;
@@ -65,36 +65,36 @@
   }
 
   &[open] {
-    opacity: var(--opacity-open);
-    transform: var(--transform-open);
+    opacity: var(--opacity-enter);
+    transform: var(--transform-enter);
     transition:
-      opacity var(--transition-duration-open)
-        var(--transition-timing-function-open),
-      transform var(--transition-duration-open)
-        var(--transition-timing-function-open),
-      overlay var(--transition-duration-open)
-        var(--transition-timing-function-open) allow-discrete,
-      display var(--transition-duration-open)
-        var(--transition-timing-function-open) allow-discrete;
+      opacity var(--transition-duration-enter)
+        var(--transition-timing-function-enter),
+      transform var(--transition-duration-enter)
+        var(--transition-timing-function-enter),
+      overlay var(--transition-duration-enter)
+        var(--transition-timing-function-enter) allow-discrete,
+      display var(--transition-duration-enter)
+        var(--transition-timing-function-enter) allow-discrete;
 
     @starting-style {
-      opacity: var(--opacity-closed);
-      transform: var(--transform-closed);
+      opacity: var(--opacity-leave);
+      transform: var(--transform-leave);
     }
   }
 
   &:not([open]) {
-    opacity: var(--opacity-closed);
-    transform: var(--transform-closed);
+    opacity: var(--opacity-leave);
+    transform: var(--transform-leave);
     transition:
-      opacity var(--transition-duration-closed)
-        var(--transition-timing-function-closed),
-      transform var(--transition-duration-closed)
-        var(--transition-timing-function-closed),
-      overlay var(--transition-duration-closed)
-        var(--transition-timing-function-closed) allow-discrete,
-      display var(--transition-duration-closed)
-        var(--transition-timing-function-closed) allow-discrete;
+      opacity var(--transition-duration-leave)
+        var(--transition-timing-function-leave),
+      transform var(--transition-duration-leave)
+        var(--transition-timing-function-leave),
+      overlay var(--transition-duration-leave)
+        var(--transition-timing-function-leave) allow-discrete,
+      display var(--transition-duration-leave)
+        var(--transition-timing-function-leave) allow-discrete;
   }
 
   &--position {
@@ -110,12 +110,12 @@
 
     &-left {
       --left: 0;
-      --transform-closed: translate(-100%, 0);
+      --transform-leave: translate(-100%, 0);
     }
 
     &-right {
       --right: 0;
-      --transform-closed: translate(100%, 0);
+      --transform-leave: translate(100%, 0);
     }
 
     &-top,
@@ -130,12 +130,12 @@
 
     &-top {
       --top: 0;
-      --transform-closed: translate(0, -100%);
+      --transform-leave: translate(0, -100%);
     }
 
     &-bottom {
       --bottom: 0;
-      --transform-closed: translate(0, 100%);
+      --transform-leave: translate(0, 100%);
     }
   }
 
@@ -153,12 +153,12 @@
       &::backdrop {
         opacity: 0.5;
         transition:
-          opacity var(--overlay-transition-duration-open)
-            var(--overlay-transition-timing-function-open),
-          overlay var(--overlay-transition-duration-open)
-            var(--overlay-transition-timing-function-open) allow-discrete,
-          display var(--overlay-transition-duration-open)
-            var(--overlay-transition-timing-function-open) allow-discrete;
+          opacity var(--overlay-transition-duration-enter)
+            var(--overlay-transition-timing-function-enter),
+          overlay var(--overlay-transition-duration-enter)
+            var(--overlay-transition-timing-function-enter) allow-discrete,
+          display var(--overlay-transition-duration-enter)
+            var(--overlay-transition-timing-function-enter) allow-discrete;
 
         @starting-style {
           opacity: 0;
@@ -169,12 +169,12 @@
     &:not([open]) {
       &::backdrop {
         transition:
-          opacity var(--overlay-transition-duration-closed)
-            var(--overlay-transition-timing-function-closed),
-          overlay var(--overlay-transition-duration-closed)
-            var(--overlay-transition-timing-function-closed) allow-discrete,
-          display var(--overlay-transition-duration-closed)
-            var(--overlay-transition-timing-function-closed) allow-discrete;
+          opacity var(--overlay-transition-duration-leave)
+            var(--overlay-transition-timing-function-leave),
+          overlay var(--overlay-transition-duration-leave)
+            var(--overlay-transition-timing-function-leave) allow-discrete,
+          display var(--overlay-transition-duration-leave)
+            var(--overlay-transition-timing-function-leave) allow-discrete;
       }
     }
   }
