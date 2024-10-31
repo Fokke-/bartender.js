@@ -3,10 +3,10 @@ class i extends Error {
     super(e), this.name = "Bartender error";
   }
 }
-const d = (n) => Object.entries(n).reduce(
+const l = (n) => Object.entries(n).reduce(
   (e, [r, t]) => (typeof t > "u" || (e[r] = t), e),
   {}
-), h = (n, e = document) => n instanceof Element ? n : typeof n == "string" ? e.querySelector(n) : null, l = (n = 100) => new Promise((e) => n ? setTimeout(e, n) : e());
+), h = (n, e = document) => n instanceof Element ? n : typeof n == "string" ? e.querySelector(n) : null, d = (n = 100) => new Promise((e) => n ? setTimeout(e, n) : e());
 class o {
   /** Enable debug mode? */
   debug = !1;
@@ -52,7 +52,7 @@ class o {
           bubbles: !0,
           detail: { bar: this }
         })
-      ), this.el.classList.remove("bartender-bar--open"), this.isOpened = !1, await l(this.getTransitionDuration()), this.el.classList.add("bartender-bar--closed"), this.el.dispatchEvent(
+      ), this.el.classList.remove("bartender-bar--open"), this.isOpened = !1, await d(this.getTransitionDuration()), this.el.classList.add("bartender-bar--closed"), this.el.dispatchEvent(
         new CustomEvent("bartender-bar-after-close", {
           bubbles: !0,
           detail: { bar: this }
@@ -202,7 +202,7 @@ class o {
         bubbles: !0,
         detail: { bar: this }
       })
-    ), this.debug && console.debug("Opening bar", this), this.modal === !0 ? this.el.showModal() : this.el.show(), this.scrollTop === !0 && this.scrollToTop(), this.el.classList.remove("bartender-bar--closed"), this.el.classList.add("bartender-bar--open"), this.isOpened = !0, await l(this.getTransitionDuration()), this.debug && console.debug("Finished opening bar", this), this.el.dispatchEvent(
+    ), this.debug && console.debug("Opening bar", this), this.modal === !0 ? this.el.showModal() : this.el.show(), this.scrollTop === !0 && this.scrollToTop(), this.el.classList.remove("bartender-bar--closed"), this.el.classList.add("bartender-bar--open"), this.isOpened = !0, await d(this.getTransitionDuration()), this.debug && console.debug("Finished opening bar", this), this.el.dispatchEvent(
       new CustomEvent("bartender-bar-after-open", {
         bubbles: !0,
         detail: { bar: this }
@@ -213,7 +213,7 @@ class o {
    * Close bar
    */
   async close() {
-    return this.el.close(), await l(this.getTransitionDuration()), this;
+    return this.el.close(), await d(this.getTransitionDuration()), this;
   }
   /**
    * Scroll bar to the top
@@ -269,7 +269,10 @@ class u {
       this.openBars.splice(this.openBars.indexOf(t.detail.bar), 1), this.openBars.length || document.body.classList.remove("bartender-open"), this.openBars.some((s) => s.modal === !0) || document.body.classList.remove("bartender-disable-scroll");
     }, this.onBarBackdropClickHandler = (t) => {
       this.getOpenBar(!0)?.name === t.detail.bar.name && this.close(t.detail.bar.name);
-    }, document.addEventListener("keydown", this.onKeydownHandler), document.addEventListener(
+    }, typeof document < "u" && typeof window < "u" && (document.addEventListener(
+      "keydown",
+      this.onKeydownHandler
+    ), document.addEventListener(
       "bartender-bar-before-open",
       this.onBarBeforeOpenHandler
     ), document.addEventListener(
@@ -282,7 +285,7 @@ class u {
       new CustomEvent("bartender-init", {
         detail: { bartender: this }
       })
-    ), this.debug && console.debug("Bartender initialized", this);
+    ), this.debug && console.debug("Bartender initialized", this));
   }
   /** Enable debug mode? */
   get debug() {
@@ -316,7 +319,7 @@ class u {
       throw new i(`Bar with name '${e}' is already defined`);
     const t = new o(e, {
       ...this.barDefaultOptions,
-      ...d(r)
+      ...l(r)
     });
     if (t.debug = this.debug, this.bars.some((s) => s.el === t.el))
       throw new i(
