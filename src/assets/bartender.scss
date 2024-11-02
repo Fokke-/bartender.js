@@ -188,7 +188,7 @@
   &--has-overlay {
     &[open] {
       &::backdrop {
-        opacity: 0.5;
+        opacity: var(--overlay-opacity);
         transition:
           opacity var(--overlay-transition-duration-enter)
             var(--overlay-transition-timing-function-enter),
