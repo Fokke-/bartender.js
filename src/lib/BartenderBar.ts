@@ -195,6 +195,7 @@ export class BartenderBar {
       'right',
       'top',
       'bottom',
+      'center',
     ]
 
     if (!validPositions.includes(val)) {
@@ -238,6 +239,13 @@ export class BartenderBar {
   }
 
   public set modal(val: boolean) {
+    const oldMode = this._modal === true ? 'modal' : 'standard'
+    const newMode = val === true ? 'modal' : 'standard'
+
+    // Update element classes
+    this.el.classList.remove(`bartender-bar--mode-${oldMode}`)
+    this.el.classList.add(`bartender-bar--mode-${newMode}`)
+
     this._modal = val
 
     if (this.initialized === false) {

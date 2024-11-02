@@ -1,5 +1,10 @@
 export type BartenderElementQuery = string | Element | null
-export type BartenderBarPosition = 'left' | 'right' | 'top' | 'bottom'
+export type BartenderBarPosition =
+  | 'left'
+  | 'right'
+  | 'top'
+  | 'bottom'
+  | 'center'
 
 export interface BartenderOptions {
   /** Enable debug mode? */

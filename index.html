@@ -27,6 +27,9 @@
           <button type="button" class="button openButton" data-bar="bottom">
             Bottom
           </button>
+          <button type="button" class="button openButton" data-bar="center">
+            Center
+          </button>
         </div>
 
         <h2>Non-modal bars</h2>
@@ -58,6 +61,13 @@
             data-bar="bottom-standard"
           >
             Bottom
+          </button>
+          <button
+            type="button"
+            class="button openButton"
+            data-bar="center-standard"
+          >
+            Center
           </button>
         </div>
 
@@ -283,9 +293,27 @@
       data-position="bottom"
       data-modal="true"
     >
-      <h2>Top (modal)</h2>
+      <h2>Bottom (modal)</h2>
 
       <button class="bar__button closeButton" type="button" data-bar="bottom">
+        Close
+      </button>
+      <p>
+        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt dicta
+        magnam temporibus rerum veniam quisquam itaque alias labore nemo, cum
+        aspernatur, consequatur nam at similique molestiae. Officia at soluta
+        ex.
+      </p>
+    </dialog>
+    <dialog
+      class="bar bar--center"
+      data-name="center"
+      data-position="center"
+      data-modal="true"
+    >
+      <h2>Center (modal)</h2>
+
+      <button class="bar__button closeButton" type="button" data-bar="center">
         Close
       </button>
       <p>
@@ -371,6 +399,27 @@
         class="bar__button closeButton"
         type="button"
         data-bar="bottom-standard"
+      >
+        Close
+      </button>
+      <p>
+        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt dicta
+        magnam temporibus rerum veniam quisquam itaque alias labore nemo, cum
+        aspernatur, consequatur nam at similique molestiae. Officia at soluta
+        ex.
+      </p>
+    </dialog>
+    <dialog
+      class="bar bar--center"
+      data-name="center-standard"
+      data-position="center"
+      data-modal="false"
+    >
+      <h2>Center (non-modal)</h2>
+      <button
+        class="bar__button closeButton"
+        type="button"
+        data-bar="center-standard"
       >
         Close
       </button>

@@ -45,7 +45,8 @@
     --transition-timing-function-leave
   );
 
-  position: fixed;
+  box-sizing: border-box;
+  overflow: auto;
   top: var(--top);
   bottom: var(--bottom);
   left: var(--left);
@@ -58,19 +59,22 @@
   height: var(--height);
   max-height: var(--max-height-fallback);
   max-height: var(--max-height);
-  z-index: 99999; // For non-modal dialogs
-  box-sizing: border-box;
-  overflow: auto;
-  margin: 0;
   padding: 0;
   border: 0;
+
+  &:focus {
+    outline: 0;
+  }
 
   @media (prefers-reduced-motion) {
     transition-duration: 0ms !important;
   }
 
-  &:focus {
-    outline: 0;
+  &--mode {
+    &-standard {
+      z-index: 99999;
+      position: fixed;
+    }
   }
 
   &[open] {
@@ -153,6 +157,22 @@
     &-bottom {
       --bottom: 0;
       --transform-leave: translate(0, 100%);
+    }
+
+    &-center {
+      --top: 50%;
+      --left: 50%;
+      --width: 80dvw;
+      --width-fallback: 80vw;
+      --max-width: 600px;
+      --height: fit-content;
+      --height-fallback: fit-content;
+      --max-height: 80dvh;
+      --max-height-fallback: 80vh;
+      --opacity-enter: 1;
+      --opacity-leave: 0;
+      --transform-enter: translate(-50%, -50%) scale(1);
+      --transform-leave: translate(-50%, -50%) scale(1.2);
     }
   }
 
