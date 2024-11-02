@@ -106,7 +106,8 @@ class o {
       "left",
       "right",
       "top",
-      "bottom"
+      "bottom",
+      "center"
     ];
     if (!r.includes(e))
       throw new i(
@@ -128,7 +129,8 @@ class o {
     return this._modal;
   }
   set modal(e) {
-    this._modal = e, this.initialized !== !1 && (this.el.dispatchEvent(
+    const r = this._modal === !0 ? "modal" : "standard", t = e === !0 ? "modal" : "standard";
+    this.el.classList.remove(`bartender-bar--mode-${r}`), this.el.classList.add(`bartender-bar--mode-${t}`), this._modal = e, this.initialized !== !1 && (this.el.dispatchEvent(
       new CustomEvent("bartender-bar-updated", {
         bubbles: !0,
         detail: {
@@ -257,7 +259,7 @@ class u {
   constructor(e = {}, r = {}) {
     this.debug = e.debug ?? this._debug, this.barDefaultOptions = {
       ...this.barDefaultOptions,
-      ...r
+      ...l(r)
     }, this.onKeydownHandler = ((t) => {
       if (t.key === "Escape" && this.getOpenBar(!0)?.permanent === !0) {
         t.preventDefault();

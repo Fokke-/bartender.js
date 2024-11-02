@@ -169,7 +169,12 @@ export declare interface BartenderBarOptions extends BartenderBarDefaultOptions 
     el?: BartenderElementQuery
 }
 
-export declare type BartenderBarPosition = 'left' | 'right' | 'top' | 'bottom'
+export declare type BartenderBarPosition =
+| 'left'
+| 'right'
+| 'top'
+| 'bottom'
+| 'center'
 
 export declare type BartenderElementQuery = string | Element | null
 
