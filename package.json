@@ -28,7 +28,8 @@
     "dist"
   ],
   "types": "./dist/index.d.ts",
-  "module": "./dist/Bartender.js",
+  "main": "./dist/bartender.js",
+  "module": "./dist/bartender.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
