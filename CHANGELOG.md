@@ -1,3 +1,9 @@
+## 3.1.0
+
+### New Features
+
+- Added support for centered bars.
+
 ## 3.0.0
 
 ### New features
@@ -8,7 +14,7 @@
 - Use [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties) to provide an easy way to customize bar transforms, transitions etc.
 - Wrap elements for Bartender or Bartender content are no longer needed.
 - UMD build is included.
-- Removed all dependencies
+- Removed all dependencies.
 
 ### Breaking changes
 
