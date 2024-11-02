@@ -1,3 +1,9 @@
+## 3.1.1
+
+### Bug fixes
+
+- Fixed bug where `--overlay-opacity` was not applied.
+
 ## 3.1.0
 
 ### New Features
