@@ -51,7 +51,7 @@ export class Bartender {
     this.debug = options.debug ?? this._debug
     this.barDefaultOptions = {
       ...this.barDefaultOptions,
-      ...barDefaultOptions,
+      ...parseOptions(barDefaultOptions),
     }
 
     // Handler for keydown events
