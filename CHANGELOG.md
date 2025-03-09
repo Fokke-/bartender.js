@@ -1,3 +1,9 @@
+## 3.1.2
+
+### Bug fixes
+
+- Removed incorrect global type declaration
+
 ## 3.1.1
 
 ### Bug fixes

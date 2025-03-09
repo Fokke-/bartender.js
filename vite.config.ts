@@ -24,10 +24,8 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       output: {
-        assetFileNames: (chunkInfo) => {
-          if (chunkInfo.name === 'style.css') return 'bartender.css'
-
-          return '[name]-[hash][extname]'
+        assetFileNames: (_chunkInfo) => {
+          return '[name][extname]'
         },
       },
     },
