@@ -184,10 +184,3 @@ export declare interface BartenderOptions {
 }
 
 export { }
-
-
-declare global {
-    interface Window {
-        bartender: Bartender;
-    }
-}
