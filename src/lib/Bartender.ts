@@ -5,6 +5,11 @@ import type {
 } from './types'
 import { BartenderError } from './BartenderError'
 import { BartenderBar } from './BartenderBar'
+import {
+  BartenderInstanceEvent,
+  BartenderBarEvent,
+  BartenderBarRemovedEvent,
+} from './events'
 import { parseOptions } from './utils'
 
 /**
@@ -66,7 +71,7 @@ export class Bartender {
     }).bind(this)
 
     // Handler for bartender-bar-before-open events
-    this.onBarBeforeOpenHandler = (event: CustomEvent): void => {
+    this.onBarBeforeOpenHandler = (event: BartenderBarEvent): void => {
       this.openBars.push(event.detail.bar)
 
       if (this.openBars.some((bar) => bar.modal === true)) {
@@ -77,7 +82,7 @@ export class Bartender {
     }
 
     // Handler for bartender-bar-before-close events
-    this.onBarBeforeCloseHandler = (event: CustomEvent): void => {
+    this.onBarBeforeCloseHandler = (event: BartenderBarEvent): void => {
       this.openBars.splice(this.openBars.indexOf(event.detail.bar), 1)
 
       if (!this.openBars.length) {
@@ -90,7 +95,7 @@ export class Bartender {
     }
 
     // Handler for bartender-bar-backdrop-click events
-    this.onBarBackdropClickHandler = (event: CustomEvent): void => {
+    this.onBarBackdropClickHandler = (event: BartenderBarEvent): void => {
       if (this.getOpenBar(true)?.name !== event.detail.bar.name) {
         return
       }
@@ -119,7 +124,7 @@ export class Bartender {
 
       document.body.classList.add('bartender-ready')
       window.dispatchEvent(
-        new CustomEvent('bartender-init', {
+        new BartenderInstanceEvent('bartender-init', {
           detail: { bartender: this },
         }),
       )
@@ -198,7 +203,7 @@ export class Bartender {
     // Add the bar
     this.bars.push(bar)
     window.dispatchEvent(
-      new CustomEvent('bartender-bar-added', {
+      new BartenderBarEvent('bartender-bar-added', {
         detail: { bar },
       }),
     )
@@ -234,7 +239,7 @@ export class Bartender {
     )
 
     window.dispatchEvent(
-      new CustomEvent('bartender-bar-removed', {
+      new BartenderBarRemovedEvent('bartender-bar-removed', {
         detail: { name },
       }),
     )
@@ -407,7 +412,7 @@ export class Bartender {
     )
 
     window.dispatchEvent(
-      new CustomEvent('bartender-destroyed', {
+      new BartenderInstanceEvent('bartender-destroyed', {
         detail: { bartender: this },
       }),
     )

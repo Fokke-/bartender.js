@@ -1,5 +1,5 @@
 import type { BartenderBarOptions, BartenderBarPosition } from './types'
-import { BartenderBarEvent } from './BartenderBarEvent'
+import { BartenderBarEvent, BartenderBarUpdatedEvent } from './events'
 import { BartenderError } from './BartenderError'
 import { resolveElement, sleep } from './utils'
 
@@ -81,7 +81,7 @@ export class BartenderBar {
       }
 
       this.el.dispatchEvent(
-        new CustomEvent('bartender-bar-before-close', {
+        new BartenderBarEvent('bartender-bar-before-close', {
           bubbles: true,
           detail: { bar: this },
         }),
@@ -94,7 +94,7 @@ export class BartenderBar {
       this.el.classList.add('bartender-bar--closed')
 
       this.el.dispatchEvent(
-        new CustomEvent('bartender-bar-after-close', {
+        new BartenderBarEvent('bartender-bar-after-close', {
           bubbles: true,
           detail: { bar: this },
         }),
@@ -120,7 +120,7 @@ export class BartenderBar {
         event.stopPropagation()
 
         this.el.dispatchEvent(
-          new CustomEvent('bartender-bar-backdrop-click', {
+          new BartenderBarEvent('bartender-bar-backdrop-click', {
             bubbles: true,
             detail: {
               bar: this,
@@ -165,7 +165,7 @@ export class BartenderBar {
     }
 
     this.el.dispatchEvent(
-      new CustomEvent('bartender-bar-updated', {
+      new BartenderBarUpdatedEvent('bartender-bar-updated', {
         bubbles: true,
         detail: {
           bar: this,
@@ -219,7 +219,7 @@ export class BartenderBar {
     // If position was changed after bar was created,
     // dispatch event to update pushable elements
     this.el.dispatchEvent(
-      new CustomEvent('bartender-bar-updated', {
+      new BartenderBarUpdatedEvent('bartender-bar-updated', {
         bubbles: true,
         detail: {
           bar: this,
@@ -254,7 +254,7 @@ export class BartenderBar {
     }
 
     this.el.dispatchEvent(
-      new CustomEvent('bartender-bar-updated', {
+      new BartenderBarUpdatedEvent('bartender-bar-updated', {
         bubbles: true,
         detail: {
           bar: this,
@@ -288,7 +288,7 @@ export class BartenderBar {
     }
 
     this.el.dispatchEvent(
-      new CustomEvent('bartender-bar-updated', {
+      new BartenderBarUpdatedEvent('bartender-bar-updated', {
         bubbles: true,
         detail: {
           bar: this,
@@ -314,7 +314,7 @@ export class BartenderBar {
     if (this.initialized === false) return
 
     this.el.dispatchEvent(
-      new CustomEvent('bartender-bar-updated', {
+      new BartenderBarUpdatedEvent('bartender-bar-updated', {
         bubbles: true,
         detail: {
           bar: this,
@@ -340,7 +340,7 @@ export class BartenderBar {
     if (this.initialized === false) return
 
     this.el.dispatchEvent(
-      new CustomEvent('bartender-bar-updated', {
+      new BartenderBarUpdatedEvent('bartender-bar-updated', {
         bubbles: true,
         detail: {
           bar: this,
@@ -400,7 +400,7 @@ export class BartenderBar {
 
     // Dispatch 'after open' event
     this.el.dispatchEvent(
-      new CustomEvent('bartender-bar-after-open', {
+      new BartenderBarEvent('bartender-bar-after-open', {
         bubbles: true,
         detail: { bar: this },
       }),

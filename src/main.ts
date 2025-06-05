@@ -9,12 +9,40 @@ declare global {
   }
 }
 
-const bartender = new Bartender({ debug: false })
-window.bartender = bartender
+window.addEventListener('bartender-init', (evt) => {
+  console.warn('bartender-init', evt.detail.bartender)
+})
+
+window.addEventListener('bartender-destroyed', (evt) => {
+  console.warn('bartender-destroyed', evt.detail.bartender)
+})
+
+window.addEventListener('bartender-bar-added', (evt) => {
+  console.warn('bartender-bar-added', evt.detail.bar)
+})
+
+window.addEventListener('bartender-bar-removed', (evt) => {
+  console.warn('bartender-bar-removed', evt.detail.name)
+})
 
 window.addEventListener('bartender-bar-before-open', (evt) => {
-  console.warn('lets goooo!', evt.detail.bar.name)
+  console.warn('bartender-bar-before-open', evt.detail.bar.name)
 })
+
+window.addEventListener('bartender-bar-after-open', (evt) => {
+  console.warn('bartender-bar-after-open', evt.detail.bar.name)
+})
+
+window.addEventListener('bartender-bar-before-close', (evt) => {
+  console.warn('bartender-bar-before-close', evt.detail.bar.name)
+})
+
+window.addEventListener('bartender-bar-after-close', (evt) => {
+  console.warn('bartender-bar-after-close', evt.detail.bar.name)
+})
+
+const bartender = new Bartender({ debug: false })
+window.bartender = bartender
 
 const dialogEls = document.querySelectorAll('dialog')
 for (const el of Array.from(dialogEls)) {
