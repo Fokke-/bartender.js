@@ -1,3 +1,9 @@
+## 3.2.0
+
+### New Features
+
+- Typed events
+
 ## 3.1.3
 
 ### Bug fixes
