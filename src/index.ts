@@ -1,7 +1,7 @@
-import './assets/bartender.scss'
-import { Bartender } from './lib/Bartender'
-import { BartenderBar } from './lib/BartenderBar'
-
+export type * from './lib/global'
 export type * from './lib/types'
 
-export { Bartender, BartenderBar }
+import './assets/bartender.scss'
+export { Bartender } from './lib/Bartender'
+export { BartenderBar } from './lib/BartenderBar'
+export { BartenderBarEvent } from './lib/BartenderBarEvent'

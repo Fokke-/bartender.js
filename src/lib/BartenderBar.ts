@@ -1,4 +1,5 @@
 import type { BartenderBarOptions, BartenderBarPosition } from './types'
+import { BartenderBarEvent } from './BartenderBarEvent'
 import { BartenderError } from './BartenderError'
 import { resolveElement, sleep } from './utils'
 
@@ -367,7 +368,7 @@ export class BartenderBar {
   public async open(): Promise<this> {
     // Dispatch 'before open' event
     this.el.dispatchEvent(
-      new CustomEvent('bartender-bar-before-open', {
+      new BartenderBarEvent('bartender-bar-before-open', {
         bubbles: true,
         detail: { bar: this },
       }),

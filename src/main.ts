@@ -9,8 +9,12 @@ declare global {
   }
 }
 
-const bartender = new Bartender({ debug: true })
+const bartender = new Bartender({ debug: false })
 window.bartender = bartender
+
+window.addEventListener('bartender-bar-before-open', (evt) => {
+  console.warn('lets goooo!', evt.detail.bar.name)
+})
 
 const dialogEls = document.querySelectorAll('dialog')
 for (const el of Array.from(dialogEls)) {

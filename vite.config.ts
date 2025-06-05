@@ -43,7 +43,8 @@ export default defineConfig({
       },
     }),
     dts({
-      rollupTypes: true,
+      include: ['./src/index.ts', './src/lib/**/*'],
+      rollupTypes: false,
       copyDtsFiles: true,
     }),
   ],
