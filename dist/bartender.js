@@ -442,6 +442,10 @@ class f {
 }
 export {
   f as Bartender,
-  l as BartenderBar
+  l as BartenderBar,
+  o as BartenderBarEvent,
+  c as BartenderBarRemovedEvent,
+  a as BartenderBarUpdatedEvent,
+  u as BartenderInstanceEvent
 };
 //# sourceMappingURL=bartender.js.map
