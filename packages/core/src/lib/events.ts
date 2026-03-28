@@ -1,3 +1,4 @@
+import type { BartenderBarPosition } from './types'
 import { Bartender } from './Bartender'
 import { BartenderBar } from './BartenderBar'
 
@@ -36,7 +37,7 @@ export interface BartenderBarUpdatedEventDetail extends BartenderBarEventDetail 
   property: string
 
   /** New value */
-  value: any
+  value: BartenderBarPosition | boolean | string
 }
 
 export class BartenderBarUpdatedEvent extends CustomEvent<BartenderBarUpdatedEventDetail> {

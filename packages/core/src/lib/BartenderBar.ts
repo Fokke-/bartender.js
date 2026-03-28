@@ -38,10 +38,10 @@ export class BartenderBar {
   private isOpened = false
 
   /** Handler for dialog close event */
-  private onCloseHandler
+  private onCloseHandler: (_event: Event) => Promise<void>
 
   /** Handler for dialog click event */
-  private onClickHandler
+  private onClickHandler: (_event: MouseEvent) => void
 
   /**
    * Create a new bar
@@ -150,8 +150,8 @@ export class BartenderBar {
       'bartender-bar--has-overlay',
     )
 
-    this.el.removeEventListener('close', this.onCloseHandler)
-    this.el.removeEventListener('click', this.onClickHandler)
+    this.el.removeEventListener('close', this.onCloseHandler as EventListener)
+    this.el.removeEventListener('click', this.onClickHandler as EventListener)
 
     return this
   }
@@ -441,9 +441,10 @@ export class BartenderBar {
    * Get transition duration in milliseconds
    */
   public getTransitionDuration(): number {
-    return (
+    const duration =
       parseFloat(window.getComputedStyle(this.el).transitionDuration || '0') *
       1000
-    )
+
+    return Number.isNaN(duration) ? 0 : duration
   }
 }

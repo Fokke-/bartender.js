@@ -35,16 +35,16 @@ export class Bartender {
   }
 
   /** Handler for keydown events */
-  private onKeydownHandler
+  private onKeydownHandler: (_event: KeyboardEvent) => void
 
   /** Handler for bartender-bar-before-open events */
-  private onBarBeforeOpenHandler
+  private onBarBeforeOpenHandler: (_event: BartenderBarEvent) => void
 
   /** Handler for bartender-bar-before-close events */
-  private onBarBeforeCloseHandler
+  private onBarBeforeCloseHandler: (_event: BartenderBarEvent) => void
 
   /** Handler for bartender-bar-backdrop-click events */
-  private onBarBackdropClickHandler
+  private onBarBackdropClickHandler: (_event: BartenderBarEvent) => void
 
   /**
    * Create a new Bartender instance
