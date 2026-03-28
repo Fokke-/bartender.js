@@ -38,7 +38,7 @@ Accessible off-canvas bar library for the web. Supports multiple bars on any sid
 
 - Always format code with Prettier (`pnpm format`) after making changes
 - Never create git commits. `git add` is allowed when the user requests it.
-- Pre-commit hook (Husky + lint-staged) runs ESLint and Prettier on staged files automatically
+- Pre-commit hook (Husky) runs `tsc --noEmit` and lint-staged (ESLint + Prettier) on commit
 - Always use exact versions when installing npm packages (no `^` or `~` prefixes)
 
 ## Git workflow
