@@ -158,9 +158,7 @@ export class Bartender {
   /**
    * Get the topmost open bar instance.
    */
-  private getOpenBar(
-    modal: boolean | undefined = undefined,
-  ): BartenderBar | null {
+  public getOpenBar(modal?: boolean): BartenderBar | null {
     const openBars =
       typeof modal === 'boolean'
         ? this.openBars.filter((bar) => bar.modal === modal)
