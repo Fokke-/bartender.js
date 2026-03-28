@@ -45,7 +45,7 @@ describe('Bartender', () => {
 
       expect(() => {
         bartender.addBar('test', { el: createDialog() })
-      }).toThrow("already defined")
+      }).toThrow('already defined')
 
       bartender.destroy()
     })
@@ -384,9 +384,9 @@ describe('Bartender', () => {
       const bar = bartender.addBar('test', { el: createDialog(), modal: true })
 
       await bartender.open('test')
-      expect(
-        document.body.classList.contains('bartender-disable-scroll'),
-      ).toBe(true)
+      expect(document.body.classList.contains('bartender-disable-scroll')).toBe(
+        true,
+      )
 
       await bartender.close('test')
       await waitForEvent(bar.el, 'bartender-bar-after-close')

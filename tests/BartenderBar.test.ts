@@ -30,15 +30,11 @@ describe('BartenderBar', () => {
 
       expect(dialog.classList.contains('bartender-bar')).toBe(true)
       expect(dialog.classList.contains('bartender-bar--closed')).toBe(true)
-      expect(
-        dialog.classList.contains('bartender-bar--position-left'),
-      ).toBe(true)
-      expect(dialog.classList.contains('bartender-bar--mode-modal')).toBe(
+      expect(dialog.classList.contains('bartender-bar--position-left')).toBe(
         true,
       )
-      expect(
-        dialog.classList.contains('bartender-bar--has-overlay'),
-      ).toBe(true)
+      expect(dialog.classList.contains('bartender-bar--mode-modal')).toBe(true)
+      expect(dialog.classList.contains('bartender-bar--has-overlay')).toBe(true)
 
       bar.destroy()
     })
@@ -92,12 +88,12 @@ describe('BartenderBar', () => {
       const bar = new BartenderBar('test', { el: dialog })
 
       bar.position = 'right'
-      expect(
-        dialog.classList.contains('bartender-bar--position-right'),
-      ).toBe(true)
-      expect(
-        dialog.classList.contains('bartender-bar--position-left'),
-      ).toBe(false)
+      expect(dialog.classList.contains('bartender-bar--position-right')).toBe(
+        true,
+      )
+      expect(dialog.classList.contains('bartender-bar--position-left')).toBe(
+        false,
+      )
 
       bar.destroy()
     })
@@ -132,12 +128,10 @@ describe('BartenderBar', () => {
       const bar = new BartenderBar('test', { el: dialog })
 
       bar.modal = false
-      expect(
-        dialog.classList.contains('bartender-bar--mode-standard'),
-      ).toBe(true)
-      expect(dialog.classList.contains('bartender-bar--mode-modal')).toBe(
-        false,
+      expect(dialog.classList.contains('bartender-bar--mode-standard')).toBe(
+        true,
       )
+      expect(dialog.classList.contains('bartender-bar--mode-modal')).toBe(false)
 
       bar.destroy()
     })
@@ -161,14 +155,12 @@ describe('BartenderBar', () => {
       const bar = new BartenderBar('test', { el: dialog })
 
       bar.overlay = false
-      expect(
-        dialog.classList.contains('bartender-bar--has-overlay'),
-      ).toBe(false)
+      expect(dialog.classList.contains('bartender-bar--has-overlay')).toBe(
+        false,
+      )
 
       bar.overlay = true
-      expect(
-        dialog.classList.contains('bartender-bar--has-overlay'),
-      ).toBe(true)
+      expect(dialog.classList.contains('bartender-bar--has-overlay')).toBe(true)
 
       bar.destroy()
     })
@@ -368,9 +360,9 @@ describe('BartenderBar', () => {
       bar.destroy()
 
       expect(dialog.classList.contains('bartender-bar')).toBe(false)
-      expect(
-        dialog.classList.contains('bartender-bar--position-left'),
-      ).toBe(false)
+      expect(dialog.classList.contains('bartender-bar--position-left')).toBe(
+        false,
+      )
     })
 
     it('should not remove dialog element from DOM', () => {
