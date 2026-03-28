@@ -6,6 +6,7 @@
   "license": "MIT",
   "private": false,
   "type": "module",
+  "homepage": "https://bartender.fokke.fi",
   "repository": {
     "type": "git",
     "url": "https://github.com/Fokke-/bartender.js"
