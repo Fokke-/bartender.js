@@ -68,7 +68,7 @@ export const createBartender = (
   }
 }
 
-export const useBartender = () => {
+export const useBartender = (): Bartender | null => {
   if (!bartender) {
     console.error(
       'You must enable Bartender plugin before calling useBartender().',
