@@ -8,7 +8,9 @@ export {
 
 export function createDialog(id?: string): HTMLDialogElement {
   const dialog = document.createElement('dialog')
-  if (id) dialog.id = id
+  if (id) {
+    dialog.id = id
+  }
   document.body.appendChild(dialog)
   return dialog
 }

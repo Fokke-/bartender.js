@@ -36,7 +36,9 @@ export const resolveElement = (
  */
 export const sleep = (duration = 100): Promise<void> => {
   return new Promise((resolve) => {
-    if (!duration) return resolve()
+    if (!duration) {
+      return resolve()
+    }
 
     return setTimeout(resolve, duration)
   })

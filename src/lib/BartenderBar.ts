@@ -311,7 +311,9 @@ export class BartenderBar {
   public set permanent(val: boolean) {
     this._permanent = val
 
-    if (this.initialized === false) return
+    if (this.initialized === false) {
+      return
+    }
 
     this.el.dispatchEvent(
       new BartenderBarUpdatedEvent('bartender-bar-updated', {
@@ -337,7 +339,9 @@ export class BartenderBar {
   public set scrollTop(val: boolean) {
     this._scrollTop = val
 
-    if (this.initialized === false) return
+    if (this.initialized === false) {
+      return
+    }
 
     this.el.dispatchEvent(
       new BartenderBarUpdatedEvent('bartender-bar-updated', {

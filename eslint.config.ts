@@ -19,6 +19,7 @@ export default defineConfigWithVueTs(
   skipFormatting,
   {
     rules: {
+      curly: 'error',
       'no-empty-pattern': 0,
       'no-useless-escape': 0,
       'no-console': 0,
