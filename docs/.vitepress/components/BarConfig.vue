@@ -77,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import type { BartenderBarPosition } from '../../../src/index'
+import type { BartenderBarPosition } from '@fokke-/bartender.js'
 import type { Bar } from '../types.d'
 import { ref } from 'vue'
 import { barDefaultOptions } from '../lib/utils'

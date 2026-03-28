@@ -1,4 +1,4 @@
-import type { BartenderBarDefaultOptions } from '../../../src/index'
+import type { BartenderBarDefaultOptions } from '@fokke-/bartender.js'
 
 export const barDefaultOptions: BartenderBarDefaultOptions = {
   position: 'left',

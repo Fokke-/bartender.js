@@ -16,6 +16,8 @@
     "changeset": "changeset"
   },
   "devDependencies": {
+    "@fokke-/bartender.js": "workspace:*",
+    "@fokke-/vue-bartender.js": "workspace:*",
     "@changesets/cli": "2.29.4",
     "@types/node": "25.5.0",
     "@vue/eslint-config-prettier": "10.2.0",

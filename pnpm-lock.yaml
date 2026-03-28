@@ -11,6 +11,12 @@ importers:
       '@changesets/cli':
         specifier: 2.29.4
         version: 2.29.4
+      '@fokke-/bartender.js':
+        specifier: workspace:*
+        version: link:packages/core
+      '@fokke-/vue-bartender.js':
+        specifier: workspace:*
+        version: link:packages/vue
       '@types/node':
         specifier: 25.5.0
         version: 25.5.0
