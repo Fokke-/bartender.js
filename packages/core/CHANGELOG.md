@@ -1,9 +1,3 @@
-## 3.3.0
-
-### Bug fixes
-
-- Changed `getOpenBar()` method visibility from private to public
-
 ## 3.2.0
 
 ### New Features
