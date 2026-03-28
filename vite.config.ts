@@ -1,4 +1,3 @@
-import eslint from '@nabla/vite-plugin-eslint'
 import dts from 'vite-plugin-dts'
 
 import { defineConfig } from 'vite'
@@ -37,13 +36,9 @@ export default defineConfig({
     },
   },
   plugins: [
-    eslint({
-      eslintOptions: {
-        fix: false,
-      },
-    }),
     dts({
       include: ['./src/index.ts', './src/lib/**/*'],
+      tsconfigPath: './tsconfig.json',
       rollupTypes: false,
       copyDtsFiles: true,
     }),

@@ -31,8 +31,7 @@ export class BartenderBarEvent extends CustomEvent<BartenderBarEventDetail> {
   }
 }
 
-export interface BartenderBarUpdatedEventDetail
-  extends BartenderBarEventDetail {
+export interface BartenderBarUpdatedEventDetail extends BartenderBarEventDetail {
   /** Updated property */
   property: string
 
