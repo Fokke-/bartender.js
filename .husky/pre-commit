@@ -1,2 +1,2 @@
-pnpm exec tsc --noEmit
+pnpm exec vue-tsc --noEmit
 pnpm exec lint-staged
