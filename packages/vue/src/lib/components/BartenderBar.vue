@@ -205,6 +205,16 @@ onMounted(() => {
     },
   )
   watch(
+    () => props.modal,
+    (val) => {
+      if (!barInstance.value || typeof val === 'undefined') {
+        return
+      }
+
+      barInstance.value.modal = val
+    },
+  )
+  watch(
     () => props.overlay,
     (val) => {
       if (!barInstance.value || typeof val === 'undefined') {
