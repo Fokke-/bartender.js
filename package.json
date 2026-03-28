@@ -1,61 +1,23 @@
 {
-  "name": "@fokke-/bartender.js",
-  "version": "3.2.0",
-  "description": "Accessible off-canvas bars",
-  "author": "Ville Fokke Saarivaara",
-  "license": "MIT",
-  "private": false,
+  "name": "bartender-monorepo",
+  "private": true,
   "type": "module",
-  "homepage": "https://bartender.fokke.fi",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Fokke-/bartender.js"
-  },
-  "keywords": [
-    "dialog",
-    "off-canvas",
-    "accessibility",
-    "a11y",
-    "sidebar",
-    "navigation"
-  ],
   "scripts": {
-    "dev": "vite --host",
-    "build": "vite build",
+    "dev:core": "pnpm --filter @fokke-/bartender.js dev",
+    "dev:vue": "pnpm --filter @fokke-/vue-bartender.js dev",
+    "build": "pnpm --filter @fokke-/bartender.js build && pnpm --filter @fokke-/vue-bartender.js build",
+    "lint": "eslint packages/",
     "format": "prettier --write ./",
-    "lint": "eslint ./src ./tests",
-    "test": "vite build && vitest run",
-    "test:watch": "vite build && vitest",
+    "test": "pnpm --filter @fokke-/bartender.js test",
     "prepare": "husky",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
-  },
-  "files": [
-    "CHANGELOG.md",
-    "LICENSE",
-    "README.md",
-    "dist"
-  ],
-  "types": "./dist/index.d.ts",
-  "main": "./dist/bartender.js",
-  "module": "./dist/bartender.js",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/bartender.js",
-      "require": "./dist/bartender.umd.cjs"
-    },
-    "./dist/bartender.css": {
-      "import": "./dist/bartender.css",
-      "require": "./dist/bartender.css"
-    }
+    "docs:preview": "vitepress preview docs",
+    "changeset": "changeset"
   },
   "devDependencies": {
-    "@fokke-/vue-bartender.js": "1.0.0",
+    "@changesets/cli": "2.29.4",
     "@types/node": "25.5.0",
-    "@vitest/browser": "4.1.2",
-    "@vitest/browser-playwright": "4.1.2",
     "@vue/eslint-config-prettier": "10.2.0",
     "@vue/eslint-config-typescript": "14.7.0",
     "eslint": "10.1.0",
@@ -63,14 +25,12 @@
     "husky": "9.1.7",
     "jiti": "2.6.1",
     "lint-staged": "16.4.0",
-    "playwright": "1.58.2",
     "sass-embedded": "1.98.0",
     "typescript": "5.9.3",
     "typescript-eslint": "8.57.2",
     "vite": "8.0.3",
     "vite-plugin-dts": "4.5.4",
     "vitepress": "1.6.4",
-    "vitest": "4.1.2",
     "vue": "3.5.31",
     "vue-tsc": "3.2.6"
   },

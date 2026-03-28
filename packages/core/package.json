@@ -1,0 +1,55 @@
+{
+  "name": "@fokke-/bartender.js",
+  "version": "3.2.0",
+  "description": "Accessible off-canvas bars",
+  "author": "Ville Fokke Saarivaara",
+  "license": "MIT",
+  "private": false,
+  "type": "module",
+  "homepage": "https://bartender.fokke.fi",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Fokke-/bartender.js",
+    "directory": "packages/core"
+  },
+  "keywords": [
+    "dialog",
+    "off-canvas",
+    "accessibility",
+    "a11y",
+    "sidebar",
+    "navigation"
+  ],
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "test": "vite build && vitest run",
+    "test:watch": "vite build && vitest"
+  },
+  "files": [
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md",
+    "dist"
+  ],
+  "types": "./dist/index.d.ts",
+  "main": "./dist/bartender.js",
+  "module": "./dist/bartender.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/bartender.js",
+      "require": "./dist/bartender.umd.cjs"
+    },
+    "./dist/bartender.css": {
+      "import": "./dist/bartender.css",
+      "require": "./dist/bartender.css"
+    }
+  },
+  "devDependencies": {
+    "@vitest/browser": "4.1.2",
+    "@vitest/browser-playwright": "4.1.2",
+    "playwright": "1.58.2",
+    "vitest": "4.1.2"
+  }
+}

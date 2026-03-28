@@ -1,0 +1,56 @@
+{
+  "name": "@fokke-/vue-bartender.js",
+  "version": "1.2.0",
+  "description": "Bartender.js plugin for Vue 3",
+  "author": "Ville Fokke Saarivaara",
+  "license": "MIT",
+  "private": false,
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Fokke-/bartender.js",
+    "directory": "packages/vue"
+  },
+  "keywords": [
+    "off-canvas",
+    "accessibility",
+    "a11y",
+    "sidebar",
+    "navigation",
+    "vue"
+  ],
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md",
+    "dist"
+  ],
+  "types": "./dist/index.d.ts",
+  "module": "./dist/vue-bartender.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/vue-bartender.js"
+    }
+  },
+  "peerDependencies": {
+    "@fokke-/bartender.js": "^3.2",
+    "vue": "^3.5"
+  },
+  "devDependencies": {
+    "@fokke-/bartender.js": "workspace:^",
+    "@vitejs/plugin-vue": "6.0.5",
+    "modern-normalize": "3.0.1",
+    "vue-router": "5.0.4",
+    "@vitest/browser": "4.1.2",
+    "@vitest/browser-playwright": "4.1.2",
+    "playwright": "1.58.2",
+    "vitest": "4.1.2"
+  }
+}

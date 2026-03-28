@@ -1,2 +1,3 @@
-pnpm exec vue-tsc --noEmit
+pnpm exec vue-tsc --noEmit -p packages/core/tsconfig.json
+pnpm exec vue-tsc --noEmit -p packages/vue/tsconfig.json
 pnpm exec lint-staged
