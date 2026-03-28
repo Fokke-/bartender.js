@@ -83,7 +83,10 @@ export class Bartender {
 
     // Handler for bartender-bar-before-close events
     this.onBarBeforeCloseHandler = (event: BartenderBarEvent): void => {
-      this.openBars.splice(this.openBars.indexOf(event.detail.bar), 1)
+      const index = this.openBars.indexOf(event.detail.bar)
+      if (index !== -1) {
+        this.openBars.splice(index, 1)
+      }
 
       if (!this.openBars.length) {
         document.body.classList.remove('bartender-open')
