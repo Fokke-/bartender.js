@@ -144,6 +144,10 @@ export class BartenderBar {
     this.el.classList.remove(
       'bartender-bar',
       `bartender-bar--position-${this.position}`,
+      'bartender-bar--closed',
+      'bartender-bar--open',
+      `bartender-bar--mode-${this._modal ? 'modal' : 'standard'}`,
+      'bartender-bar--has-overlay',
     )
 
     this.el.removeEventListener('close', this.onCloseHandler)
