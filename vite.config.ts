@@ -1,7 +1,6 @@
 import dts from 'vite-plugin-dts'
 
 import { defineConfig } from 'vite'
-import { resolve } from 'path'
 import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
@@ -9,7 +8,6 @@ export default defineConfig({
   define: { 'process.env': {} },
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
-    extensions: ['.js', '.json', '.jsx', '.mjs', '.ts', '.tsx', '.vue'],
   },
   css: {
     preprocessorOptions: {
@@ -29,7 +27,7 @@ export default defineConfig({
       },
     },
     lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
+      entry: fileURLToPath(new URL('./src/index.ts', import.meta.url)),
       name: 'Bartender',
       fileName: 'bartender',
       formats: ['es', 'umd'],
