@@ -13,6 +13,7 @@ export default defineConfig({
   },
   title: 'Bartender.js',
   description: 'Library for creating accessible off-canvas bars and modals.',
+  base: '/',
   lastUpdated: true,
   sitemap: {
     hostname: 'https://bartender.fokke.fi',
