@@ -4,6 +4,9 @@ on:
   push:
     branches: [beta]
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 concurrency:
   group: release-beta
   cancel-in-progress: false
