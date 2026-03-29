@@ -36,6 +36,8 @@ jobs:
 
       - run: pnpm changeset version
 
+      - run: pnpm build
+
       - name: Commit and push changes
         run: |
           git config user.name "github-actions[bot]"
