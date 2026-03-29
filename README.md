@@ -28,6 +28,9 @@ Available commands:
 - `pnpm lint` - Lint source code
 - `pnpm format` - Format code
 - `pnpm test` - Build and run tests
+- `pnpm docs:dev` - Documentation dev server
+- `pnpm docs:build` - Build documentation
+- `pnpm docs:preview` - Preview built documentation
 
 ## Publishing
 
