@@ -32,25 +32,34 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Exit pre-release mode
-        id: pre_exit
+      - name: Check pre-release mode
+        id: check_pre
         run: |
           if [ -f .changeset/pre.json ]; then
-            pnpm changeset pre exit
-            pnpm changeset version
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add -A
-            git commit --no-verify -m "Exit pre-release mode and version packages"
-            git push
-            echo "exited=true" >> $GITHUB_OUTPUT
+            echo "active=true" >> $GITHUB_OUTPUT
           fi
 
+      - name: Exit pre-release mode and publish
+        if: steps.check_pre.outputs.active == 'true'
+        run: |
+          pnpm changeset pre exit
+          pnpm changeset version
+          pnpm build
+          pnpm changeset publish
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit --no-verify -m "Exit pre-release mode and version packages"
+          git push
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
+
       - run: pnpm build
-        if: steps.pre_exit.outputs.exited != 'true'
+        if: steps.check_pre.outputs.active != 'true'
 
       - uses: changesets/action@v1
-        if: steps.pre_exit.outputs.exited != 'true'
+        if: steps.check_pre.outputs.active != 'true'
         with:
           version: pnpm changeset version
           publish: pnpm changeset publish
