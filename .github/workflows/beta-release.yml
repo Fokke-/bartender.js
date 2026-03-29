@@ -53,5 +53,4 @@ jobs:
     needs: version
     uses: ./.github/workflows/publish.yml
     with:
-      tag: beta
       ref: beta
