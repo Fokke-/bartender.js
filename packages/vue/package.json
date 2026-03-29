@@ -1,6 +1,6 @@
 {
   "name": "@fokke-/vue-bartender.js",
-  "version": "1.2.0",
+  "version": "1.2.1-beta.0",
   "description": "Bartender.js plugin for Vue 3",
   "author": "Ville Fokke Saarivaara",
   "license": "MIT",
@@ -40,7 +40,7 @@
     }
   },
   "peerDependencies": {
-    "@fokke-/bartender.js": "^3.2",
+    "@fokke-/bartender.js": "^3.2.1-beta.0",
     "vue": "^3.5"
   },
   "devDependencies": {

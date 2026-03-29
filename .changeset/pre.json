@@ -1,0 +1,16 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "@fokke-/bartender.js": "3.2.0",
+    "@fokke-/vue-bartender.js": "1.2.0"
+  },
+  "changesets": [
+    "fix-close-modal-bar",
+    "fix-destroy-cleanup",
+    "fix-vue-directive-listeners",
+    "fix-vue-modal-watcher",
+    "improve-core-types",
+    "whole-turtles-divide"
+  ]
+}
