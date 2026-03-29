@@ -36,10 +36,7 @@ jobs:
 
       - run: pnpm build
 
-      - name: Debug OIDC claims
-        run: |
-          OIDC_TOKEN=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=npm" | jq -r '.value')
-          echo "$OIDC_TOKEN" | cut -d. -f2 | base64 -d 2>/dev/null | jq '{repository, repository_owner, job_workflow_ref, workflow_ref, ref}'
+      - run: npm config list
 
       - run: pnpm changeset publish
         env:
