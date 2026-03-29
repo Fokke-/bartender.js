@@ -13,7 +13,6 @@ concurrency:
 
 permissions:
   contents: write
-  id-token: write
 
 jobs:
   version:
@@ -28,6 +27,7 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
+          registry-url: https://registry.npmjs.org
 
       - run: pnpm install --frozen-lockfile
 
@@ -41,6 +41,11 @@ jobs:
 
       - run: pnpm build
 
+      - name: Publish to npm
+        run: pnpm changeset publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Commit and push changes
         run: |
           git config user.name "github-actions[bot]"
@@ -48,9 +53,3 @@ jobs:
           git add -A
           git diff-index --quiet HEAD || git commit --no-verify -m "Version packages (beta) [skip ci]"
           git push
-
-  publish:
-    needs: version
-    uses: ./.github/workflows/publish.yml
-    with:
-      ref: beta
