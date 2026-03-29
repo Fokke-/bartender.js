@@ -32,6 +32,12 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - name: Exit pre-release mode
+        run: |
+          if [ -f .changeset/pre.json ]; then
+            pnpm changeset pre exit
+          fi
+
       - run: pnpm build
 
       - uses: changesets/action@v1
