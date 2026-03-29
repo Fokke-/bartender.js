@@ -43,7 +43,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
-          git diff-index --quiet HEAD || git commit -m "Version packages (beta) [skip ci]"
+          git diff-index --quiet HEAD || git commit --no-verify -m "Version packages (beta) [skip ci]"
           git push
 
   publish:
