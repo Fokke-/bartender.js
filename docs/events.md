@@ -44,7 +44,9 @@ window.addEventListener('bartender-bar-removed', (event) => {
 
 One of the following bar properties has changed:
 
+- name
 - position
+- modal
 - overlay
 - permanent
 - scrollTop

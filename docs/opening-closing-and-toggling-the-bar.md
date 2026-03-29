@@ -41,7 +41,7 @@ Close all bars. Resolves after all the bars have been closed. By default only mo
 | closeNonModalBars | `boolean` | `false` | Close non-modal bars in addition to the modal bars? |
 
 ```javascript
-// Close all non-modal bars
+// Close all modal bars
 bartender.closeAll()
 
 // Close all bars, including the non-modal

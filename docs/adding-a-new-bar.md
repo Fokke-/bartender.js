@@ -20,7 +20,7 @@ In standard dialog mode bar will open as a fixed element and interaction with el
 - `permanent` setting will have no effect.
 - Bar is not closeable by hitting `esc` key.
 - Bar will not be closed by clicking outside the bar.
-- Bar will not be closed when another bar is opened with `keepOtherBarsOpen: true`.
+- Bar will not be closed when another bar is opened.
 - Bar will not be closed when `Bartender.closeAll()` is called without any arguments.
   :::
 
@@ -42,11 +42,11 @@ bartender.addBar('mobileNav', {
 
 | Property  | Type                                                 | Default  | Description                                                     |
 | --------- | ---------------------------------------------------- | -------- | --------------------------------------------------------------- |
-| el        | `string \| element`                                  |          | Bar element as selector string or reference to the element.     |
+| el        | `string \| Element \| null`                          |          | Bar element as selector string or reference to the element.     |
 | position  | `'left' \| 'right' \| 'top' \| 'bottom' \| 'center'` | `'left'` | Bar position                                                    |
 | modal     | `boolean`                                            | `true`   | Open bar as a modal?                                            |
 | overlay   | `boolean`                                            | `true`   | Show overlay shading over the content when bar is open?         |
-| permanent | `boolean`                                            | `false`  | Bar is not closeable by clicking overlay of pressing `esc` key. |
+| permanent | `boolean`                                            | `false`  | Bar is not closeable by clicking overlay or pressing `esc` key. |
 | scrollTop | `boolean`                                            | `true`   | Bar will be scrolled to top after opening it.                   |
 
 ## Modifying bar settings

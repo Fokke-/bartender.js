@@ -28,7 +28,7 @@ For example, if we want to set bar max-width to `50dvw`, we need to style it lik
   --max-width-fallback: 50vw;
 }
 
-// Without fallbacks
+/* Without fallbacks */
 .mobileNav {
   --max-width: 500px;
 }
@@ -44,7 +44,7 @@ You may want to define some global styles, which will apply to all the bars.
   --opacity-leave: 0;
 }
 
-// For left positioned bars
+/* For left positioned bars */
 .bartender-bar--position-left {
   --overlay-background: maroon;
 }
@@ -91,14 +91,14 @@ You may want to define some global styles, which will apply to all the bars.
 
 ### Overlay shading
 
-| Property                                   | Default value                           | Description                                     |
-| ------------------------------------------ | --------------------------------------- | ----------------------------------------------- |
-| --overlay-background                       | #000                                    | Overlay background color                        |
-| --overlay-opacity                          | 0.5                                     | Overlay opacity for open bar                    |
-| --overlay-transition-duration-enter        | var(--transition-duration-enter)        | Overlay transition duration for open bar        |
-| --overlay-transition-duration-leave        | var(--transition-duration-leave)        | Overlay transition duration for closed bar      |
-| --overlay-transition-timing-function-enter | var(--transition-timing-function-enter) | Overlay transition timing function for open bar |
-| --overlay-transition-timing-function-leave | var(--transition-timing-function-leave) | Overlay transition timing function for open bar |
+| Property                                   | Default value                           | Description                                       |
+| ------------------------------------------ | --------------------------------------- | ------------------------------------------------- |
+| --overlay-background                       | #000                                    | Overlay background color                          |
+| --overlay-opacity                          | 0.5                                     | Overlay opacity for open bar                      |
+| --overlay-transition-duration-enter        | var(--transition-duration-enter)        | Overlay transition duration for open bar          |
+| --overlay-transition-duration-leave        | var(--transition-duration-leave)        | Overlay transition duration for closed bar        |
+| --overlay-transition-timing-function-enter | var(--transition-timing-function-enter) | Overlay transition timing function for open bar   |
+| --overlay-transition-timing-function-leave | var(--transition-timing-function-leave) | Overlay transition timing function for closed bar |
 
 ## Examples
 
@@ -135,7 +135,7 @@ You may want to define some global styles, which will apply to all the bars.
 ```javascript
 // Bar config
 {
-  position: center,
+  position: 'center',
 }
 ```
 
@@ -160,7 +160,7 @@ In addition to transforms, you can also animate the bar with `--animation-*` pro
 
 ```js
 {
-  position: right,
+  position: 'right',
 }
 ```
 
