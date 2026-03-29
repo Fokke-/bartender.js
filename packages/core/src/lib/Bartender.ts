@@ -292,14 +292,14 @@ export class Bartender {
   /**
    * Close bar
    *
-   * If bar is undefined, the topmost bar will be closed. Resolves after the bar has closed.
+   * If bar is undefined, the topmost modal bar will be closed. Resolves after the bar has closed.
    */
   public async close(
     bar?: BartenderBar | string,
   ): Promise<BartenderBar | null> {
     const targetBar = (() => {
       if (!bar) {
-        return this.getOpenBar()
+        return this.getOpenBar(true)
       }
 
       if (bar instanceof BartenderBar) {
