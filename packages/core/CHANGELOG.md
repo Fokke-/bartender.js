@@ -1,3 +1,12 @@
+## 3.2.1
+
+### Patch Changes
+
+- 465fa98: Fix `close()` to close the topmost modal bar instead of any open bar when called without arguments
+- c808b23: Fix BartenderBar.destroy() not removing all CSS classes (closed/open, mode, overlay)
+- 44ff98f: Improved types
+- bf4a9f6: Changed getOpenBar() method visibility from private to public
+
 ## 3.2.1-beta.0
 
 ### Patch Changes
