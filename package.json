@@ -1,6 +1,7 @@
 {
   "name": "bartender-monorepo",
   "private": true,
+  "packageManager": "pnpm@10.29.3",
   "type": "module",
   "scripts": {
     "dev:core": "pnpm --filter @fokke-/bartender.js dev",
